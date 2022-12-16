@@ -61,6 +61,5 @@ public class Calculator {
                 fail("Исключение: деление на ноль");
             }
         }
-
     }
 }
