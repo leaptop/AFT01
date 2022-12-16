@@ -4,7 +4,7 @@ import org.junit.jupiter.api.*;
 public class FirstTest {
     @BeforeAll
     static void beforeAll() {
-        System.out.println("FirstTest class started (works for all descendabts)");
+        System.out.println("FirstTest class started (works for all descendands)");
     }
 
     @BeforeEach
