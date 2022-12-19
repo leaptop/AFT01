@@ -1,10 +1,12 @@
+package autotests;
+
 import org.junit.jupiter.api.*;
 
 
 public class FirstTest {
     @BeforeAll
     static void beforeAll() {
-        System.out.println("FirstTest class started (works for all descendands)");
+        System.out.println("autotests.FirstTest class started (works for all descendands)");
     }
 
     @BeforeEach
@@ -19,7 +21,7 @@ public class FirstTest {
 
     @AfterAll
     static void afterAll() {
-        System.out.println("All tests in FirstTest finished");
+        System.out.println("All tests in autotests.FirstTest finished");
     }
 
     @Test

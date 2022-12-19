@@ -1,3 +1,5 @@
+package autotests;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.LoginPage;
 
 import java.time.Duration;
 import java.util.List;
@@ -36,7 +39,10 @@ public class LoginTest {
     }
 
     /**
-     * Задание 6
+     * Задание 6. Проверяю реакцию сайта на ввод неверных данных в поля логина и пароля.
+     * <p>
+     * В конце добавлены проверки из задания 7:
+     * Проверка того, что введённое ранее имя пользователя сохранилось в поле ввода, а пароль исчез.
      */
     @Test
     void incorrectUserNameAndPassword() {
@@ -44,10 +50,16 @@ public class LoginTest {
         chromedriver.findElement(By.name("_username")).sendKeys("TestUser");
         chromedriver.findElement((By.id("password"))).sendKeys("Password");
         String xpathForInvalidCredentialsText = "//div[contains(text(), 'Invalid credentials.')]";
-        Assertions.assertThrows(NoSuchElementException.class, ()-> chromedriver.findElement(By.xpath(xpathForInvalidCredentialsText)),
+        Assertions.assertThrows(NoSuchElementException.class, () -> chromedriver.findElement(By.xpath(xpathForInvalidCredentialsText)),
                 "Исключение не было выброшено, т.к. элемент был найден");
         chromedriver.findElement(By.xpath("//*[@value='Войти']")).click();
         WebElement we = chromedriver.findElement(By.xpath(xpathForInvalidCredentialsText));
-        Assertions.assertTrue(!(we==null), "Текст не был найден ");
+        Assertions.assertTrue(!(we == null), "Текст не был найден ");
+
+        LoginPage lp = new LoginPage(chromedriver);
+        String str = lp.getTextFromUserNameInput();
+        Assertions.assertTrue(!str.isEmpty(), "Введённое ранее имя пользователя не сохранилось");
+        String strPass = lp.getTextFromPasswordInput();
+        Assertions.assertTrue(strPass.isEmpty(), "В поле пароль есть какой-то текст");
     }
 }
