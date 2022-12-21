@@ -27,12 +27,26 @@
             <artifactId>selenium-java</artifactId>
             <version>4.7.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-api -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-api</artifactId>
+            <version>4.7.2</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/ru.yandex.qatools.htmlelements/htmlelements-java -->
         <dependency>
             <groupId>ru.yandex.qatools.htmlelements</groupId>
             <artifactId>htmlelements-java</artifactId>
             <version>1.20.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/ru.sbtqa.htmlelements/htmlelements-java -->
+        <dependency>
+            <groupId>ru.sbtqa.htmlelements</groupId>
+            <artifactId>htmlelements-java</artifactId>
+            <version>1.21.4</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.codeborne/selenide -->
         <dependency>
             <groupId>com.codeborne</groupId>
