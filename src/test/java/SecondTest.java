@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.*;
 
 /**
- * На примере данного класса можно сделать вывод о вызовах методов:
+ * На примере данного класса можно сделать вывод о порядке вызовов методов:
  * @BeforeAll родителя
  * @BeforeAll потомка
  *
@@ -29,7 +29,6 @@ public class SecondTest extends FirstTest {
     void afterEachSecond() {
         System.out.println("Тест остановлен");
     }
-
 
     @AfterAll
     static void afterAllSecond() {

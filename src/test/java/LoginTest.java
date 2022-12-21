@@ -31,7 +31,5 @@ public class LoginTest {
 
         chromedriver.manage().window().maximize();
         chromedriver.quit();
-
-
     }
 }
