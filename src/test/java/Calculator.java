@@ -15,9 +15,7 @@ public class Calculator {
 
     @Test
     void test1() {
-        // Assertions.assertEquals(correctSum, sum(Addend1, Addend2), "Сумма чисел " + Addend1 + " и " + Addend2 + " не равна числу " + correctSum);
-        Assertions.assertEquals(correctSum, sum(Addend1, Addend2), String.format("Сумма чисел %d и %d не равна числу %d", Addend1, Addend2, correctSum));
-
+         Assertions.assertEquals(correctSum, sum(Addend1, Addend2), String.format("Сумма чисел %d и %d не равна числу %d", Addend1, Addend2, correctSum));
     }
 
     @Test

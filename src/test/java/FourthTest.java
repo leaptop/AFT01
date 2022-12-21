@@ -21,6 +21,9 @@ public class FourthTest {
         System.out.println("нескольких ");
     }
 
+    /**
+     * Порядок вызова методов важен!
+     */
     @BeforeAll
     static void beforeB() {
         System.out.println("Порядок");
