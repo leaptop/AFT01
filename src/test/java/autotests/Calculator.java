@@ -13,26 +13,26 @@ public class Calculator {
         return a + b;
     }
 
-    int x = 2, y = 2, z = 4, t = 5;
+    int Addend1 = 2, Addend2 = 2, correctSum = 4, WrongSum = 5;
 
     @Test
     void test1() {
-        Assertions.assertEquals(sum(x, y), z, "Сумма чисел " + x + " и " + y + " не равна числу " + z);
+         Assertions.assertEquals(correctSum, sum(Addend1, Addend2), String.format("Сумма чисел %d и %d не равна числу %d", Addend1, Addend2, correctSum));
     }
 
     @Test
     void test2() {//результат в виде org.opentest4j.AssertionFailedError
-        Assertions.assertEquals(sum(x, y), t, "Сумма чисел " + x + " и " + y + " не равна числу " + t);
+        Assertions.assertEquals(WrongSum, sum(Addend1, Addend2), String.format("Сумма чисел %d и %d не равна числу %d", Addend1, Addend2, WrongSum));
     }
 
     @Test
     void test3() {
-        assertTrue(sum(x, y) == z, "Сумма чисел " + x + " и " + y + " не равна числу " + z);
+        assertTrue(sum(Addend1, Addend2) == correctSum, String.format("Сумма чисел %d и %d не равна числу %d", Addend1, Addend2, correctSum));
     }
 
     @Test
     void test4() {
-        assertTrue(sum(x, y) == t, "Сумма чисел " + x + " и " + y + " не равна числу " + t);
+        assertTrue(sum(Addend1, Addend2) == WrongSum, String.format("Сумма чисел %d и %d не равна числу %d", Addend1, Addend2, WrongSum));
     }
 
     /**
@@ -42,10 +42,10 @@ public class Calculator {
     @Test
     void test5() {
         Assertions.assertAll(
-                () -> assertEquals(sum(x, y), z, "Сумма чисел " + x + " и " + y + " не равна числу " + z),
-                () -> assertEquals(sum(x, y), t, "Сумма чисел " + x + " и " + y + " не равна числу " + t),
-                () -> assertTrue(sum(x, y) == z, "Сумма чисел " + x + " и " + y + " не равна числу " + z),
-                () -> assertTrue(sum(x, y) == t, "Сумма чисел " + x + " и " + y + " не равна числу " + t)
+                () -> assertEquals(correctSum, sum(Addend1, Addend2), String.format("Сумма чисел %d и %d не равна числу %d", Addend1, Addend2, correctSum)),
+                () -> assertEquals(WrongSum, sum(Addend1, Addend2), String.format("Сумма чисел %d и %d не равна числу %d", Addend1, Addend2, WrongSum)),
+                () -> assertTrue(sum(Addend1, Addend2) == correctSum, String.format("Сумма чисел %d и %d не равна числу %d", Addend1, Addend2, correctSum)),
+                () -> assertTrue(sum(Addend1, Addend2) == WrongSum, String.format("Сумма чисел %d и %d не равна числу %d", Addend1, Addend2, WrongSum))
         );
     }
 
