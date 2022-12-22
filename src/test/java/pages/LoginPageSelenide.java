@@ -24,16 +24,14 @@ public class LoginPageSelenide {
         return $x(xpathForInvalidCredentialsText).exists();
     }
 
-    public LoginPageSelenide clickEnterButton() {
-        //$(By.xpath(xpathForEnterButton)).click();
-        enterButton.click();
-        return this;
-    }
-
     /**
      * Яндексовский элемент для сохранения кнопки. Находит кнопку "Войти".
      */
     private Button enterButton = new Button($(By.xpath(xpathForEnterButton)));
+    public LoginPageSelenide clickEnterButton() {
+        enterButton.click();
+        return this;
+    }
 
     /**
      * Яндексовский элемент для работы с инпутами. Находит поле ввода логина.
@@ -44,7 +42,7 @@ public class LoginPageSelenide {
      * Шлю логин с помощью объекта TextInput
      *
      * @param login логин
-     * @return
+     * @return возвращаем текущую страницу для возможности вызова других методов по цепочке.
      */
     public LoginPageSelenide sendLogin(String login) {
         inputLogin.sendKeys(login);
@@ -67,12 +65,7 @@ public class LoginPageSelenide {
         return this;
     }
     /**
-     * Универсальный метод для передачи текста с помощью TextInput из библиотеки яндекса.
-     * <p>
-     * Кажется, что его можно и нужно сократить до возможности работать с...
-     * <p>
-     * Вообще вроде как надо создать TextInput для обоих полей - пароля и логина...
-     * Меня смущает, что они инициализируются через new... Где их инициализировать? В конструкторе?
+     * Универсальный метод для передачи текста с помощью TextInput
      *
      * @param element
      * @param value
