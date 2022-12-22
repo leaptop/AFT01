@@ -1,6 +1,7 @@
 package login;
 
 import autotests.TestBase;
+import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pages.LoginPage;
@@ -9,12 +10,14 @@ import pages.SuccessfulLoginPage;
 
 import static com.codeborne.selenide.Selenide.open;
 
-public class LoginPositiveTestsSelenide extends TestBase {
+public class LoginPositiveTestsSelenide {
     @Test
-    void checkCorrectAuthorizationInput() {
-      //  chromedriver.get("https://tt-testing.quality-lab.ru/login");
-        open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class);
-      //  LoginPage lp = new LoginPage(chromedriver);
+    void checkCorrectAuthorizationInput() throws InterruptedException {
+        Configuration.browserSize = "1920x1080";//maximize больше нет в селениде
+        open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class).fillName("Авто пользователь");
+
+        Thread.sleep(4000);
+        //  LoginPage lp = new LoginPage(chromedriver);
 //        lp.sendTextToUserInput("Авто Пользователь");
 //        lp.sendTextToPasswordInput("12345678");
 //        lp.clickEnterButton();

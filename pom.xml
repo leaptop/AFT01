@@ -18,7 +18,8 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.9.1</version>
+<!--            <version>5.9.1</version>-->
+            <version>5.1.1</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
@@ -33,21 +34,17 @@
             <artifactId>selenium-api</artifactId>
             <version>4.7.2</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/ru.yandex.qatools.htmlelements/htmlelements-java -->
         <dependency>
             <groupId>ru.yandex.qatools.htmlelements</groupId>
             <artifactId>htmlelements-java</artifactId>
-            <version>1.20.0</version>
+            <version>1.20.0</version> <!-- 1.21+ is SELENIUM 4.1.0 compatible -->
         </dependency>
-        <!-- https://mvnrepository.com/artifact/ru.sbtqa.htmlelements/htmlelements-java -->
         <dependency>
-            <groupId>ru.sbtqa.htmlelements</groupId>
-            <artifactId>htmlelements-java</artifactId>
-            <version>1.21.4</version>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-common</artifactId>
+            <version>2.0b1</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.codeborne/selenide -->
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>selenide</artifactId>
