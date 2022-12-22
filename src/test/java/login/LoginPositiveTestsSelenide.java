@@ -14,7 +14,12 @@ public class LoginPositiveTestsSelenide {
     @Test
     void checkCorrectAuthorizationInput() throws InterruptedException {
         Configuration.browserSize = "1920x1080";//maximize больше нет в селениде
-        open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class).fillName("Авто пользователь");
+        open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class)
+                .sendLogin("Авто пользователь")
+                .sendPassword("12345678")
+                .clickEnterButton()
+        ;
+
 
         Thread.sleep(4000);
         //  LoginPage lp = new LoginPage(chromedriver);
