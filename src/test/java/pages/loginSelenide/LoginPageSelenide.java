@@ -1,14 +1,10 @@
-package pages;
+package pages.loginSelenide;
 
-import com.codeborne.selenide.selector.ByAttribute;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import ru.yandex.qatools.htmlelements.element.Button;
 import ru.yandex.qatools.htmlelements.element.TextInput;
 
-import static com.codeborne.selenide.Selectors.by;
-import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selenide.*;
 
 public class LoginPageSelenide {
@@ -20,14 +16,32 @@ public class LoginPageSelenide {
      * xpath для кнопки "Войти"
      */
     private String xpathForEnterButton = "//*[@value='Войти']";
+
     public boolean invalidCredentialsTextIsVisible() {
         return $x(xpathForInvalidCredentialsText).exists();
+    }
+
+    /**
+     * @return возвращает текст из поля ввода пароля
+     */
+    public String getPasswordInputText() {
+        inputPassword = new TextInput(webdriver().object().findElement(By.id("password")));
+        return inputPassword.getText();
+    }
+
+    /**
+     * @return возвращает текст из поля ввода логина
+     */
+    public String getLoginInputText() {
+        inputLogin = new TextInput(webdriver().object().findElement(By.name("_username")));
+        return inputLogin.getText();
     }
 
     /**
      * Яндексовский элемент для сохранения кнопки. Находит кнопку "Войти".
      */
     private Button enterButton = new Button($(By.xpath(xpathForEnterButton)));
+
     public LoginPageSelenide clickEnterButton() {
         enterButton.click();
         return this;
@@ -64,6 +78,7 @@ public class LoginPageSelenide {
         inputPassword.sendKeys(password);
         return this;
     }
+
     /**
      * Универсальный метод для передачи текста с помощью TextInput
      *
@@ -76,6 +91,7 @@ public class LoginPageSelenide {
         input.sendKeys(input.getClearCharSequence() + value);
         return this;
     }
+
     /**
      * Заполняю логин с помощью селениумовского By. Для селенида похоже нет селенидовского метода поиска по атрибутам.
      * //TextInput inpa = new TextInput(ByAttribute("name", "_username")); не сработает. Это для CSS вроде

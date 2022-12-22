@@ -1,4 +1,4 @@
-package pages;
+package pages.loginSelenide;
 
 import com.codeborne.selenide.Condition;
 import ru.yandex.qatools.htmlelements.element.Image;
@@ -63,25 +63,4 @@ public class SuccessfulLoginPageSelenide {
         upperRightCornereAvatar.click();
         return this;
     }
-
-    /**
-     * @return возвращает вебЭлемент аватарки, расположенной справа вверху.
-     */
-//    public WebElement getupperRightCornerAvatar() {
-//        return chromedriver.findElement(By.xpath(upperRightCornerAvatar));
-//    }
-
-    /**
-     * @return возвращает Имя пользователя из всплывающей формы после нажатия на аватарку справа сверху
-     */
-    // public String getUserName() {
-//        return chromedriver.findElement(By.xpath(UserName)).getText();
-//    }
-
-    /**
-     * @return возвращает email пользователя из всплывающей формы после нажатия на аватарку справа сверху
-     */
-//    public String getUserEmail() {
-//        return chromedriver.findElement(By.xpath(UserEmail)).getText();
-//    }
 }

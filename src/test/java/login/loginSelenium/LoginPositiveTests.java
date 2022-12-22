@@ -1,10 +1,10 @@
-package login;
+package login.loginSelenium;
 
-import autotests.TestBase;
+import helpers.TestBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import pages.LoginPage;
-import pages.SuccessfulLoginPage;
+import pages.loginSelenium.LoginPage;
+import pages.loginSelenium.SuccessfulLoginPage;
 
 /**
  * Класс, содержащий позитивные тесты

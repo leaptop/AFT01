@@ -1,9 +1,9 @@
-package login;
+package login.loginSelenium;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import autotests.TestBase;
-import pages.LoginPage;
+import helpers.TestBase;
+import pages.loginSelenium.LoginPage;
 
 /**
  * Класс, содержащий негативные тесты
