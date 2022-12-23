@@ -3,7 +3,6 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 /**
  * Page Object для страницы с вводом логина и пароля.
@@ -33,7 +32,6 @@ public class LoginPage {
     public String getTextFromUserNameInput() {
          return chromedriver.findElement(By.name("_username")).getAttribute("value");
     }
-
 
     /**
      * @return возвращает текст из поля ввода пароля

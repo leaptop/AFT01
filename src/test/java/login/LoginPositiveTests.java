@@ -34,18 +34,15 @@ public class LoginPositiveTests extends TestBase {
         lp.sendTextToUserInput("Авто Пользователь");
         lp.sendTextToPasswordInput("12345678");
         lp.clickEnterButton();
-        Assertions.assertEquals("https://tt-testing.quality-lab.ru/report/group/edit",
-                chromedriver.getCurrentUrl(), "Редирект произошёл не на тот адрес");
         SuccessfulLoginPage slp = new SuccessfulLoginPage(chromedriver);
-        slp.getupperRightCornerAvatar().click();
         Assertions.assertAll(
+                ()->Assertions.assertEquals("https://tt-testing.quality-lab.ru/report/group/edit",
+                        chromedriver.getCurrentUrl(), "Редирект произошёл не на тот адрес"),
+                ()-> slp.getUpperRightCornerAvatar().click(),
                 () -> Assertions.assertEquals("Авто Пользователь", slp.getUserName(),
                         "Имя пользователя некорректно"),
                 () -> Assertions.assertEquals("124124@m.r", slp.getUserEmail(),
                         "email некорректен")
         );
-//        Assertions.assertEquals("Авто Пользователь", slp.getUserName(), "Имя пользователя некорректно");
-//        Assertions.assertEquals("124124@m.r", slp.getUserEmail(), "email некорректен");
     }
-
 }

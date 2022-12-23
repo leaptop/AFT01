@@ -1,11 +1,9 @@
 package login;
 
+import autotests.TestBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import autotests.TestBase;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
 import pages.LoginPage;
 
 /**
@@ -24,18 +22,18 @@ public class LoginNegativeTests extends TestBase {
         LoginPage lp = new LoginPage(chromedriver);
         lp.sendTextToUserInput("TestUser");
         lp.sendTextToPasswordInput("Password");
-        Assertions.assertThrows(NoSuchElementException.class,
-                () -> chromedriver.findElement(By.xpath(lp.xpathForInvalidCredentialsText)),
-                "Текст с надписью \"Invalid credentials.\" появился, этого не должно было произойти"
-        );
+        Assertions.assertTrue(!lp.invalidCredentialsTextIsVisible(),
+                "Текст с надписью \"Invalid credentials.\" появился, этого не должно было произойти");
         lp.clickEnterButton();
-        Assertions.assertEquals("Invalid credentials.",
-                chromedriver.findElement(By.xpath(lp.xpathForInvalidCredentialsText)).getText(),
-                "Текст с надписью \"Invalid credentials.\" должен был появиться, но не появился");
-        String str = lp.getTextFromUserNameInput();
-        Assertions.assertTrue(!str.isEmpty(), "Введённое ранее имя пользователя не сохранилось в поле ввода");
-        String strPass = lp.getTextFromPasswordInput();
-        Assertions.assertTrue(strPass.isEmpty(), "В поле пароль есть какой-то текст, его там не должно быть");
+        Assertions.assertAll(
+                () -> Assertions.assertEquals("Invalid credentials.",
+                        chromedriver.findElement(By.xpath(lp.xpathForInvalidCredentialsText)).getText(),
+                        "Текст с надписью \"Invalid credentials.\" должен был появиться, но не появился"),
+                () -> Assertions.assertFalse(lp.getTextFromUserNameInput().isEmpty(),
+                        "Введённое ранее имя пользователя не сохранилось в поле ввода"),
+                () -> Assertions.assertTrue(lp.getTextFromPasswordInput().isEmpty(),
+                        "В поле пароль есть какой-то текст, его там не должно быть")
+        );
     }
 
     /**
@@ -49,9 +47,11 @@ public class LoginNegativeTests extends TestBase {
         chromedriver.get("https://tt-testing.quality-lab.ru/login");
         LoginPage lp = new LoginPage(chromedriver);
         lp.clickEnterButton();
-        Assertions.assertFalse(lp.invalidCredentialsTextIsVisible(),
-                "Текст с надписью \"Invalid credentials.\" появился, чего не должно было произойти");
-        Assertions.assertEquals("https://tt-testing.quality-lab.ru/login", chromedriver.getCurrentUrl()
-                , "URL-адрес изменился, чего не должно было произойти");
+        Assertions.assertAll(
+                ()->Assertions.assertFalse(lp.invalidCredentialsTextIsVisible(),
+                        "Текст с надписью \"Invalid credentials.\" появился, чего не должно было произойти"),
+                ()->Assertions.assertEquals("https://tt-testing.quality-lab.ru/login", chromedriver.getCurrentUrl()
+                        , "URL-адрес изменился, чего не должно было произойти")
+        );
     }
 }
