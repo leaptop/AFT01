@@ -1,10 +1,14 @@
 package authorizedTests;
 
-import com.codeborne.selenide.Condition;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pages.selenide.CalendarPO;
 
-import java.time.Duration;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
+import java.util.Locale;
 
 import static com.codeborne.selenide.Selenide.*;
 
@@ -14,26 +18,31 @@ import static com.codeborne.selenide.Selenide.*;
 пользователь авторизован в системе
 открыта страница “Графики работы” (https://tt-develop.quality-lab.ru/calendar/)
 Дождаться загрузки календаря на текущий месяц
-Сценарий: проверка текущего месяца
+
+1Сценарий: проверка текущего месяца
 Проверить:
 месяц и год совпадают с текущими
 в месяце есть рабочие дни (зеленые)
 в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
-Сценарий: проверка переключения месяца
+
+2Сценарий: проверка переключения месяца
 Выбрать следующий месяц и нажать кнопку “Применить”
 Проверить:
 в месяце есть рабочие дни (зеленые)
 в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
-Сценарий: проверка графика другого сотрудника:
+
+3Сценарий: проверка графика другого сотрудника:
 Выбрать любого другого сотрудника (в тест-методе использовать фиксированную фамилию) и нажать кнопку “Применить”
 Проверить:
 в месяце есть рабочие дни (зеленые)
 в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
-Сценарий: проверка переключения бокового сниппета
+
+4Сценарий: проверка переключения бокового сниппета
 Реализуй при помощи неявных ожиданий
 Для каждого дня в календаре выполнить:
 Клик по дню в календаре
 Проверить что информация в боковом снипете совпадает с информацией в дне
+
 Запустить новый тест-класс
 Отправить изменения в репозиторий
 Создать Merge (Pull) Request для вливания ветки  task8-9 в ветку master.
@@ -50,17 +59,43 @@ CalendarTest наследует TestBase
 
  */
 public class CalendarTest extends AuthorizedTestBaseSelenide {
+    public CalendarPO calendarPO;
+
     /**
      * Открываем календарь и ждём появления сообщения о загрузке. Потом ждём его исчезновения.
      */
     @BeforeEach
-    public void openCalendar(){
-        open("https://tt.quality-lab.ru/calendar/");
-        $x("//span[contains(@class, 'btn-primary m-loader')]").shouldBe(Condition.visible);
-        $x("//span[contains(@class, 'btn-primary m-loader')]").should(Condition.disappear, Duration.ofSeconds(30));
+    public void openCalendar() {
+        calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
+                .waitForCalendarToLoad();
     }
+
+    /**
+     * 1Сценарий: проверка текущего месяца
+     * Проверить:
+     * месяц и год совпадают с текущими
+     * в месяце есть рабочие дни (зеленые)
+     * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
+     */
     @Test
-    public void test1(){
-        System.out.println("5");
+    public void checkCurrentMonthAndYear() {
+        Date date = Date.from(Instant.now());
+        SimpleDateFormat newDateFormat = new SimpleDateFormat("LLLL yyyy", Locale.getDefault());
+        String result = newDateFormat.format(date);
+        Assertions.assertEquals(result, calendarPO.getCurrentMonthAndYear(),
+                "Текущие месяц и год не совпадают с выведенными на сайте");
+        Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0, "Не найдены рабочие дни в месяце");
+        Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0, "Не найдены выходные дни в месяце");
+    }
+    /**
+     * 2Сценарий: проверка переключения месяца
+     * Выбрать следующий месяц и нажать кнопку “Применить”
+     * Проверить:
+     * в месяце есть рабочие дни (зеленые)
+     * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
+     */
+    @Test
+    public void checkMothSwitch(){
+
     }
 }

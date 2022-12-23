@@ -4,7 +4,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import pages.loginSelenide.LoginPageSelenide;
+import pages.selenide.LoginPageSelenide;
 
 import static com.codeborne.selenide.Selenide.open;
 import static properties.Properties.credentialsProperties;

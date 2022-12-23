@@ -4,7 +4,7 @@ import com.codeborne.selenide.Configuration;
 import helpers.TestBaseSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import pages.loginSelenide.LoginPageSelenide;
+import pages.selenide.LoginPageSelenide;
 
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverConditions.url;

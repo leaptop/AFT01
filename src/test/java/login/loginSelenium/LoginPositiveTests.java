@@ -3,8 +3,8 @@ package login.loginSelenium;
 import helpers.TestBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import pages.loginSelenium.LoginPage;
-import pages.loginSelenium.SuccessfulLoginPage;
+import pages.selenium.LoginPage;
+import pages.selenium.SuccessfulLoginPage;
 
 /**
  * Класс, содержащий позитивные тесты

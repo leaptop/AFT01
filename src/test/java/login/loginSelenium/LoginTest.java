@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import pages.loginSelenium.LoginPage;
+import pages.selenium.LoginPage;
 
 public class LoginTest {
     public WebDriver chromedriver;

@@ -1,4 +1,4 @@
-package pages.loginSelenide;
+package pages.selenide;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

@@ -4,8 +4,8 @@ import com.codeborne.selenide.Configuration;
 import helpers.TestBaseSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import pages.loginSelenide.LoginPageSelenide;
-import pages.loginSelenide.SuccessfulLoginPageSelenide;
+import pages.selenide.LoginPageSelenide;
+import pages.selenide.SuccessfulLoginPageSelenide;
 
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.webdriver;
