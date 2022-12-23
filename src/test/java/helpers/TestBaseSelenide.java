@@ -11,7 +11,7 @@ public class TestBaseSelenide {
      */
     @BeforeEach
     public void before() {
-        Configuration.browserSize = "1920x1080";//maximize больше нет в селениде
+        Configuration.browserSize = "1500x800";//maximize больше нет в селениде
 
     }
 

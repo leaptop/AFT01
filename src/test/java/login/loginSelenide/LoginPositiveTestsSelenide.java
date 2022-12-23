@@ -16,7 +16,7 @@ public class LoginPositiveTestsSelenide extends TestBaseSelenide {
      * Проверка авторизации. Позитивный вариант.
      */
     @Test
-    void checkCorrectAuthorizationInput(){
+    void checkCorrectAuthorizationInput() {
         open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class)
                 .sendLogin("Авто пользователь")
                 .sendPassword("12345678")
