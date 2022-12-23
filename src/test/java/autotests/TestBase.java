@@ -24,9 +24,8 @@ public class TestBase {
      * Метод завершает работу вебдрайвера после выполнения каждого теста.
      */
     @AfterEach
-    void finishTest() throws InterruptedException {
-        Thread.sleep(3000);
-        if (!(chromedriver == null))
+    void finishTest() {
+        if (chromedriver != null)
             chromedriver.quit();
     }
 }

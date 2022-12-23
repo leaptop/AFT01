@@ -38,8 +38,14 @@ public class LoginPositiveTests extends TestBase {
                 chromedriver.getCurrentUrl(), "Редирект произошёл не на тот адрес");
         SuccessfulLoginPage slp = new SuccessfulLoginPage(chromedriver);
         slp.getupperRightCornerAvatar().click();
-        Assertions.assertEquals("Авто Пользователь", slp.getUserName(), "Имя пользователя некорректно");
-        Assertions.assertEquals("124124@m.r", slp.getUserEmail(), "email некорректен");
+        Assertions.assertAll(
+                () -> Assertions.assertEquals("Авто Пользователь", slp.getUserName(),
+                        "Имя пользователя некорректно"),
+                () -> Assertions.assertEquals("124124@m.r", slp.getUserEmail(),
+                        "email некорректен")
+        );
+//        Assertions.assertEquals("Авто Пользователь", slp.getUserName(), "Имя пользователя некорректно");
+//        Assertions.assertEquals("124124@m.r", slp.getUserEmail(), "email некорректен");
     }
 
 }
