@@ -15,9 +15,11 @@ public class LoginPage {
     }
 
     /**
-     * xpath для текста, появляющегося при неверном логине и/или пароле
+     * @return Возвращает текст Invalid credentials.
      */
-    public String xpathForInvalidCredentialsText = "//div[contains(text(), 'Invalid credentials.')]";
+    public String getInvalidCredentialsText() {
+        return chromedriver.findElement(By.xpath("//div[contains(text(), 'Invalid credentials.')]")).getText();
+    }
 
     /**
      * Нажимает кнопку "Войти"
@@ -30,7 +32,7 @@ public class LoginPage {
      * @return возвращает текст из поля ввода логина
      */
     public String getTextFromUserNameInput() {
-         return chromedriver.findElement(By.name("_username")).getAttribute("value");
+        return chromedriver.findElement(By.name("_username")).getAttribute("value");
     }
 
     /**

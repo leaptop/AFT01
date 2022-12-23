@@ -3,7 +3,7 @@ package login;
 import autotests.TestBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import pages.LoginPage;
 
 /**
@@ -22,12 +22,13 @@ public class LoginNegativeTests extends TestBase {
         LoginPage lp = new LoginPage(chromedriver);
         lp.sendTextToUserInput("TestUser");
         lp.sendTextToPasswordInput("Password");
-        Assertions.assertTrue(!lp.invalidCredentialsTextIsVisible(),
-                "Текст с надписью \"Invalid credentials.\" появился, этого не должно было произойти");
-        lp.clickEnterButton();
         Assertions.assertAll(
-                () -> Assertions.assertEquals("Invalid credentials.",
-                        chromedriver.findElement(By.xpath(lp.xpathForInvalidCredentialsText)).getText(),
+                () -> Assertions.assertTrue(!lp.invalidCredentialsTextIsVisible(),
+                        "Текст с надписью \"Invalid credentials.\" появился, этого не должно было произойти"),
+                () -> Assertions.assertThrows(NoSuchElementException.class, () -> lp.getInvalidCredentialsText(),
+                        "Текст с надписью \"Invalid credentials.\" появился, этого не должно было произойти"),
+                () -> lp.clickEnterButton(),
+                () -> Assertions.assertEquals("Invalid credentials.", lp.getInvalidCredentialsText(),
                         "Текст с надписью \"Invalid credentials.\" должен был появиться, но не появился"),
                 () -> Assertions.assertFalse(lp.getTextFromUserNameInput().isEmpty(),
                         "Введённое ранее имя пользователя не сохранилось в поле ввода"),
@@ -48,9 +49,9 @@ public class LoginNegativeTests extends TestBase {
         LoginPage lp = new LoginPage(chromedriver);
         lp.clickEnterButton();
         Assertions.assertAll(
-                ()->Assertions.assertFalse(lp.invalidCredentialsTextIsVisible(),
+                () -> Assertions.assertFalse(lp.invalidCredentialsTextIsVisible(),
                         "Текст с надписью \"Invalid credentials.\" появился, чего не должно было произойти"),
-                ()->Assertions.assertEquals("https://tt-testing.quality-lab.ru/login", chromedriver.getCurrentUrl()
+                () -> Assertions.assertEquals("https://tt-testing.quality-lab.ru/login", chromedriver.getCurrentUrl()
                         , "URL-адрес изменился, чего не должно было произойти")
         );
     }
