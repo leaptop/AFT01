@@ -98,7 +98,6 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      */
     @Test
     public void checkMonthSwitch(){
-        calendarPO.chooseMonthAndYear("1 23");
+        calendarPO.chooseMonthAndYear("Июн 2023");
     }
-
 }

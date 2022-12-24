@@ -18,16 +18,40 @@ public class CalendarPO {
 
     /**
      * Выбирает месяц и год в календаре
-     * @param str дата в формате 11 23
+     *
+     * @param neededDate дата в формате Mmm YYYY, например Июн 2023
      */
-    public CalendarPO chooseMonthAndYear(String str){
-        String currentYear = getCurrentMonthAndYear().substring(getCurrentMonthAndYear().length()-4);
+    public CalendarPO chooseMonthAndYear(String neededDate) {
         buttonForDateChoice.click();
-        buttonSwitchingYearsPrev.click();
+        int neededYear =
+                Integer.parseInt(neededDate.substring(neededDate.length() - 4));
+        int currentYear =
+                Integer.parseInt(getCurrentMonthAndYear().substring(getCurrentMonthAndYear().length() - 4));
+        int diffInYears = neededYear - currentYear;
+        if (diffInYears > 0) {
+            for (int i = 0; i < diffInYears; i++) {
+                buttonSwitchingYearsNext.click();
+            }
+        } else if (diffInYears < 0){
+            for (int i = 0; i < Math.abs(diffInYears); i++) {
+                buttonSwitchingYearsPrev.click();
+            }
+        }
+        getMonthButton(neededDate.substring(0, 3)).click();
+        applyButton.click();
+        String str = "g";
         return this;
     }
+    private SelenideElement applyButton = $x("//button[text()='Применить']");
+    private SelenideElement getMonthButton (String mon){
+        return $x(String.format("//div[@class='datepicker-months']//span[contains(@class,'month') and text()='%s']", mon));
+    }
+private ElementsCollection buttonOfMonth=
+        $$x("//div[@class='datepicker-months']//span[contains(@class,'month')]");
     private SelenideElement buttonSwitchingYearsPrev =
             $x("//div[@class='datepicker-months']//th[@class='prev']");
+    private SelenideElement buttonSwitchingYearsNext =
+            $x("//div[@class='datepicker-months']//th[@class='next']");
     private SelenideElement buttonForDateChoice =
             $x("//div[@class='input-group date filter_input_date']//i");
 
@@ -50,20 +74,19 @@ public class CalendarPO {
     }
 
     /**
-     *
      * @return Возвращает все зелёные плашки рабочих дней.
      */
-    public ElementsCollection getWorkDayLInks(){
+    public ElementsCollection getWorkDayLInks() {
         return $$x(xpathForDefaultDay);
     }
 
     /**
-     *
      * @return Возвращает плашки выходных дней.
      */
-    public ElementsCollection getHolidayLinks(){
+    public ElementsCollection getHolidayLinks() {
         return $$x(xpathForNoEventDay);
     }
+
     /**
      * Плашка дня с событием (зелёное событие работы)
      */

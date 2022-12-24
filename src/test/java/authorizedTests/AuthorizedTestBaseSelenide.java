@@ -27,8 +27,7 @@ public class AuthorizedTestBaseSelenide {
      * Метод завершает работу вебдрайвера после выполнения каждого теста.
      */
     @AfterEach
-    public void after() throws InterruptedException {
-        Thread.sleep(5000);
+    public void after() {
         WebDriverRunner.closeWebDriver();
     }
 }

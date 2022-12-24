@@ -12,12 +12,10 @@ public class TestBaseSelenide {
     @BeforeEach
     public void before() {
         Configuration.browserSize = "1500x800";//maximize больше нет в селениде
-
     }
 
     @AfterEach
-    public void after() throws InterruptedException {
-        Thread.sleep(4000);
+    public void after() {
         WebDriverRunner.closeWebDriver();
     }
 }
