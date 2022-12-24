@@ -1,8 +1,10 @@
 package authorizedTests;
 
+import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebElement;
 import pages.selenide.CalendarPO;
 
 import java.text.SimpleDateFormat;
@@ -95,7 +97,8 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
     @Test
-    public void checkMothSwitch(){
-
+    public void checkMonthSwitch(){
+        calendarPO.chooseMonthAndYear("1 23");
     }
+
 }

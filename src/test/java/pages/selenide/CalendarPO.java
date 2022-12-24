@@ -2,7 +2,9 @@ package pages.selenide;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.impl.CollectionElement;
+import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
 
@@ -13,6 +15,21 @@ public class CalendarPO {
     public CalendarPO() {
 
     }
+
+    /**
+     * Выбирает месяц и год в календаре
+     * @param str дата в формате 11 23
+     */
+    public CalendarPO chooseMonthAndYear(String str){
+        String currentYear = getCurrentMonthAndYear().substring(getCurrentMonthAndYear().length()-4);
+        buttonForDateChoice.click();
+        buttonSwitchingYearsPrev.click();
+        return this;
+    }
+    private SelenideElement buttonSwitchingYearsPrev =
+            $x("//div[@class='datepicker-months']//th[@class='prev']");
+    private SelenideElement buttonForDateChoice =
+            $x("//div[@class='input-group date filter_input_date']//i");
 
     /**
      * Ждём появления сообщения о загрузке. Потом ждём его исчезновения.
