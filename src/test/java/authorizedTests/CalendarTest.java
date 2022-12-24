@@ -84,11 +84,16 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
         Date date = Date.from(Instant.now());
         SimpleDateFormat newDateFormat = new SimpleDateFormat("LLLL yyyy", Locale.getDefault());
         String result = newDateFormat.format(date);
-        Assertions.assertEquals(result, calendarPO.getCurrentMonthAndYear(),
-                "Текущие месяц и год не совпадают с выведенными на сайте");
-        Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0, "Не найдены рабочие дни в месяце");
-        Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0, "Не найдены выходные дни в месяце");
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(result, calendarPO.getCurrentMonthAndYear(),
+                        "Текущие месяц и год не совпадают с выведенными на сайте"),
+                () -> Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
+                        "Не найдены рабочие дни в месяце"),
+                () -> Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0,
+                        "Не найдены выходные дни в месяце")
+        );
     }
+
     /**
      * 2Сценарий: проверка переключения месяца
      * Выбрать следующий месяц и нажать кнопку “Применить”
@@ -97,7 +102,14 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
     @Test
-    public void checkMonthSwitch(){
+    public void checkMonthSwitch() {
         calendarPO.chooseMonthAndYear("Июн 2023");
+        calendarPO.waitForCalendarToLoad();
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
+                        "Не найдены рабочие дни в месяце"),
+                () -> Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0,
+                        "Не найдены выходные дни в месяце")
+        );
     }
 }
