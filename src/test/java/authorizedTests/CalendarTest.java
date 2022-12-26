@@ -1,6 +1,7 @@
 package authorizedTests;
 
 import com.codeborne.selenide.SelenideElement;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import pages.selenide.CalendarPO;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -45,19 +47,11 @@ import static com.codeborne.selenide.Selenide.*;
 Клик по дню в календаре
 Проверить что информация в боковом снипете совпадает с информацией в дне
 
-Запустить новый тест-класс
-Отправить изменения в репозиторий
-Создать Merge (Pull) Request для вливания ветки  task8-9 в ветку master.
-Сообщить куратору песочки о готовности задания к проверке
-Самопроверка задания
-Все тесты зеленые
-CalendarTest наследует TestBase
-В CalendarTest есть метод @BeforeEach который создает предусловия для тестов
-В CalendarTest написано 4 тест-метода
-В CalendarTest реализован вспомогательный метод для проверки наличия рабочих и выходных дней в графике
-Реализован новый PageObject для страницы графиков работы.
-Помимо методов работы с контролами в нем также содержится метод ожидания загрузки календаря
-Реализован вспомогательный класс для авторизации
+5 Выясни какие значения таймаутов стоят по-умолчанию для разных неявных ожиданий
+(т.е. не только для поиска элементов, а так же ожидание загрузки страницы и т.п.)
+
+Выясни работает ли неявное ожидание при использовании метода findElements? Почему?
+
 
  */
 public class CalendarTest extends AuthorizedTestBaseSelenide {
@@ -71,6 +65,14 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
         calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
                 .waitForCalendarToLoad();
     }
+//    /**
+//     * Обнуляем ссылку, чтобы в каждом тесте работать с новым объектом.
+//     *
+//     */
+//    @AfterEach
+//    public void afterEach(){
+//        calendarPO = null;
+//    }
 
     /**
      * 1Сценарий: проверка текущего месяца
@@ -103,7 +105,7 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      */
     @Test
     public void checkMonthSwitch() {
-        calendarPO.chooseMonthAndYear("Июн 2023");
+        calendarPO.chooseMonthAndYear("Янв 2023");
         calendarPO.waitForCalendarToLoad();
         Assertions.assertAll(
                 () -> Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
@@ -111,5 +113,42 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
                 () -> Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0,
                         "Не найдены выходные дни в месяце")
         );
+    }
+
+    /**
+     * 3Сценарий: проверка графика другого сотрудника:
+     * Выбрать любого другого сотрудника (в тест-методе использовать фиксированную фамилию) и нажать кнопку “Применить”
+     * Проверить:
+     * в месяце есть рабочие дни (зеленые)
+     * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
+     */
+    @Test
+    public void checkOtherEmployee() {
+        calendarPO.chooseEmployee("Якина");
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
+                        "Не найдены рабочие дни в месяце"),
+                () -> Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0,
+                        "Не найдены выходные дни в месяце")
+        );
+    }
+
+    /**
+     * 4 Сценарий: проверка переключения бокового сниппета
+     * Реализуй при помощи неявных ожиданий
+     * Для каждого дня в календаре выполнить:
+     * Клик по дню в календаре
+     * Проверить что информация в боковом снипете совпадает с информацией в дне
+     * <p>
+     * Для этого нужно хранить таблицу в виде вроде List<Map<int, String>>,т.к. элементы одного дня хранятся в разных
+     * строках. Непонятно как их организовать...Да это и не нужно... Вроде... Хотя дату надо тоже проверить
+     * наверное... Так что, вероятно, придётся хранить очень структурированно...
+     *
+     *
+     */
+    @Test
+    public void checkSideSnippetSwitch() {
+        calendarPO.checkCalendarSnippetInteraction();
+        String str = "f";
     }
 }
