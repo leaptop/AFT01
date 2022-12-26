@@ -19,6 +19,8 @@ public class CalendarPO {
     }
 
     public void checkCalendarSnippetInteraction() {
+       // webdriver().driver().config().timeout()
+
         ElementsCollection workDaysPlanks = $$x(xpathForDefaultDay);
         for (int i = 0; i < workDaysPlanks.size(); i++) {
             String info = workDaysPlanks.get(i).$x("./div/span").getText();
