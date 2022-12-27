@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver;
  * @date 18.12.2022
  */
 public class LoginPage {
+
     WebDriver chromedriver;
     /**
      * xpath для текста, появляющегося при неверном логине и/или пароле
