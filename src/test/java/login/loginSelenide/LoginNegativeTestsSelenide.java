@@ -35,8 +35,10 @@ public class LoginNegativeTestsSelenide extends TestBaseSelenide {
                 .sendLogin("TestUser")
                 .sendPassword("Password")
                 .clickEnterButton();
-        Assertions.assertTrue(lps.invalidCredentialsTextIsVisible(), "Надпись Invalid Credentials не появилась");
-        Assertions.assertEquals("TestUser", lps.getLoginInputText(), "Введённое ранее имя пользователя не сохранилось");
-        Assertions.assertEquals("", lps.getPasswordInputText(), "В поле пароль есть какой-то текст");
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(lps.invalidCredentialsTextIsVisible(), "Надпись Invalid Credentials не появилась"),
+                () -> Assertions.assertEquals("TestUser", lps.getLoginInputText(), "Введённое ранее имя пользователя не сохранилось"),
+                () -> Assertions.assertEquals("", lps.getPasswordInputText(), "В поле пароль есть какой-то текст")
+        );
     }
 }
