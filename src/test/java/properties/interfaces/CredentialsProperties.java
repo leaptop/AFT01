@@ -38,15 +38,26 @@ import org.aeonbits.owner.Config;
  */
 public interface CredentialsProperties extends Config {
     /**
-     * Логин
+     * Логин из credentials.properties
      */
     @Key("name")
     String name();
 
     /**
-     * Пароль
+     * Логин из переменной среды
+     */
+    @Key("USERNAME2")
+    String username();
+
+    /**
+     * Пароль из credentials.properties
      */
     @Key("password")
     String password();
 
+    /**
+     * URL из файла main.properties
+     */
+    @Key("url")
+    String url();
 }

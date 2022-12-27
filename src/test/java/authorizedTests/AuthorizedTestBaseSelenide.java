@@ -1,6 +1,5 @@
 package authorizedTests;
 
-import properties.GetMainProperties;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.AfterEach;
@@ -22,15 +21,10 @@ public class AuthorizedTestBaseSelenide {
     @BeforeEach
     void initTests() {
         Configuration.browserSize = "1500x800";     //maximize больше нет в селениде
-        //open("https://tt.quality-lab.ru/login", LoginPageSelenide.class)
-        GetMainProperties.loadMainProperties();
-        String username = GetMainProperties
-                .getPropertyFromEnvironmentVariable("USERNAME2");
-        open(GetMainProperties.url, LoginPageSelenide.class)
-                .sendLogin(username)
+        open(credentialsProperties.url(), LoginPageSelenide.class)
+                .sendLogin(credentialsProperties.username())
                 .sendPassword(credentialsProperties.password())
-                .clickEnterButton()
-        ;
+                .clickEnterButton();
     }
 
     /**
