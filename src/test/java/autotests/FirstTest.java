@@ -2,7 +2,10 @@ package autotests;
 
 import org.junit.jupiter.api.*;
 
-
+/**
+ * @author Алексеев Степан
+ * @date 16.12.2022
+ */
 public class FirstTest {
     @BeforeAll
     static void beforeAll() {

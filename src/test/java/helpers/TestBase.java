@@ -6,6 +6,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+/**
+ * Класс для реализации базового функционала для всех тестов, написанных с использованием Selenium.
+ *
+ * @author Алексеев Степан
+ * @date 20.12.2022
+ */
 public class TestBase {
     public WebDriver chromedriver;
 

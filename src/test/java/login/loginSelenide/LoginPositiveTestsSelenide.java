@@ -11,6 +11,10 @@ import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
 
+/**
+ * @author Алексеев Степан
+ * @date 19.12.2022
+ */
 public class LoginPositiveTestsSelenide extends TestBaseSelenide {
     /**
      * Проверка авторизации. Позитивный вариант.
@@ -20,12 +24,10 @@ public class LoginPositiveTestsSelenide extends TestBaseSelenide {
         open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class)
                 .sendLogin("Авто пользователь")
                 .sendPassword("12345678")
-                .clickEnterButton()
-        ;
+                .clickEnterButton();
         webdriver().shouldHave(url("https://tt-testing.quality-lab.ru/report/group/edit"));
         SuccessfulLoginPageSelenide slps = new SuccessfulLoginPageSelenide();
-        slps.clickUpperRightCornerAvatar()
-        ;
+        slps.clickUpperRightCornerAvatar();
         Configuration.timeout = 10000;
         Assertions.assertEquals("Авто Пользователь", slps.getNameFromCard(), "Имя не равно ожидаемому");
         Assertions.assertEquals("124124@m.r", slps.getEmailFromCard(), "Имейл не равен ожидаемому");

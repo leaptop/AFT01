@@ -8,6 +8,11 @@ import pages.selenide.LoginPageSelenide;
 
 import static com.codeborne.selenide.Selenide.open;
 import static properties.Properties.credentialsProperties;
+
+/**
+ * @author Алексеев Степан
+ * @date 25.12.2022
+ */
 public class AuthorizedTestBaseSelenide {
     /**
      * Инициализируем
@@ -15,7 +20,7 @@ public class AuthorizedTestBaseSelenide {
      */
     @BeforeEach
     void initTests() {
-        Configuration.browserSize = "1500x800";//maximize больше нет в селениде
+        Configuration.browserSize = "1500x800";     //maximize больше нет в селениде
         open("https://tt.quality-lab.ru/login", LoginPageSelenide.class)
                 .sendLogin(credentialsProperties.name())
                 .sendPassword(credentialsProperties.password())

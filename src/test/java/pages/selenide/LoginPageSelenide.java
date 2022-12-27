@@ -7,7 +7,15 @@ import ru.yandex.qatools.htmlelements.element.TextInput;
 
 import static com.codeborne.selenide.Selenide.*;
 
+/**
+ * @author Алексеев Степан
+ * @date 19.12.2022
+ */
 public class LoginPageSelenide {
+    /**
+     * Яндексовский элемент для работы с инпутами. Находит поле ввода логина.
+     */
+    private TextInput inputLogin = new TextInput(webdriver().object().findElement(By.name("_username")));
     /**
      * xpath для текста, появляющегося при неверном логине и/или пароле
      */
@@ -28,6 +36,14 @@ public class LoginPageSelenide {
         inputPassword = new TextInput(webdriver().object().findElement(By.id("password")));
         return inputPassword.getText();
     }
+    /**
+     * Яндексовский элемент для работы с инпутами. Находит поле ввода пароля.
+     */
+    private TextInput inputPassword = new TextInput(webdriver().object().findElement(By.id("password")));
+    /**
+     * Яндексовский элемент для сохранения кнопки. Находит кнопку "Войти".
+     */
+    private Button enterButton = new Button($(By.xpath(xpathForEnterButton)));
 
     /**
      * @return возвращает текст из поля ввода логина
@@ -38,19 +54,13 @@ public class LoginPageSelenide {
     }
 
     /**
-     * Яндексовский элемент для сохранения кнопки. Находит кнопку "Войти".
+     * Нажимаю кнопку ввода
+     * @return
      */
-    private Button enterButton = new Button($(By.xpath(xpathForEnterButton)));
-
     public LoginPageSelenide clickEnterButton() {
         enterButton.click();
         return this;
     }
-
-    /**
-     * Яндексовский элемент для работы с инпутами. Находит поле ввода логина.
-     */
-    private TextInput inputLogin = new TextInput(webdriver().object().findElement(By.name("_username")));
 
     /**
      * Шлю логин с помощью объекта TextInput
@@ -62,11 +72,6 @@ public class LoginPageSelenide {
         inputLogin.sendKeys(login);
         return this;
     }
-
-    /**
-     * Яндексовский элемент для работы с инпутами. Находит поле ввода пароля.
-     */
-    private TextInput inputPassword = new TextInput(webdriver().object().findElement(By.id("password")));
 
     /**
      * Шлю пароль с помощью объекта TextInput

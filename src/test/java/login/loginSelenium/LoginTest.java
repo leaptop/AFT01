@@ -9,6 +9,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import pages.selenium.LoginPage;
 
+/**
+ * @author Алексеев Степан
+ * @date 17.12.2022
+ */
 public class LoginTest {
     public WebDriver chromedriver;
 
@@ -45,7 +49,8 @@ public class LoginTest {
         chromedriver.findElement(By.name("_username")).sendKeys("TestUser");
         chromedriver.findElement((By.id("password"))).sendKeys("Password");
         String xpathForInvalidCredentialsText = "//div[contains(text(), 'Invalid credentials.')]";
-        Assertions.assertThrows(NoSuchElementException.class, () -> chromedriver.findElement(By.xpath(xpathForInvalidCredentialsText)),
+        Assertions.assertThrows(NoSuchElementException.class,
+                () -> chromedriver.findElement(By.xpath(xpathForInvalidCredentialsText)),
                 "Исключение не было выброшено, т.к. элемент был найден");
         chromedriver.findElement(By.xpath("//*[@value='Войти']")).click();
         WebElement we = chromedriver.findElement(By.xpath(xpathForInvalidCredentialsText));

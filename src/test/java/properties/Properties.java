@@ -6,7 +6,8 @@ import properties.interfaces.CredentialsProperties;
 /**
  * Класс, содержащий ссылку для доступа к файлу .property.
  *
- * @author Степан Алексеев
+ * @author Алексеев Степан
+ * @date 22.12.2022
  */
 public class Properties {
     /**
@@ -15,6 +16,4 @@ public class Properties {
      * @author Степан Алексеев
      */
     public static CredentialsProperties credentialsProperties = ConfigFactory.create(CredentialsProperties.class);
-//    Reader reader = new BufferedReader(new InputStreamReader(
-//            getClass().getResourceAsStream("messages.properties"), "utf-8")));
 }

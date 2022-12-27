@@ -7,6 +7,9 @@ import pages.selenium.LoginPage;
 
 /**
  * Класс, содержащий негативные тесты
+ *
+ * @author Алексеев Степан
+ * @date 18.12.2022
  */
 public class LoginNegativeTests extends TestBase {
     /**
@@ -22,7 +25,7 @@ public class LoginNegativeTests extends TestBase {
         lp.clickEnterButton();
         Assertions.assertFalse(lp.invalidCredentialsTextIsVisible(),
                 "Исключение не было выброшено, т.к. элемент был найден");
-        Assertions.assertEquals("https://tt-testing.quality-lab.ru/login", chromedriver.getCurrentUrl()
-                , "URL-адрес изменился");
+        Assertions.assertEquals("https://tt-testing.quality-lab.ru/login",
+                chromedriver.getCurrentUrl(), "URL-адрес изменился");
     }
 }

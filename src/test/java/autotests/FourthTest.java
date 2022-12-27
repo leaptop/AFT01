@@ -12,6 +12,9 @@ import org.junit.jupiter.api.*;
  * Задание 3.4.g впечатление, что JVM решает запускать тесты, сначала
  * отсортировав их по названию в лексикографическом порядке. На самом деле судя
  * по документации там по-другому сделано: https://github.com/junit-team/junit5/issues/2990#issuecomment-1207248587
+ *
+ * @author Алексеев Степан
+ * @date 16.12.2022
  */
 public class FourthTest {
 

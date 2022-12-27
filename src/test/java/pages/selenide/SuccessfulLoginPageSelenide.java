@@ -8,13 +8,17 @@ import static com.codeborne.selenide.Selenide.*;
 
 /**
  * Класс, реализующий паттерн Page Object для страницы, показываемой после успешного входа в систему по логину и паролю.
+ *
+ * @author Алексеев Степан
+ * @date 19.12.2022
  */
 public class SuccessfulLoginPageSelenide {
 
     /**
      * xpath для поиска аватарки пользователя справа вверху.
      */
-    private String xpathForUpperRightCornerAvatar = "//span[@class='m-topbar__userpic']//div[@class='avatarCover']";
+    private String xpathForUpperRightCornerAvatar =
+            "//span[@class='m-topbar__userpic']//div[@class='avatarCover']";
     /**
      * xpath для поля логина
      */
@@ -27,6 +31,14 @@ public class SuccessfulLoginPageSelenide {
      * Текстовое поле с имейлом пользователя на карточке после нажатия на аватарку справа сверху
      */
     private TextBlock emailBlock = new TextBlock($x(xpathForUserEmailOnCard));
+    /**
+     * Аватарка справа сверху
+     */
+    private Image upperRightCornereAvatar = new Image($x(xpathForUpperRightCornerAvatar));
+    /**
+     * Текстовое поле с именем и фамилией пользователя на карточке после нажатия на аватарку справа сверху
+     */
+    private TextBlock nameBlock = new TextBlock($x(xpathForUserNameOnCard));
 
     /**
      * @return возвращает имейл пользователя с карточки после нажатия на аватарку справа сверху
@@ -37,22 +49,12 @@ public class SuccessfulLoginPageSelenide {
     }
 
     /**
-     * Текстовое поле с именем и фамилией пользователя на карточке после нажатия на аватарку справа сверху
-     */
-    private TextBlock nameBlock = new TextBlock($x(xpathForUserNameOnCard));
-
-    /**
      * @return Возвращает имя и фамилию с карточки после нажатия на аватарку справа сверху
      */
     public String getNameFromCard() {
         $x(xpathForUserNameOnCard).shouldBe(Condition.visible);
         return nameBlock.getText();
     }
-
-    /**
-     * Аватарка справа сверху
-     */
-    private Image upperRightCornereAvatar = new Image($x(xpathForUpperRightCornerAvatar));
 
     /**
      * Кликает по аватарке в правом верхнем углу экрана.

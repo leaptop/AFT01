@@ -6,14 +6,12 @@ import org.openqa.selenium.WebDriver;
 
 /**
  * Page Object для страницы с вводом логина и пароля.
+ *
+ * @author Алексеев Степан
+ * @date 18.12.2022
  */
 public class LoginPage {
     WebDriver chromedriver;
-
-    public LoginPage(WebDriver we) {
-        chromedriver = we;
-    }
-
     /**
      * xpath для текста, появляющегося при неверном логине и/или пароле
      */
@@ -22,6 +20,10 @@ public class LoginPage {
      * xpath для кнопки "Войти"
      */
     private String xpathForEnterButton = "//*[@value='Войти']";
+
+    public LoginPage(WebDriver we) {
+        chromedriver = we;
+    }
 
     /**
      * Нажимает кнопку "Войти"

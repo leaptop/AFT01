@@ -1,6 +1,9 @@
 package properties.interfaces;
 /**
  * Данная библиотека использует следующий подход: создание интерфейса, ассоциированного с проперти файлом.
+ *
+ * @author Алексеев Степан
+ * @date 22.12.2022
  */
 
 import org.aeonbits.owner.Config;

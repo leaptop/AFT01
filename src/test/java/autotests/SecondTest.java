@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 /**
  * На примере данного класса можно сделать вывод о вызовах методов:
  *
+ * @author Алексеев Степан
  * @BeforeAll родителя
  * @BeforeAll потомка
  * @BeforeEach родителя
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.*;
  * @AfterEach родителя
  * @AfterAll потомка
  * @AfterAll родителя
+ * @date 16.12.2022
  */
 public class SecondTest extends FirstTest {
     @BeforeAll

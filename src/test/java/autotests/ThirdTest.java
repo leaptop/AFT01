@@ -13,8 +13,10 @@ import org.junit.jupiter.api.Test;
  * Если же в вопросе имелось в виду сохранение функционала класса autotests.FirstTest
  * в первоначальном виде, то нужно будет просто переопределить здесь метод
  *
+ * @author Алексеев Степан
  * @BeforeAll с той же сигнатурой, что и в autotests.FirstTest.
  * Точно так же можно переопределить @BeforeEach.
+ * @date 16.12.2022
  */
 public class ThirdTest extends FirstTest {
     @BeforeAll

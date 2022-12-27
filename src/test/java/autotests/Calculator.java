@@ -7,6 +7,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Задание 4 АФТ
+ *
+ * @author Алексеев Степан
+ * @date 21.12.2022
  */
 public class Calculator {
     public int sum(int a, int b) {

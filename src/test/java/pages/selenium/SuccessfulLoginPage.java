@@ -6,18 +6,17 @@ import org.openqa.selenium.WebElement;
 
 /**
  * Класс, реализующий паттерн Page Object для страницы, показываемой после успешного входа в систему по логину и паролю.
+ *
+ * @author Алексеев Степан
+ * @date 18.12.2022
  */
 public class SuccessfulLoginPage {
     WebDriver chromedriver;
-
-    public SuccessfulLoginPage(WebDriver we) {
-        chromedriver = we;
-    }
-
     /**
      * xpath для поиска аватарки пользователя справа вверху.
      */
-    private String upperRightCornerAvatar = "//span[@class='m-topbar__userpic']//div[@class='avatarCover']";
+    private String upperRightCornerAvatar =
+            "//span[@class='m-topbar__userpic']//div[@class='avatarCover']";
     /**
      * xpath для поля ввода логина
      */
@@ -26,6 +25,10 @@ public class SuccessfulLoginPage {
      * xpath для поля ввода пароля
      */
     private String UserEmail = "//span[contains(@class, 'm-card-user__email')]";
+
+    public SuccessfulLoginPage(WebDriver we) {
+        chromedriver = we;
+    }
 
     /**
      * @return возвращает вебЭлемент аватарки, расположенной справа вверху.

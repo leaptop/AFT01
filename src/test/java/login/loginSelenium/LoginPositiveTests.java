@@ -8,6 +8,9 @@ import pages.selenium.SuccessfulLoginPage;
 
 /**
  * Класс, содержащий позитивные тесты
+ *
+ * @author Алексеев Степан
+ * @date 18.12.2022
  */
 public class LoginPositiveTests extends TestBase {
     /**

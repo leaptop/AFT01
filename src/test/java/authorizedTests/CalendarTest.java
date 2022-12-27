@@ -25,9 +25,11 @@ import static com.codeborne.selenide.Selenide.*;
 Выясни работает ли неявное ожидание при использовании метода findElements? Почему?
 Ответ: Если будет найден хотя бы один элемент, то ждать появления остальных этот метод не будет, просто проверит
 DOM-дерево, найдёт все элементы, поместит их в коллекцию и завершится. Если же ни одного элемента не будет найдено, то
-implicitWait будет работать (ждать заданное время) до появления первого элемента.
+implicitWait будет работать (ждать заданное время) до появления первого элемента. */
 
-
+/**
+ * @author Алексеев Степан
+ * @date 25.12.2022
  */
 public class CalendarTest extends AuthorizedTestBaseSelenide {
     public CalendarPO calendarPO;
@@ -40,14 +42,6 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
         calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
                 .waitForCalendarToLoad();
     }
-//    /**
-//     * Обнуляем ссылку, чтобы в каждом тесте работать с новым объектом.
-//     *
-//     */
-//    @AfterEach
-//    public void afterEach(){
-//        calendarPO = null;
-//    }
 
     /**
      * 1Сценарий: проверка текущего месяца
@@ -118,12 +112,9 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      * Для этого нужно хранить таблицу в виде вроде List<Map<int, String>>,т.к. элементы одного дня хранятся в разных
      * строках. Непонятно как их организовать...Да это и не нужно... Вроде... Хотя дату надо тоже проверить
      * наверное... Так что, вероятно, придётся хранить очень структурированно...
-     *
-     *
      */
     @Test
     public void checkSideSnippetSwitch() {
         calendarPO.checkCalendarSnippetInteraction();
-        String str = "f";
     }
 }

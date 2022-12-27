@@ -9,6 +9,10 @@ import pages.selenide.LoginPageSelenide;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverConditions.url;
 
+/**
+ * @author Алексеев Степан
+ * @date 19.12.2022
+ */
 public class LoginNegativeTestsSelenide extends TestBaseSelenide {
     /**
      * Проверка того, что текст о неверных данных (о логине и пароле) не выведется при нажатии на кнопку "Войти"
@@ -19,8 +23,8 @@ public class LoginNegativeTestsSelenide extends TestBaseSelenide {
     @Test
     public void checkEmptyLoginPassword() {
         Configuration.browserSize = "1920x1080";
-        LoginPageSelenide lps = open("https://tt-testing.quality-lab.ru/login"
-                , LoginPageSelenide.class).clickEnterButton();
+        LoginPageSelenide lps = open("https://tt-testing.quality-lab.ru/login",
+                LoginPageSelenide.class).clickEnterButton();
         Assertions.assertFalse(lps.invalidCredentialsTextIsVisible());
         webdriver().shouldHave(url("https://tt-testing.quality-lab.ru/login"));
     }
@@ -30,7 +34,7 @@ public class LoginNegativeTestsSelenide extends TestBaseSelenide {
      * Также проверка того, что введённое ранее имя пользователя сохранилось в поле ввода, а пароль исчез.
      */
     @Test
-    void incorrectUserNameAndPassword() {
+    public void incorrectUserNameAndPassword() {
         LoginPageSelenide lps = open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class)
                 .sendLogin("TestUser")
                 .sendPassword("Password")
