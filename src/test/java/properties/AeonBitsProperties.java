@@ -9,7 +9,7 @@ import properties.interfaces.CredentialsProperties;
  * @author Алексеев Степан
  * @date 22.12.2022
  */
-public class Properties {
+public class AeonBitsProperties {
     /**
      * Создаём объект CredentialsProperties на основе интерфейса
      * CredentialsProperties для доступа к переменным из файла .property.

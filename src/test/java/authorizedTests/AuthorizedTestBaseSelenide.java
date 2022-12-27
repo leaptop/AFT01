@@ -1,6 +1,6 @@
 package authorizedTests;
 
-import autotests.GetProperties;
+import properties.GetMainProperties;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.AfterEach;
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import pages.selenide.LoginPageSelenide;
 
 import static com.codeborne.selenide.Selenide.open;
-import static properties.Properties.credentialsProperties;
+import static properties.AeonBitsProperties.credentialsProperties;
 
 /**
  * @author Алексеев Степан
@@ -23,9 +23,11 @@ public class AuthorizedTestBaseSelenide {
     void initTests() {
         Configuration.browserSize = "1500x800";     //maximize больше нет в селениде
         //open("https://tt.quality-lab.ru/login", LoginPageSelenide.class)
-        GetProperties.loadMainProperties();
-        open(GetProperties.url, LoginPageSelenide.class)
-                .sendLogin(credentialsProperties.name())
+        GetMainProperties.loadMainProperties();
+        String username = GetMainProperties
+                .getPropertyFromEnvironmentVariable("USERNAME2");
+        open(GetMainProperties.url, LoginPageSelenide.class)
+                .sendLogin(username)
                 .sendPassword(credentialsProperties.password())
                 .clickEnterButton()
         ;

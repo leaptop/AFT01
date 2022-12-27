@@ -1,6 +1,4 @@
-package autotests;
-
-import org.junit.jupiter.api.Test;
+package properties;
 
 import java.io.File;
 import java.io.FileReader;
@@ -13,8 +11,18 @@ import java.util.Properties;
  * @author Алексеев Степан
  * @date 27.12.2022
  */
-public class GetProperties {
+public class GetMainProperties {
     public static String url = "";
+
+    /**
+     * Возвращает значение переменной среды по её имени
+     *
+     * @param environmentVariableName имя переменной среды
+     * @return Возвращает значение переменной среды
+     */
+    public static String getPropertyFromEnvironmentVariable(String environmentVariableName) {
+        return System.getenv(environmentVariableName);
+    }
 
     /**
      * Загружает информацию из файла свойств.
