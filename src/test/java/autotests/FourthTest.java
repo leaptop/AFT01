@@ -18,34 +18,35 @@ import org.junit.jupiter.api.*;
  */
 public class FourthTest {
 
-    // @BeforeEach
-    void beforeD() {
+    static void beforeD() {
         System.out.println("выполнения ");
     }
 
-    @BeforeEach
-    void beforeE() {
-        beforeD();
+    static void beforeE() {
         System.out.println("нескольких ");
     }
 
+    /**
+     * Порядок вызова методов важен!
+     */
     @BeforeAll
     static void beforeB() {
         System.out.println("Порядок");
-    }
-
-    @AfterEach
-    void beforeA() {
-        System.out.println("Before ");
+        beforeD();
+        beforeE();
+        beforeA();
         beforeF();
+        beforeC();
     }
 
-    //@BeforeEach
-    void beforeF() {
+    static void beforeA() {
+        System.out.println("Before ");
+    }
+
+    static void beforeF() {
         System.out.println("методов ");
     }
 
-    @AfterAll
     static void beforeC() {
         System.out.println("недетерминирован");
     }
