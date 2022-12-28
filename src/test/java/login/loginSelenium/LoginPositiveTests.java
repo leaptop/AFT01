@@ -2,7 +2,7 @@ package login.loginSelenium;
 
 import com.codeborne.selenide.logevents.SelenideLogger;
 import helpers.TestBase;
-import io.qameta.allure.selenide.AllureSelenide;
+//import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,16 +16,17 @@ import pages.selenium.SuccessfulLoginPage;
  * @author Алексеев Степан
  * @date 18.12.2022
  */
+
 public class LoginPositiveTests extends TestBase {
 
-    /**
-     * add listener to Selenide:
-     */
-    public void initScreensInSelenide(){
-        SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
-                .screenshots(true)
-                .savePageSource(false));
-    }
+//    /** Удалить когда включу снятие скриншотов по-другому
+//     * add listener to Selenide:
+//     */
+//    public void initScreensInSelenide(){
+//        SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
+//                .screenshots(true)
+//                .savePageSource(false));
+//    }
 
     /**
      * Задание 13: параметризация тестов
@@ -44,7 +45,7 @@ public class LoginPositiveTests extends TestBase {
                 chromedriver.getCurrentUrl(), "Редирект произошёл не на тот адрес");
         SuccessfulLoginPage slp = new SuccessfulLoginPage(chromedriver);
         slp.getupperRightCornerAvatar().click();
-        Assertions.assertEquals("Авто Пользователь", slp.getUserName(), "Имя пользователя некорректно");
+        Assertions.assertEquals(name, slp.getUserName(), "Имя пользователя некорректно");
         Assertions.assertEquals("124124@m.r", slp.getUserEmail(), "email некорректен");
     }
 
