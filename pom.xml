@@ -22,6 +22,20 @@
         <allure.maven>2.10.0</allure.maven>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-selenide</artifactId>
+            <version>2.19.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.9.0</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -109,10 +123,10 @@
                 <artifactId>allure-maven</artifactId>
                 <version>${allure.maven}</version>
                 <configuration>
-                    <resultsDirectory>${basedir}/allure-results
-                    </resultsDirectory>
-                    <reportDirectory>${basedir}/target/allure-reports
-                    </reportDirectory>
+<!--                    <resultsDirectory>${basedir}/allure-results-->
+<!--                    </resultsDirectory>-->
+<!--                    <reportDirectory>${basedir}/target/allure-reports-->
+<!--                    </reportDirectory>-->
                 </configuration>
             </plugin>
         </plugins>

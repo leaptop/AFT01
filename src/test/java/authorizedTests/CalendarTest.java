@@ -1,22 +1,17 @@
 package authorizedTests;
 
-import com.codeborne.selenide.SelenideElement;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.WebElement;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import pages.selenide.CalendarPO;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Properties;
 
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.open;
 
 /*
 5 Выясни какие значения таймаутов стоят по-умолчанию для разных неявных ожиданий
