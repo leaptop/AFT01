@@ -56,7 +56,7 @@ public interface CredentialsProperties extends Config {
     String password();
 
     /**
-     * URL из файла main.properties
+     * URL из credentials.properties
      */
     @Key("url")
     String url();

@@ -3,6 +3,7 @@ package pages.selenide;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -58,6 +59,7 @@ public class CalendarPO {
      * XXX - код неправильный, но работает
      * Проверяет взаимодействие календаря и сниппета справа сверху.
      */
+    @Step("Проверка взаимодействия календаря и сниппета справа сверху")
     public void checkCalendarSnippetInteraction() {
         ElementsCollection workDaysPlanks = $$x(xpathForDefaultDay);
         for (int i = 0; i < workDaysPlanks.size(); i++) {
@@ -106,8 +108,11 @@ public class CalendarPO {
     }
 
     /**
-     * Выбор сотрудника из списка
+     * @param employee часть имени или фамилии сотрудника для поиска
+     * @return возвращает CalendarPO для вызовов по цепочке
      */
+    @Step("Выбор сотрудника из списка, имя/фамилия которого " +
+            "содержат \"{employee}\"")
     public CalendarPO chooseEmployee(String employee) {
         $x(String.format("//select[@name='filter-user-id']/option[contains(text(),'%s')]",
                 employee)).click();
@@ -121,6 +126,7 @@ public class CalendarPO {
      *
      * @param neededDate дата в формате Mmm YYYY, например Июн 2023
      */
+    @Step("Выбирает месяц и год в календаре: {neededDate}")
     public CalendarPO chooseMonthAndYear(String neededDate) {
         buttonForDateChoice.click();
         int neededYear =
@@ -151,6 +157,7 @@ public class CalendarPO {
      * @param mon указание месяца в виде "Янв", "Мар" и т.д.
      * @return
      */
+    @Step("Получает кнопку месяца с названием \"{mon}\"")
     private SelenideElement getMonthButton(String mon) {
         return $x(String.format(
                 "//div[@class='datepicker-months']//span[contains(@class,'month') and text()='%s']",
@@ -162,6 +169,7 @@ public class CalendarPO {
      *
      * @return возвращает текущую страницу для продолжения вызовов методов по цепочке
      */
+    @Step("Ждёт загрузку календаря")
     public CalendarPO waitForCalendarToLoad() {
         $x("//span[contains(@class, 'btn-primary m-loader')]")
                 .should(Condition.disappear, Duration.ofSeconds(30));
@@ -172,6 +180,7 @@ public class CalendarPO {
      * @return Возвращает месяц и год, отображённые на календаре в виде строки.
      * Например: "Декабрь 2022";
      */
+    @Step("Получает текущие месяц и год, отображённые в календаре")
     public String getCurrentMonthAndYear() {
         return $x("//input[@name='filter-date']").getValue();
     }
@@ -179,6 +188,8 @@ public class CalendarPO {
     /**
      * @return Возвращает все зелёные плашки рабочих дней.
      */
+    @Step("Извлекает все зелёные плашки рабочих дней в коллекцию для " +
+            "дальнейшей обработки.")
     public ElementsCollection getWorkDayLInks() {
         return $$x(xpathForDefaultDay);
     }
@@ -186,6 +197,8 @@ public class CalendarPO {
     /**
      * @return Возвращает плашки выходных дней.
      */
+    @Step("Извлекает все плашки выходных дней в коллекцию для дальнейшей " +
+            "обработки")
     public ElementsCollection getHolidayLinks() {
         return $$x(xpathForNoEventDay);
     }

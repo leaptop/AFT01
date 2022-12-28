@@ -1,10 +1,7 @@
 package authorizedTests;
 
 import com.codeborne.selenide.SelenideElement;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebElement;
 import pages.selenide.CalendarPO;
 
@@ -42,6 +39,7 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
     /**
      * Открываем календарь и ждём появления сообщения о загрузке. Потом ждём его исчезновения.
      */
+
     @BeforeEach
     public void openCalendar() {
         calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
@@ -49,13 +47,14 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
     }
 
     /**
-     * 1Сценарий: проверка текущего месяца
+     * 1 Сценарий: проверка текущего месяца
      * Проверить:
      * месяц и год совпадают с текущими
      * в месяце есть рабочие дни (зеленые)
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
-    @Test
+    @DisplayName("1 Сценарий: проверка текущего месяца")
+    @Test()
     public void checkCurrentMonthAndYear() {
         Date date = Date.from(Instant.now());
         SimpleDateFormat newDateFormat = new SimpleDateFormat("LLLL yyyy", Locale.getDefault());
@@ -71,12 +70,13 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
     }
 
     /**
-     * 2Сценарий: проверка переключения месяца
+     * 2 Сценарий: проверка переключения месяца
      * Выбрать следующий месяц и нажать кнопку “Применить”
      * Проверить:
      * в месяце есть рабочие дни (зеленые)
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
+    @DisplayName("2 Сценарий: проверка переключения месяца")
     @Test
     public void checkMonthSwitch() {
         calendarPO.chooseMonthAndYear("Янв 2023");
@@ -90,12 +90,13 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
     }
 
     /**
-     * 3Сценарий: проверка графика другого сотрудника:
+     * 3 Сценарий: проверка графика другого сотрудника:
      * Выбрать любого другого сотрудника (в тест-методе использовать фиксированную фамилию) и нажать кнопку “Применить”
      * Проверить:
      * в месяце есть рабочие дни (зеленые)
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
+    @DisplayName("3 Сценарий: проверка графика другого сотрудника")
     @Test
     public void checkOtherEmployee() {
         calendarPO.chooseEmployee("Якина");
@@ -118,6 +119,7 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      * строках. Непонятно как их организовать...Да это и не нужно... Вроде... Хотя дату надо тоже проверить
      * наверное... Так что, вероятно, придётся хранить очень структурированно...
      */
+    @DisplayName("4 Сценарий: проверка переключения бокового сниппета")
     @Test
     public void checkSideSnippetSwitch() {
         calendarPO.checkCalendarSnippetInteraction();
