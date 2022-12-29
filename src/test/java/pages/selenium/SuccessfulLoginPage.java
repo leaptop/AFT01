@@ -33,7 +33,7 @@ public class SuccessfulLoginPage {
     /**
      * @return возвращает вебЭлемент аватарки, расположенной справа вверху.
      */
-    public WebElement getupperRightCornerAvatar() {
+    public WebElement getUpperRightCornerAvatar() {
         return chromedriver.findElement(By.xpath(upperRightCornerAvatar));
     }
 

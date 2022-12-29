@@ -22,14 +22,16 @@
         <allure.maven>2.10.0</allure.maven>
     </properties>
     <dependencies>
-<!--    Это нужно в инструкции для вызова скриншотов по одной из инструкций.
-Но добавление этого ломает сборку аллюр отчётов: -->
-<!--        <dependency>-->
-<!--            <groupId>io.qameta.allure</groupId>-->
-<!--            <artifactId>allure-selenide</artifactId>-->
-<!--            <version>2.19.0</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--    Это нужно в инструкции для вызова скриншотов по одной из статей.
+        Но добавление этого ломает сборку аллюр отчётов!: -->
+        <!--        <dependency>-->
+        <!--            <groupId>io.qameta.allure</groupId>-->
+        <!--            <artifactId>allure-selenide</artifactId>-->
+        <!--            <version>2.19.0</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
+        <!--        Убрать когда подберу правильную комбинацию зависимостей.-->
+
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -125,6 +127,7 @@
                 <artifactId>allure-maven</artifactId>
                 <version>${allure.maven}</version>
                 <configuration>
+                    <reportVersion>${allure.version}</reportVersion>
                     <resultsDirectory>${basedir}/allure-results
                     </resultsDirectory>
                     <reportDirectory>${basedir}/target/allure-reports

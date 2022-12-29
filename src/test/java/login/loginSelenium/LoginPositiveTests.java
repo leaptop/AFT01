@@ -1,10 +1,7 @@
 package login.loginSelenium;
 
-import com.codeborne.selenide.logevents.SelenideLogger;
 import helpers.TestBase;
-//import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import pages.selenium.LoginPage;
@@ -19,67 +16,56 @@ import pages.selenium.SuccessfulLoginPage;
 
 public class LoginPositiveTests extends TestBase {
 
-//    /** Удалить когда включу снятие скриншотов по-другому
-//     * add listener to Selenide:
-//     */
-//    public void initScreensInSelenide(){
-//        SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
-//                .screenshots(true)
-//                .savePageSource(false));
-//    }
-
     /**
      * Задание 13: параметризация тестов
-     * @param name
-     * @param pass
+     * Проверка реакции сайта на ввод корректных логина и пароля.
+     * Проверка правильности имени и электронной почты пользователя.
+     * Создать ветку task13-15 от ветки task10-12 и переключиться на нее
+     * Реализовать автотест по следующему сценарию:
+     * Открыть страницу https://tt-develop.quality-lab.ru/login
+     * Ввести логин “Тест”
+     * Ввести пароль “Тест”
+     * Нажать кнопку “Войти”
+     * Проверить что авторизация успешна:
+     * Произошел редирект на страницу https://tt-develop.quality-lab.ru/report/stats/project
+     * Вход произошел под нужным пользователем:
+     * Нажать на аватар в верхнем правом углу
+     * Фамилия пользователя соответствует ожидаемой
+     * Он упадет и это нормально
+     * Реализовать сбор следующей информации в случае падения автотеста:
+     * Скриншот страницы во время падения
+     * Текст ошибки на русском.
+     * StackTrace
+     * Запустить новый тест
+     * Сформировать отчет allure
+     * Выложить изменения в репозиторий
+     * Самопроверка задания
+     * Тест из LoginPositiveTests не продублирован с новыми значениями, а параметризован
+     * При запуске теста в результатах выводятся два запуска с разными параметрами
+     * Новый тест красный
+     * В отчете allure прицеплен скриншот и выведены текст ошибки и stackTrace
+     *
+     * @param name логин
+     * @param pass пароль
      */
     @ParameterizedTest(name = "{displayName}: {arguments}")
-    @CsvSource({"Тест, Тест"})
-    void checkCorrectAuthorizationInputViaParameters(String name, String pass) {
+    @CsvSource({"Авто Пользователь, 12345678, 124124@m.r", "Тест, Тест, 1@m.r"})
+    void checkCorrectAuthorizationInputViaParameters
+    (String name, String pass, String mail) {
         chromedriver.get("https://tt-testing.quality-lab.ru/login");
         LoginPage lp = new LoginPage(chromedriver);
         lp.sendTextToUserInput(name);
         lp.sendTextToPasswordInput(pass);
         lp.clickEnterButton();
-        Assertions.assertEquals("https://tt-testing.quality-lab.ru/report/group/edit",
-                chromedriver.getCurrentUrl(), "Редирект произошёл не на тот адрес");
         SuccessfulLoginPage slp = new SuccessfulLoginPage(chromedriver);
-        slp.getupperRightCornerAvatar().click();
-        Assertions.assertEquals(name, slp.getUserName(), "Имя пользователя некорректно");
-        Assertions.assertEquals("124124@m.r", slp.getUserEmail(), "email некорректен");
+        Assertions.assertAll(
+                () -> Assertions.assertEquals("https://tt-testing.quality-lab.ru/report/group/edit",
+                        chromedriver.getCurrentUrl(), "Редирект произошёл не на тот адрес"),
+                () -> slp.getUpperRightCornerAvatar().click(),
+                () -> Assertions.assertEquals(name, slp.getUserName(),
+                        "Имя пользователя некорректно"),
+                () -> Assertions.assertEquals(mail, slp.getUserEmail(),
+                        "email некорректен")
+        );
     }
-
-    /**
-     * Проверка реакции сайта на ввод корректных логина и пароля.
-     * Проверка правильности имени и электронной почты пользователя.
-     * <p>
-     * Задание:
-     * Написать тест-метод в новом классе по следующему сценарию (использовать данные своего аккаунта)
-     * Открыть страницу ТТ
-     * Ввести существующий логин
-     * Ввести пароль к выбранному логину
-     * Нажать кнопку “Войти”
-     * Проверить:
-     * Произошел редирект на страницу https://tt-develop.quality-lab.ru/report/group/edit
-     * Вход произошел под нужным пользователем:
-     * Нажать на аватар в верхнем правом углу
-     * Фамилия пользователя соответствует ожидаемой
-     * Email пользователя равен: “fake+ИД@quality-lab.ru”
-     */
-    @Test
-    void checkCorrectAuthorizationInput() {
-        chromedriver.get("https://tt-testing.quality-lab.ru/login");
-        LoginPage lp = new LoginPage(chromedriver);
-        lp.sendTextToUserInput("Авто Пользователь");
-        lp.sendTextToPasswordInput("12345678");
-        lp.clickEnterButton();
-        Assertions.assertEquals("https://tt-testing.quality-lab.ru/report/group/edit",
-                chromedriver.getCurrentUrl(), "Редирект произошёл не на тот адрес");
-        SuccessfulLoginPage slp = new SuccessfulLoginPage(chromedriver);
-        slp.getupperRightCornerAvatar().click();
-        Assertions.assertEquals("Авто Пользователь", slp.getUserName(), "Имя пользователя некорректно");
-        Assertions.assertEquals("124124@m.r", slp.getUserEmail(), "email некорректен");
-    }
-
-
 }

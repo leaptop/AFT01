@@ -30,8 +30,12 @@ public class TestBase {
 
     /**
      * Метод завершает работу вебдрайвера после выполнения каждого теста.
+     *
+     * Его необходимо отключить на время использования MyTestWatcher, т.к.
+     * иначе нельзя получить доступ к вебдрайверу (он закрывается здесь до
+     * запуска методов из MyTestWatcher).
      */
-    @AfterEach
+    // @AfterEach
     void finishTest() {
         if (chromedriver != null)
             chromedriver.quit();
