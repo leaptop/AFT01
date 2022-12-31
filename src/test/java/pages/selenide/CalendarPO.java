@@ -4,11 +4,9 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.Instant;
-import java.util.Date;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -18,8 +16,25 @@ public class CalendarPO {
 
     }
 
+    /*
+    1. Выбираешь все недели по локатору -
+    "//div[contains(@class, 'fc-week')]//div[@class = 'fc-content-skeleton']//table"
+    2. После этого запускаешь цикл, который будет идти по каждой неделе
+    3. Выбираешь в конкретной неделе конкретный день (если в неделе есть день,
+    который относится к прошлому или следующему месяцу, то он его пропустит из-за локатора)
+    Локатор: "//div[contains(@class, 'fc-week')][%s]//div[@class = 'fc-content-skeleton']//table//thead//td[not(contains(@class, 'other-month'))]" - тут вместо %s номер недели подставляешь
+    4. Запускаешь цикл, который будет идти по дням недели (только дни, которые входят в текущий месяц)
+    Создаешь переменную, которая будет прибавляться, если это рабочий день (чтобы снизу тоже информацию брать)
+    5. Добавляешь к локатору в п.3 ещё "[%s]//a[contains(@class, 'no-event')]" - тут вместо %s номер дня
+    6. Проверяешь:
+    6.1 Если это выходной день(п.5 локатор ищет выходной день), то кликаешь на него и проверяешь, что нужно
+    6.2 Если это не выходной день(вместо локатора в п.5 изменить на [%s]//a[contains(@class, 'default')] - %s тот же),
+    то кликаешь по нему + проверяешь второй уровень ивента по локатору
+    "//div[contains(@class, 'fc-week')][%s]//div[@class = 'fc-content-skeleton']//table//tbody//tr[2]//td[contains(@class, 'event')]"
+    - %s это номер недели + добавляешь [%s]//a[contains(@class, 'no-event')] - %s номер дня
+     */
     public void checkCalendarSnippetInteraction() {
-       // webdriver().driver().config().timeout()
+        // webdriver().driver().config().timeout()
 
         ElementsCollection workDaysPlanks = $$x(xpathForDefaultDay);
         for (int i = 0; i < workDaysPlanks.size(); i++) {
@@ -52,10 +67,10 @@ public class CalendarPO {
             String dateToCheck = dateHeaders.get(i).getAttribute("data-date");
             String formattedDateToCheck = "";
             formattedDateToCheck += dateToCheck.substring(8);
-            formattedDateToCheck+=".";
-            formattedDateToCheck+= dateToCheck.substring(5,7);
-            formattedDateToCheck+=".";
-            formattedDateToCheck+=dateToCheck.substring(2,4);
+            formattedDateToCheck += ".";
+            formattedDateToCheck += dateToCheck.substring(5, 7);
+            formattedDateToCheck += ".";
+            formattedDateToCheck += dateToCheck.substring(2, 4);
             if (formattedDateToCheck
                     .equals($x("//h3[@class='m-portlet__head-text right_panel_name']").getText())) {
                 continue;
@@ -100,6 +115,7 @@ public class CalendarPO {
         }
         getMonthButton(neededDate.substring(0, 3)).click();
         applyButton.click();
+        waitForCalendarToLoad();
         return this;
     }
 
@@ -177,89 +193,111 @@ public class CalendarPO {
             "//td[@class='fc-event-container']/a[contains(@class,'schedule-badge--no-event schedule-badge')]";
     private String xpathForHeadersOfAllDays = "//td[contains(@class,'fc-day-top') and not (contains(@class,'fc-other-month'))]";
 
+    /**
+     * Сначала попробую сохранить информацию, потом решу как её вытащить во
+     * внешний мир ( в переменные класса).
+     * Можно создать класс Day, его засунуть в коллекцию. У него будут поля,
+     * указывающие его принадлежность к дню недели, числу, выходной/не
+     * выходной и т.п.
+     */
+    public void fillTheCalendar() {
+        days = new ArrayList<>();
+        ElementsCollection aw = $$x(
+                "//div[@class='fc-row fc-week fc-widget-content']"
+        );//Недели. Обычно их 6.
+        boolean foundfirst = false;
+        boolean belongsToM = false;
+        boolean foundFirstOfTheNextMonth = false;
+        for (int j = 0; j < aw.size(); j++) {
+            SelenideElement row1 = aw.get(j).$x(//первый ряд tr таблицы
+                    "./div[@class='fc-content-skeleton']//tbody/tr[1]");
+            List<String> lot = new ArrayList<>();//тексты td первого ряда
+            for (int i = 0; i < 7; i++) {
+                lot.add(row1.$x(String.format("./td[%d]", (i + 1))).getText());
+            }
+            // int[7] secondRowIndexes = new int[7];
+            ElementsCollection awh = aw.get(j).$$x(".//td[contains(@class," +
+                    "'fc-day-top')]");//заголовки дней текущей недели
+            for (int i = 0; i < awh.size(); i++) {//Первый проход по неделе с
+                if (j == 0 && !foundfirst) {//вызывается для каждого дня 1 нед.
+                    if (Integer.parseInt(awh.get(i).$x("./span").getText()) == 1) {
+                        foundfirst = true;
+                        belongsToM = true;
+                    }
+                }
+                if ((j == (aw.size() - 1) || j == (aw.size() - 2)) &&
+                        Integer.parseInt(awh.get(i).$x("./span").getText()) == 1) {
+                    belongsToM = false;//ищу дни нового месяца
+                    foundFirstOfTheNextMonth = true;
+                }
+                ArrayList<String> eventsOfOneDay = new ArrayList<>();//сюда
+                // поместить информацию о всех записях для 1 дня
+                ElementsCollection awr = aw.get(j).$$x(
+                        ".//div[@class='fc-content-skeleton']//tbody/tr");
+                String lotl = lot.get(i);//получил событие из 1й строки для iдня
+                eventsOfOneDay.add(lotl);//добавил в список дня 1е событие
+                for (int k = 1, n = 1; k < awr.size(); k++) {//иду по рядам
+                    //Нужно вытащить инфу о
+                    // всех остальных рядах недели для 1 дня. Буду считать,
+                    // что если первый tr содержит информацию (помимо пустой
+                    // строки), то это - рабочий день, иначе выходной или
+                    // день другого месяца.
+                    //     for (int l = 0; l < lot.size(); l++) {//иду по инфе 1 ряда
+                    if (belongsToM && lotl.length() > 0) {
+                        eventsOfOneDay.add(awr.get(k).$x(String.format("./td" +
+                                        "[%d]",
+                                (n++))).getText());//добавляю в список события
+                        //из следующих строк. Здесь проблема в том, что
+                        // элементов td м.б. меньше, чем 7. Т.о. индекс для
+                        // взятия элемента из awr не i+1. Эта т.н. проблема
+                        // решается тем, что добавляется индекс для второго
+                        // ряда и когда надо, элемент второго ряда
+                        // добавляется по нему и инкрементируется. Т.о.
+                        // проходимся по уменьшенному второму ряду,
+                        // инкрементируя индекс только в момент добавления
+                        // элемента.
+                    }
+//                    }
+                }
+                String row1Content = lot.get(i); //добавлением элементов в Day
+                days.add(new Day(awh.get(i).$x("./span").getText(),
+                        awh.get(i).getAttribute("data-date"),
+                        awh.get(i),
+                        belongsToM,
+                        row1Content,
+                        eventsOfOneDay,
+                        i + 1
 
-    // Оставлено потому что пока не смог реализовать структурированное сохранение календаря. Не уверен, нужно ли это.
-// Можно удалить когда задача 9.4 будет выполнена.
-//
-//    public void fillMapOfDays() {
-//        List<String> dates = new ArrayList<>();
-//        mapOfDays = new HashMap<>();
-//        ElementsCollection ec = $$x(
-//                "//td[contains(@class,'fc-day-top') and not (contains(@class,'fc-other-month'))]");
-//        for (int i = 0; i < ec.size(); i++) {
-//            dates.add(ec.get(i).getAttribute("data-date"));
-//            mapOfDays.put(ec.get(i).getAttribute("data-date"), new ArrayList<>());
-//            for (int j = 0; j <; j++) {//пройти столько раз, сколько строк в таблице (для одной недели)
-//
-//            }
-//        }
-//        String str = "y";
-//    }
-//
-//    private String eachWeekOfMonth = "//div[@class='fc-content-skeleton']";
-//    private String headersOfWeek = "//td[contains(@class,'fc-day-top') and not (contains(@class,'fc-other-month'))]";
-//    private String anyPlankOfWeek = "//span[@class='fc-title']";
-//
-//    public void check() {//Наверное этот вариант не годится, т.к. индексы td разнятся из-за наличия в некоторых неделях
-//        // выходных до субботы и воскресенья...
-//        ElementsCollection allHeadersOfDaysOfCurrentMonth = $$x("//td[contains(@class,'fc-day-top') and not (contains(@class,'fc-other-month'))]");
-//        for (int i = 0; i < allHeadersOfDaysOfCurrentMonth.size(); i++) {
-//            allHeadersOfDaysOfCurrentMonth.get(i).click();
-//            // String firstPlank =
-//            int w = 0;
-//            ArrayList<String> ls = new ArrayList<>();
-//            while (allHeadersOfDaysOfCurrentMonth.get(i).sibling(w).exists()) {
-//                ls.add(allHeadersOfDaysOfCurrentMonth.get(i).sibling(w).getAttribute("data-date"));//смотрит впереди стоящих сиблингов. В воскресенье видит 0 сиблингов
-//                // в понедельник 6. Во вторник 5. Теперь надо обратиться ко всем рядам таблицы недели по нужному индексу, опираясь на w.
-//                //Кстати при этом не учитывается, принадлежит день текущему месяцу или нет.
-//                // При этом каждый элемент единственного дня нужно записать сюда. После окончания рядов сравнивать
-//                // с боковым сниппетом полученную информацию.
-//                 w++;
-//            }
-//            ls = null;
-//
-//            //Нужно пройтись по рядам данной недели:
-//            ElementsCollection allCurrentWeekRows = allHeadersOfDaysOfCurrentMonth.get(i).$$x("./../../../tbody/tr");
-//            for (int j = 0; j < allCurrentWeekRows.size(); j++) {
-//                //  allCurrentWeekRows.get(j).$x("./td")
-//            }
-//            String r = "f";
-//        }
-//
-//    }
-//
-////    public void goThroughWeeks() {
-////        mapOfDays = new HashMap<>();
-////        ElementsCollection weeks = $$x("//div[@class='fc-content-skeleton']");//сохранили все недели (таблицы)
-////        for (int i = 0; i < weeks.size(); i++) {//проходимся по каждой таблице (неделе)
-////            ElementsCollection headersOrDates = weeks.get(i).$$x(".//td[contains(@class,'fc-day-top')]");//заголовки(даты) конкретной недели (включая дни вне текущего месяца вроде)
-////            ArrayList<ArrayList<String>> eventsOfDay = new ArrayList<>();//для каждой даты свой набор событий
-////            ElementsCollection rows = weeks.get(i).$$(".//tbody/tr");//в каждой таблице (неделе) есть набор рядов
-////            for (int j = 0; j < rows.size(); j++) {//проходимся по каждому ряду в таблице (неделе)
-////                ElementsCollection cells = rows.get(j).$$("./td");//набор ячеек конкретного ряда
-////                for (int k = 0; k < cells.size(); k++) {//в каждом ряду проходимся по ячейкам (td)
-////                    //теперь можно заполнять списки событий...
-////                    eventsOfDay.get(i).add(cells.get(k).$x(".//span").getValue());
-////
-////                }
-////                mapOfDays.put(headersOrDates.get(i).getAttribute("data-date"), eventsOfDay.get(i));
-////            }
-////
-////
-////            //            for (int j = 0; j < headersOrDates.size(); j++) {
-//////                ArrayList<String> eventsOfDay = new ArrayList<>();
-//////                ElementsCollection planks = weeks.get(i).$$("//span[@class='fc-title']");
-//////                SelenideElement tableRows = $$x(weeks)
-//////                for (int k = 0; k < planks.size(); k++) {
-//////
-//////                }
-//////                mapOfDays.put(headersOrDates.get(j).getAttribute("data-date"), eventsOfDay);
-//////            }
-////        }
-////        String s = "f";
-////    }
-//
-//
-//    private Map<String, List<String>> mapOfDays;
+                ));
+            }
+            String endOfWeek = "1";
+        }
+        String f = "f";
+    }
 
+    public ArrayList<Day> days;
+
+    class Day {
+        String fcDayNumber;//порядковый день месяца
+        String date;
+        SelenideElement linkToClick;
+
+        boolean belongsToThisMonth;
+        String row1tdContents;
+        ArrayList<String> events;
+        int dayOfWeek;
+
+        public Day(String fcDayNumber, String date,
+                   SelenideElement linkToClick, boolean belongsToThisMonth,
+                   String row1tdContents, ArrayList<String> events,
+                   int dayOfWeek) {
+            this.fcDayNumber = fcDayNumber;
+            this.date = date;
+            this.linkToClick = linkToClick;
+            this.belongsToThisMonth = belongsToThisMonth;
+            this.row1tdContents = row1tdContents;
+            this.events = events;
+            this.dayOfWeek = dayOfWeek;
+        }
+    }
 }

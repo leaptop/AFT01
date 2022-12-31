@@ -123,7 +123,8 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      */
     @Test
     public void checkSideSnippetSwitch() {
-        calendarPO.checkCalendarSnippetInteraction();
+        calendarPO.chooseMonthAndYear("Мар 2023");
+        calendarPO.fillTheCalendar();
         String str = "f";
     }
 }
