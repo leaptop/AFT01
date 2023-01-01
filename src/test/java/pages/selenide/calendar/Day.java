@@ -11,13 +11,13 @@ import java.util.ArrayList;
  * Класс для сохранения содержимого одного дня
  */
 public class Day {
-    public String fcDayNumber;//число (день месяца)
-    public String date;//дата дня
-    public SelenideElement linkToClick;//ссылка для клика в календаре
-    public boolean belongsToThisMonth;//принадлежность текущему месяцу
-    public String row1tdContents;//содержимое первого ряда
-    public ArrayList<String> events;//события дня
-    public int dayOfWeek;//день недели
+    private String fcDayNumber;//число (день месяца)
+    private String date;//дата дня
+    private SelenideElement linkToClick;//ссылка для клика в календаре
+    private boolean belongsToThisMonth;//принадлежность текущему месяцу
+    private String row1tdContents;//содержимое первого ряда
+    private ArrayList<String> events;//события дня
+    private int dayOfWeek;//день недели
 
     public Day(String fcDayNumber, String date,
                SelenideElement linkToClick, boolean belongsToThisMonth,
@@ -30,5 +30,33 @@ public class Day {
         this.row1tdContents = row1tdContents;
         this.events = events;
         this.dayOfWeek = dayOfWeek;
+    }
+
+    public String getFcDayNumber() {
+        return fcDayNumber;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public SelenideElement getLinkToClick() {
+        return linkToClick;
+    }
+
+    public boolean isBelongsToThisMonth() {
+        return belongsToThisMonth;
+    }
+
+    public String getRow1tdContents() {
+        return row1tdContents;
+    }
+
+    public ArrayList<String> getEvents() {
+        return events;
+    }
+
+    public int getDayOfWeek() {
+        return dayOfWeek;
     }
 }

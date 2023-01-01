@@ -1,6 +1,7 @@
 package authorizedTests.calendar;
 
 import authorizedTests.AuthorizedTestBaseSelenide;
+import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import pages.selenide.calendar.CalendarPO;
 import pages.selenide.calendar.Day;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
@@ -25,8 +27,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 Ответ: Если будет найден хотя бы один элемент, то ждать появления остальных этот метод не будет, просто проверит
 DOM-дерево, найдёт все элементы, поместит их в коллекцию и завершится. Если же ни одного элемента не будет найдено, то
 implicitWait будет работать (ждать заданное время) до появления первого элемента.
-
-
  */
 public class CalendarTest extends AuthorizedTestBaseSelenide {
     public CalendarPO calendarPO;
@@ -39,14 +39,6 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
         calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
                 .waitForCalendarToLoad();
     }
-//    /**
-//     * Обнуляем ссылку, чтобы в каждом тесте работать с новым объектом.
-//     *
-//     */
-//    @AfterEach
-//    public void afterEach(){
-//        calendarPO = null;
-//    }
 
     /**
      * 1Сценарий: проверка текущего месяца
@@ -113,29 +105,25 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      * Для каждого дня в календаре выполнить:
      * Клик по дню в календаре
      * Проверить что информация в боковом снипете совпадает с информацией в дне
-     * <p>
-     * Для этого нужно хранить таблицу в виде вроде List<Map<int, String>>,т.к. элементы одного дня хранятся в разных
-     * строках. Непонятно как их организовать...Да это и не нужно... Вроде... Хотя дату надо тоже проверить
-     * наверное... Так что, вероятно, придётся хранить очень структурированно...
      */
     @Test
     public void checkSideSnippetSwitch() {
-        calendarPO.chooseMonthAndYear("Мар 2023");
+        WebDriverRunner.driver().getWebDriver().manage().timeouts()
+                .implicitlyWait(Duration.ofSeconds(30));
         calendarPO.fillTheCalendar();
         for (Day day : calendarPO.days) {
-            if (day.belongsToThisMonth) {
-                day.linkToClick.click();
+            if (day.isBelongsToThisMonth()) {
+                day.getLinkToClick().click();
                 calendarPO.fillSnippet();
-                String dateToCheck = day.date;
+                String dateToCheck = day.getDate();
                 String formattedDateToCheck = "";
                 formattedDateToCheck += dateToCheck.substring(8);
                 formattedDateToCheck += ".";
                 formattedDateToCheck += dateToCheck.substring(5, 7);
                 formattedDateToCheck += ".";
                 formattedDateToCheck += dateToCheck.substring(2, 4);
-                if (formattedDateToCheck
+                if (formattedDateToCheck//проверка даты дня
                         .equals(calendarPO.snippet.getDate())) {
-                    continue;
                 } else {
                     fail(String.format("В сниппете справа сверху дата должна быть %s, а фактически %s"
                                     , formattedDateToCheck
@@ -143,8 +131,21 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
                             )
                     );
                 }
+
+                if (day.getEvents().get(0).equals("")) {//проверка выходных
+                    Assertions.assertEquals("Выходной",
+                            calendarPO.snippet.getEvents().get(1), "В " +
+                                    "сниппете неверная информация о дне " + day.getDate());
+                    continue;
+                } else {//проверка рабочих дней:
+                    for (int i = 0; i < day.getEvents().size(); i++) {
+                        Assertions.assertEquals(day.getEvents().get(i),
+                                calendarPO.snippet.getEvents().get(i * 2),
+                                "В сниппете неверная информация о дне "
+                                        + day.getDate());
+                    }
+                }
             }
         }
-        String str = "f";
     }
 }
