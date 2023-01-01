@@ -1,8 +1,11 @@
-package pages.selenide;
+package pages.selenide.calendar;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -192,112 +195,132 @@ public class CalendarPO {
     private String xpathForNoEventDay =
             "//td[@class='fc-event-container']/a[contains(@class,'schedule-badge--no-event schedule-badge')]";
     private String xpathForHeadersOfAllDays = "//td[contains(@class,'fc-day-top') and not (contains(@class,'fc-other-month'))]";
+    /**
+     * Здесь хранятся все дни из календаря
+     */
+    public ArrayList<Day> days;
+    /**
+     * Здесь хранится текущий сниппет
+     */
+    public Snippet snippet;
+    /**
+     * xpath для даты в сниппете
+     * <p>
+     * Для реализации задания по использованию неявных ожиданий элементы
+     * * сниппета д.б. использованы через Selenium, не через  Selenide, т.к. в
+     * * Selenide нет неявных ожиданий.
+     */
+    private SelenideElement snippetDate = $x(
+            "//div[contains(@class,'schedule-right-panel')]//h3");
+    /**
+     * Элементы с текстом сниппета
+     * <p>
+     * Для реализации задания 9.5 по использованию неявных ожиданий элементы
+     * сниппета д.б. использованы через Selenium, не через  Selenide, т.к. в
+     * Selenide нет неявных ожиданий.
+     */
+    ElementsCollection snippetEvents = $$x(
+            "//div[contains(@class,'schedule-right-panel')" +
+                    "]//div[@class='render-badge']/span");
 
     /**
-     * Сначала попробую сохранить информацию, потом решу как её вытащить во
-     * внешний мир ( в переменные класса).
-     * Можно создать класс Day, его засунуть в коллекцию. У него будут поля,
-     * указывающие его принадлежность к дню недели, числу, выходной/не
-     * выходной и т.п.
+     * Возвращает события расписанные в сниппете через Selenium.
+     */
+    public List<WebElement> getSnippetEvents() {
+        return WebDriverRunner.driver().getWebDriver().findElements(By.xpath(
+                "//div[contains(@class,'schedule-right-panel')" +
+                        "]//div[@class='render-badge']/span"));
+    }
+
+    /**
+     * Возвращает дату из сниппета
+     */
+    public String getSnippetDate() {
+        return WebDriverRunner.driver().getWebDriver().findElement(By.xpath(
+                        "//div[contains(@class,'schedule-right-panel')]//h3"))
+                .getText();
+    }
+
+    /**
+     * Здесь получаем содержимое сниппета и заносим его в переменную snippet.
+     */
+    public void fillSnippet() {
+        List<WebElement> listEv = getSnippetEvents();
+        ArrayList<String> snippetEventsString = new ArrayList<>();
+        for (int i = 0; i < listEv.size(); i++) {
+            snippetEventsString.add(listEv.get(i).getText());
+        }
+        snippet = new Snippet(getSnippetDate(), snippetEventsString);
+    }
+
+    /**
+     * Данный метод сохраняет всю информацию о днях из календаря в виде
+     * массива days.
      */
     public void fillTheCalendar() {
         days = new ArrayList<>();
         ElementsCollection aw = $$x(
                 "//div[@class='fc-row fc-week fc-widget-content']"
-        );//Недели. Обычно их 6.
-        boolean foundfirst = false;
-        boolean belongsToM = false;
-        boolean foundFirstOfTheNextMonth = false;
-        for (int j = 0; j < aw.size(); j++) {
-            SelenideElement row1 = aw.get(j).$x(//первый ряд tr таблицы
+        );//Недели. Обычно их 6 в этом календаре.
+        boolean foundFirst = false;//найден первый день месяца
+        boolean belongsToM = false;//день принадлежит текущему месяцу
+        for (int w = 0; w < aw.size(); w++) {//Проход по неделям
+            SelenideElement row1 = aw.get(w).$x(//первый ряд tr таблицы
                     "./div[@class='fc-content-skeleton']//tbody/tr[1]");
-            List<String> lot = new ArrayList<>();//тексты td первого ряда
-            for (int i = 0; i < 7; i++) {
-                lot.add(row1.$x(String.format("./td[%d]", (i + 1))).getText());
-            }
-            // int[7] secondRowIndexes = new int[7];
-            ElementsCollection awh = aw.get(j).$$x(".//td[contains(@class," +
+            List<String> fstRow = new ArrayList<>();//тексты td первого ряда
+            ElementsCollection awh = aw.get(w).$$x(".//td[contains(@class," +
                     "'fc-day-top')]");//заголовки дней текущей недели
-            for (int i = 0; i < awh.size(); i++) {//Первый проход по неделе с
-                if (j == 0 && !foundfirst) {//вызывается для каждого дня 1 нед.
-                    if (Integer.parseInt(awh.get(i).$x("./span").getText()) == 1) {
-                        foundfirst = true;
-                        belongsToM = true;
-                    }
+            for (int d = 0; d < awh.size(); d++) {//Проход по дням недели
+                fstRow.add(row1.$x(String.format("./td[%d]", (d + 1))).getText());
+                if ((w == 0)//ищем 1й день месяца
+                        && !foundFirst
+                        && (Integer.parseInt(awh.get(d).$x("./span")
+                        .getText()) == 1)) {
+                    foundFirst = true;
+                    belongsToM = true;
                 }
-                if ((j == (aw.size() - 1) || j == (aw.size() - 2)) &&
-                        Integer.parseInt(awh.get(i).$x("./span").getText()) == 1) {
-                    belongsToM = false;//ищу дни нового месяца
-                    foundFirstOfTheNextMonth = true;
+                if ((w == (aw.size() - 1)//ищем первый день нового месяца
+                        || w == (aw.size() - 2))
+                        && Integer.parseInt(awh.get(d).$x("./span").getText()) == 1) {
+                    belongsToM = false;
                 }
                 ArrayList<String> eventsOfOneDay = new ArrayList<>();//сюда
-                // поместить информацию о всех записях для 1 дня
-                ElementsCollection awr = aw.get(j).$$x(
+                // помещаем информацию о всех записях для d-го дня
+                ElementsCollection wRows = aw.get(w).$$x(//ряды wй недели
                         ".//div[@class='fc-content-skeleton']//tbody/tr");
-                String lotl = lot.get(i);//получил событие из 1й строки для iдня
-                eventsOfOneDay.add(lotl);//добавил в список дня 1е событие
-                for (int k = 1, n = 1; k < awr.size(); k++) {//иду по рядам
-                    //Нужно вытащить инфу о
-                    // всех остальных рядах недели для 1 дня. Буду считать,
+                String fstRowd = fstRow.get(d);//получил событие из 1й строки
+                // для d-го дня
+                eventsOfOneDay.add(fstRowd);//добавил в список дня d-е событие
+                for (int r = 1, n = 1; r < wRows.size(); r++) {//иду по рядам
+                    //Нужно вытащить инфу о всех остальных рядах недели для
+                    // текущего (d) дня. Буду считать,
                     // что если первый tr содержит информацию (помимо пустой
                     // строки), то это - рабочий день, иначе выходной или
                     // день другого месяца.
-                    //     for (int l = 0; l < lot.size(); l++) {//иду по инфе 1 ряда
-                    if (belongsToM && lotl.length() > 0) {
-                        eventsOfOneDay.add(awr.get(k).$x(String.format("./td" +
+                    if (belongsToM && fstRowd.length() > 0 && wRows.size() > 1) {
+                        eventsOfOneDay.add(wRows.get(r).$x(String.format("./td" +
                                         "[%d]",
                                 (n++))).getText());//добавляю в список события
-                        //из следующих строк. Здесь проблема в том, что
-                        // элементов td м.б. меньше, чем 7. Т.о. индекс для
-                        // взятия элемента из awr не i+1. Эта т.н. проблема
-                        // решается тем, что добавляется индекс для второго
-                        // ряда и когда надо, элемент второго ряда
-                        // добавляется по нему и инкрементируется. Т.о.
-                        // проходимся по уменьшенному второму ряду,
+                        // Проходимся по второму ряду,
                         // инкрементируя индекс только в момент добавления
                         // элемента.
                     }
-//                    }
                 }
-                String row1Content = lot.get(i); //добавлением элементов в Day
-                days.add(new Day(awh.get(i).$x("./span").getText(),
-                        awh.get(i).getAttribute("data-date"),
-                        awh.get(i),
+                String row1Content = fstRow.get(d);
+                days.add(new Day(awh.get(d).$x("./span").getText(),
+                        awh.get(d).getAttribute("data-date"),
+                        awh.get(d),
                         belongsToM,
                         row1Content,
                         eventsOfOneDay,
-                        i + 1
-
+                        d + 1
                 ));
             }
-            String endOfWeek = "1";
         }
         String f = "f";
     }
-
-    public ArrayList<Day> days;
-
-    class Day {
-        String fcDayNumber;//порядковый день месяца
-        String date;
-        SelenideElement linkToClick;
-
-        boolean belongsToThisMonth;
-        String row1tdContents;
-        ArrayList<String> events;
-        int dayOfWeek;
-
-        public Day(String fcDayNumber, String date,
-                   SelenideElement linkToClick, boolean belongsToThisMonth,
-                   String row1tdContents, ArrayList<String> events,
-                   int dayOfWeek) {
-            this.fcDayNumber = fcDayNumber;
-            this.date = date;
-            this.linkToClick = linkToClick;
-            this.belongsToThisMonth = belongsToThisMonth;
-            this.row1tdContents = row1tdContents;
-            this.events = events;
-            this.dayOfWeek = dayOfWeek;
-        }
-    }
 }
+
+
+
+

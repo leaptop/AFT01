@@ -1,20 +1,19 @@
-package authorizedTests;
+package authorizedTests.calendar;
 
-import com.codeborne.selenide.SelenideElement;
-import org.junit.jupiter.api.AfterEach;
+import authorizedTests.AuthorizedTestBaseSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebElement;
-import pages.selenide.CalendarPO;
+import pages.selenide.calendar.CalendarPO;
+import pages.selenide.calendar.Day;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 import static com.codeborne.selenide.Selenide.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /*
 5 Выясни какие значения таймаутов стоят по-умолчанию для разных неявных ожиданий
@@ -118,13 +117,34 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      * Для этого нужно хранить таблицу в виде вроде List<Map<int, String>>,т.к. элементы одного дня хранятся в разных
      * строках. Непонятно как их организовать...Да это и не нужно... Вроде... Хотя дату надо тоже проверить
      * наверное... Так что, вероятно, придётся хранить очень структурированно...
-     *
-     *
      */
     @Test
     public void checkSideSnippetSwitch() {
         calendarPO.chooseMonthAndYear("Мар 2023");
         calendarPO.fillTheCalendar();
+        for (Day day : calendarPO.days) {
+            if (day.belongsToThisMonth) {
+                day.linkToClick.click();
+                calendarPO.fillSnippet();
+                String dateToCheck = day.date;
+                String formattedDateToCheck = "";
+                formattedDateToCheck += dateToCheck.substring(8);
+                formattedDateToCheck += ".";
+                formattedDateToCheck += dateToCheck.substring(5, 7);
+                formattedDateToCheck += ".";
+                formattedDateToCheck += dateToCheck.substring(2, 4);
+                if (formattedDateToCheck
+                        .equals(calendarPO.snippet.getDate())) {
+                    continue;
+                } else {
+                    fail(String.format("В сниппете справа сверху дата должна быть %s, а фактически %s"
+                                    , formattedDateToCheck
+                                    , calendarPO.snippet.getDate()
+                            )
+                    );
+                }
+            }
+        }
         String str = "f";
     }
 }
