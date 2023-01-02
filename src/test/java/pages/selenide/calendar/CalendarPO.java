@@ -11,9 +11,13 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codeborne.selenide.Selenide.*;
-import static org.junit.jupiter.api.Assertions.fail;
+import static com.codeborne.selenide.Selenide.$$x;
+import static com.codeborne.selenide.Selenide.$x;
 
+/**
+ * Класс для реализации объекта Page Object для страницы Тайм Трекера с
+ * календарём.
+ */
 public class CalendarPO {
     public CalendarPO() {
 
@@ -48,6 +52,9 @@ public class CalendarPO {
      */
     private String xpathForNoEventDay =
             "//td[@class='fc-event-container']/a[contains(@class,'schedule-badge--no-event schedule-badge')]";
+    /**
+     * Заголовки всех дней текущего месяца
+     */
     private String xpathForHeadersOfAllDays = "//td[contains(@class,'fc-day-top') and not (contains(@class,'fc-other-month'))]";
     /**
      * Здесь хранятся все дни из календаря
@@ -77,9 +84,11 @@ public class CalendarPO {
             "//div[contains(@class,'schedule-right-panel')" +
                     "]//div[@class='render-badge']/span");
 
-
     /**
      * Выбор сотрудника из списка
+     *
+     * @param employee часть имени или фамилии сотрудника
+     * @return возвращает текущий PO для вызовов методов поцепочке.
      */
     public CalendarPO chooseEmployee(String employee) {
         $x(String.format("//select[@name='filter-user-id']/option[contains(text(),'%s')]", employee)).click();
@@ -119,7 +128,7 @@ public class CalendarPO {
      * Выбор месяца в выпадающем меню по названию в виде "Янв"
      *
      * @param mon указание месяца в виде "Янв", "Мар" и т.д.
-     * @return
+     * @return возвращает элемент кнопки с месяцем
      */
     private SelenideElement getMonthButton(String mon) {
         return $x(String.format("//div[@class='datepicker-months']//span[contains(@class,'month') and text()='%s']", mon));
@@ -131,12 +140,14 @@ public class CalendarPO {
      * @return
      */
     public CalendarPO waitForCalendarToLoad() {
-        $x("//span[contains(@class, 'btn-primary m-loader')]").should(Condition.disappear, Duration.ofSeconds(30));
+        $x("//span[contains(@class, 'btn-primary m-loader')]")
+                .should(Condition.disappear, Duration.ofSeconds(30));
         return this;
     }
 
     /**
-     * @return Возвращает месяц и год, отображённые на календаре в виде строки. Например: "Декабрь 2022";
+     * @return Возвращает месяц и год, отображённые на календаре в виде строки.
+     * Например: "Декабрь 2022";
      */
     public String getCurrentMonthAndYear() {
         return $x("//input[@name='filter-date']").getValue();
