@@ -87,6 +87,35 @@
             <artifactId>allure-junit5</artifactId>
             <version>${qameta.allure}</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.squareup.okhttp3</groupId>-->
+<!--            <artifactId>okhttp</artifactId>-->
+<!--            <version>4.10.0</version>-->
+<!--&lt;!&ndash;   , 3.4.1, 3.8.0, 3.10.0, 3.14.8, 3.14.9, 4.0.1, 4.10.0         f?&ndash;&gt;-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp-urlconnection -->
+        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>5.0.0-alpha.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp-urlconnection</artifactId>
+            <version>5.0.0-alpha.11</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp-urlconnection -->
+<!--        <dependency>-->
+<!--            <groupId>com.squareup.okhttp3</groupId>-->
+<!--            <artifactId>okhttp-urlconnection</artifactId>-->
+<!--&lt;!&ndash;            <version>3.0.0-RC1</version>&ndash;&gt;-->
+<!--            <version>4.10.0</version>-->
+<!--        </dependency>-->
+
 
     </dependencies>
     <build>
