@@ -15,19 +15,17 @@ public class LoginPage {
     }
 
     /**
-     * xpath для текста, появляющегося при неверном логине и/или пароле
+     * @return Возвращает текст Invalid credentials.
      */
-    private String xpathForInvalidCredentialsText = "//div[contains(text(), 'Invalid credentials.')]";
-    /**
-     * xpath для кнопки "Войти"
-     */
-    private String xpathForEnterButton = "//*[@value='Войти']";
+    public String getInvalidCredentialsText() {
+        return chromedriver.findElement(By.xpath("//div[contains(text(), 'Invalid credentials.')]")).getText();
+    }
 
     /**
      * Нажимает кнопку "Войти"
      */
     public void clickEnterButton() {
-        chromedriver.findElement(By.xpath(xpathForEnterButton)).click();
+        chromedriver.findElement(By.xpath("//*[@value='Войти']")).click();
     }
 
     /**
@@ -67,7 +65,7 @@ public class LoginPage {
      */
     public boolean invalidCredentialsTextIsVisible() {
         try {
-            chromedriver.findElement(By.xpath(xpathForInvalidCredentialsText));
+            chromedriver.findElement(By.xpath("//div[contains(text(), 'Invalid credentials.')]"));
         } catch (NoSuchElementException nsee) {
             return false;
         }
