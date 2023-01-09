@@ -20,6 +20,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,11 +47,57 @@ public class Task14HTTPAuthorization {
 
     private static final String IMGUR_CLIENT_ID = "...";
     private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-    public static final MediaType JSON = MediaType.get("application/json; " +
-           "charset=utf-8");
-//     public static final MediaType JSON = MediaType.get("application/json; " +
+    public static final MediaType JSON = MediaType.get(
+            "application/json; charset=utf-8");
+    //     public static final MediaType JSON = MediaType.get("application/json; " +
 //                "charset=1251");
     public CalendarPO calendarPO;
+
+    @Test
+    public void post2() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        String json = "{'_csrf_token': ''," +
+                "'_username': '" + credentialsProperties.username() + "'," +
+                "'_password': '" + credentialsProperties.password() + "'," +
+                "'_submit': 'Войти'}";
+        RequestBody body = RequestBody.create(json, JSON);
+
+        Request request = new Request.Builder()
+                .addHeader("Accept", "text/html,application/xhtml+xml,application/xml;" +
+                        "q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8," +
+                        "application/signed-exchange;v=b3;q=0.9")
+                .addHeader("Accept-Encoding", "gzip, deflate, br")
+                .addHeader("Accept-Language", "ru,en;q=0.9,ru-RU;q=0.8,en-US;" +
+                        "q=0.7")
+                .addHeader("Cache-Control", "max-age=0")
+                .addHeader("Connection", "keep-alive")
+                .addHeader("Content-Length", "187")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+//Cookie: _gcl_au=1.1.101985907.1669973365; _ga=GA1.2.1638702588.1669973366;
+// side-menu=minimized; m-datatable__local_data-1-m-meta={%22pagination%22:{%22page%22:1%2C%22perpage%22:10%2C%22total%22:2%2C%22pages%22:1}%2C%22sort%22:{%22sort%22:%22%22%2C%22field%22:%22%22}%2C%22query%22:{}}; PHPSESSID=a15dfa9b51c96d24016c975dc23d032a
+                .addHeader("Host", "tt.quality-lab.ru")
+                .addHeader("Origin", "https://tt.quality-lab.ru")
+                .addHeader("Referer", "https://tt.quality-lab.ru/login")
+                .addHeader("sec-ch-ua",
+                        "\"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"108\"" +
+                                ", \"Google Chrome\";v=\"108\"")
+                .addHeader("sec-ch-ua-mobile", "?0")
+                .addHeader("sec-ch-ua-platform", "\"Windows\"")
+                .addHeader("Sec-Fetch-Dest", "document")
+                .addHeader("Sec-Fetch-Mode", "navigate")
+                .addHeader("Sec-Fetch-Site", "same-origin")
+                .addHeader("Sec-Fetch-User", "?1")
+                .addHeader("Upgrade-Insecure-Requests", "1")
+                .addHeader("User-Agent", ("Mozilla/5.0 (Windows NT 10.0; Win64;" +
+                        " x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+                        "Chrome/108.0.0.0 Safari/537.36)"))
+                .url("https://tt.quality-lab.ru/login_check")
+                .post(body)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            System.out.println(response.body().string());
+        }
+    }
 
     @Test
     public void fromLK() {
@@ -67,53 +115,23 @@ public class Task14HTTPAuthorization {
                 .cookieJar(cookieJar)
                 .followRedirects(false)
                 .build();//1 end
-        Set<org.openqa.selenium.Cookie> sc45 =
-                chromedriver.manage().getCookies();//           Try POSTMAN &
-        //Получилось авторизоваться в Postman)) Создал новый пост запрос,
-        // перешёл в body, выбрал радиобаттон form-data, прописал туда всё.
-        // FormEncodingBuilderTest ?
         RequestBody formBody = null;
         try {
             formBody
-//                    = FormBody.create(String.format("{\n" +
-//                            "  \"_csrf_token\": \"\",\n" +
-//                            "  \"_username\": \"%s\",\n" +
-//                            "  \"_password\": \"%s\",\n" +
-//                            "  \"_submit\": \"Войти\"\n" +
-//                            "}", credentialsProperties.username(),
-//                            credentialsProperties.password()),
-//                    JSON);
-                    = new   FormBody.Builder()//2
-                    // start.
-                    // Response{protocol=http/1.1, code=302, message=Found, url=https://tt.quality-lab.ru/login_check}
-                    //сообщение на странице логина: No session available, it either timed out or cookies are not enabled.
-                    .addEncoded("_csrf_token", "")
-                    .addEncoded("_username", credentialsProperties.username())
-                    .addEncoded("_password", URLEncoder.encode(credentialsProperties.password(), "UTF-8"))
-                    .addEncoded("_submit", URLEncoder.encode("Войти", "UTF-8"))
+                    = new FormBody.Builder(StandardCharsets.UTF_8)//2
+                    .add("_csrf_token", "")
+                    .add("_username", credentialsProperties.username())
+                    .add("_password", credentialsProperties.password())
+                    .add("_submit", "Войти")
                     .build();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        RequestBody body =
-                RequestBody.create(bowlingJson(credentialsProperties.name(),
-                        credentialsProperties.password()), JSON);
         Request request = new Request.Builder()
                 .url("https://tt.quality-lab.ru/login_check")
-              //  .addHeader("Referrer-Policy", "strict-origin-when-cross" +
-              //  "-origin")
                 .addHeader("Connection", "keep-alive")
-//                .addHeader("Accept", "text/html,application/xhtml+xml," +
-//                        "application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-               // .addHeader("Accept-Encoding", "gzip, deflate, br")
-                .addHeader("Accept-Language", "ru,en;q=0.9,ru-RU;q=0.8,en-US;q=0.7")
-                // .addHeader("Content-Type", "text/plain;
-                // charset=WINDOWS-UTF-8")
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
-               // .addHeader("User-Agent", userAgent)
                 .post(formBody)
-               // .post(body)
                 .build();
         try {
             Response response = client.newCall(request).execute();
@@ -121,8 +139,6 @@ public class Task14HTTPAuthorization {
         } catch (IOException e) {
             e.printStackTrace();
         }//2 end
-
-        //3 start
         chromedriver.get("https://tt.quality-lab.ru");//3a
         chromedriver.manage().deleteAllCookies();//3b
 
@@ -137,18 +153,14 @@ public class Task14HTTPAuthorization {
         cookieManager.getCookieStore().getCookies().forEach(httpCookie -> {//3c
             org.openqa.selenium.Cookie cookie = new org.openqa.selenium
                     .Cookie(
-                    //  Cookie cookie = new Cookie(
                     httpCookie.getName(),
                     httpCookie.getValue(),
                     httpCookie.getDomain(),
                     httpCookie.getPath(),
-                    // null
                     date
             );
             chromedriver.manage().addCookie(cookie);
         });
-        Set<org.openqa.selenium.Cookie> sc2 =
-                chromedriver.manage().getCookies();
         chromedriver.get("https://tt.quality-lab.ru/calendar/");//4 Здесь
         // пользователь д.б. уже авторизован. Но пока высвечивается сообщение:
         // "No session available, it either timed out or cookies are not enabled."
@@ -156,6 +168,26 @@ public class Task14HTTPAuthorization {
 //                .waitForCalendarToLoad();
         // openCalendar();
         // checkCurrentMonthAndYear();
+    }
+
+    @Test
+    public void whenSendPostRequestWithAuthorization_thenCorrect()
+            throws IOException {
+        String postBody = "test post";
+
+        Request request = new Request.Builder()
+                .url("https://tt.quality-lab.ru/login_check")
+                .addHeader("Authorization",
+                        Credentials.basic(credentialsProperties.username(),
+                                credentialsProperties.password()))
+                .post(RequestBody.create(
+                        MediaType.parse("text/x-markdown"), postBody))
+                .build();
+
+        Call call = client.newCall(request);
+        Response response = call.execute();
+        System.out.println(response.body().string());
+        Assertions.assertEquals(200, response.code());
     }
 
     /**
