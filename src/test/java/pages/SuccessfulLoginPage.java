@@ -1,4 +1,4 @@
-package pages.selenide;
+package pages;
 
 import com.codeborne.selenide.Condition;
 import ru.yandex.qatools.htmlelements.element.Image;
@@ -9,8 +9,7 @@ import static com.codeborne.selenide.Selenide.*;
 /**
  * Класс, реализующий паттерн Page Object для страницы, показываемой после успешного входа в систему по логину и паролю.
  */
-public class SuccessfulLoginPageSelenide {
-
+public class SuccessfulLoginPage {
     /**
      * xpath для поиска аватарки пользователя справа вверху.
      */
@@ -37,19 +36,19 @@ public class SuccessfulLoginPageSelenide {
     private Image upperRightCornereAvatar = new Image($x(xpathForUpperRightCornerAvatar));
 
     /**
-     * @return возвращает имейл пользователя с карточки после нажатия на аватарку справа сверху
+     * @return возвращает текстовый блок с имейлом пользователя с карточки после нажатия на аватарку справа сверху
      */
-    public String getEmailFromCard() {
+    public TextBlock getEmailTextBlock() {
         $x(xpathForUserEmailOnCard).shouldBe(Condition.visible);
-        return emailBlock.getText();
+        return emailBlock;
     }
 
     /**
-     * @return Возвращает имя и фамилию с карточки после нажатия на аватарку справа сверху
+     * @return Возвращает текстовый блок имени и фамилии с карточки после нажатия на аватарку справа сверху
      */
-    public String getNameFromCard() {
+    public TextBlock getNameTextBlock() {
         $x(xpathForUserNameOnCard).shouldBe(Condition.visible);
-        return nameBlock.getText();
+        return nameBlock;
     }
 
     /**
@@ -57,7 +56,7 @@ public class SuccessfulLoginPageSelenide {
      *
      * @return возвращает текущую страницу для возможности запуска других методов по цепочке.
      */
-    public SuccessfulLoginPageSelenide clickUpperRightCornerAvatar() {
+    public SuccessfulLoginPage clickUpperRightCornerAvatar() {
         upperRightCornereAvatar.click();
         return this;
     }

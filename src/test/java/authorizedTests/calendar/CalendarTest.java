@@ -1,13 +1,13 @@
 package authorizedTests.calendar;
 
-import authorizedTests.AuthorizedTestBaseSelenide;
+import authorizedTests.AuthorizedTestBase;
 import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pages.selenide.calendar.CalendarPO;
-import pages.selenide.calendar.Day;
-import pages.selenide.calendar.Snippet;
+import pages.calendar.CalendarPO;
+import pages.calendar.Day;
+import pages.calendar.Snippet;
 
 import java.time.Duration;
 import java.time.*;
@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 DOM-дерево, найдёт все элементы, поместит их в коллекцию и завершится. Если же ни одного элемента не будет найдено, то
 implicitWait будет работать (ждать заданное время) до появления первого элемента.
  */
-public class CalendarTest extends AuthorizedTestBaseSelenide {
+public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
 
     /**
@@ -49,7 +49,7 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
                 } else {//поиск рабочих дней:
                     for (int i = 0; i < day.getEvents().size(); i++) {
                         if (snippet.getEvents().get(1).equals("Рабочий день")
-                                ||snippet.getEvents().get(1).equals("Рабочее время")) {
+                                || snippet.getEvents().get(1).equals("Рабочее время")) {
                             foundWorkDay = true;
                             break;
                         }

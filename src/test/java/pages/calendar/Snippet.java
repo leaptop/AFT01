@@ -1,4 +1,4 @@
-package pages.selenide.calendar;
+package pages.calendar;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

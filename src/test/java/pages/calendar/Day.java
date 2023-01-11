@@ -1,4 +1,4 @@
-package pages.selenide.calendar;
+package pages.calendar;
 
 import com.codeborne.selenide.SelenideElement;
 

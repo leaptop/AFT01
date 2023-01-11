@@ -1,31 +1,27 @@
 package helpers;
 
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
 public class TestBase {
-    public WebDriver chromedriver;
-
     /**
-     * Инициализируем вебдрайвер, настраиваем его перед запуском каждого теста.
+     * Настраиваем тесты перед запуском.
+     *
+     * Здесь дублируется прописывание разрешения экрана, как и в AuthorizedTestBase потому, что в заданиях до работы
+     * с календарём (в CalendarTests) как раз и нужно было использовать разные логины и пароли.
      */
     @BeforeEach
-    void initTests() {
-        System.setProperty("webdriver.chrome.driver", System.getenv("CHROME_DRIVER"));
-        ChromeOptions options = new ChromeOptions();
-        chromedriver = new ChromeDriver(options);
-        chromedriver.manage().window().maximize();
+    public void before() {
+        Configuration.browserSize = "1500x800";
     }
 
     /**
-     * Метод завершает работу вебдрайвера после выполнения каждого теста.
+     * Закрываем вебдрайвер в конце каждого теста
      */
     @AfterEach
-    void finishTest() {
-        if (chromedriver != null)
-            chromedriver.quit();
+    public void after() {
+        WebDriverRunner.closeWebDriver();
     }
 }
