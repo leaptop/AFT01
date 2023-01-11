@@ -128,14 +128,21 @@ public class Task14HTTPAuthorization {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        Request request = new Request.Builder()
+        Request getRequest = new Request.Builder()
+                .url("https://tt.quality-lab.ru/login")
+                .addHeader("Connection", "keep-alive")
+                .build();
+        Request postRequest = new Request.Builder()
                 .url("https://tt.quality-lab.ru/login_check")
                 .addHeader("Connection", "keep-alive")
                 .post(formBody)
                 .build();
         try {
-            Response response = client.newCall(request).execute();
-            System.out.println(response.body().string());
+            Response response1 = client.newCall(getRequest).execute();
+            Response response2 = client.newCall(postRequest).execute();
+            System.out.println(response1.body().string());
+            System.out.println("-----------------------------------------------------------------");
+            System.out.println(response2.body().string());
         } catch (IOException e) {
             e.printStackTrace();
         }//2 end
