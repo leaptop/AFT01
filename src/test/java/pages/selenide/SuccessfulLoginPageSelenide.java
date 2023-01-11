@@ -27,6 +27,14 @@ public class SuccessfulLoginPageSelenide {
      * Текстовое поле с имейлом пользователя на карточке после нажатия на аватарку справа сверху
      */
     private TextBlock emailBlock = new TextBlock($x(xpathForUserEmailOnCard));
+    /**
+     * Текстовое поле с именем и фамилией пользователя на карточке после нажатия на аватарку справа сверху
+     */
+    private TextBlock nameBlock = new TextBlock($x(xpathForUserNameOnCard));
+    /**
+     * Аватарка справа сверху
+     */
+    private Image upperRightCornereAvatar = new Image($x(xpathForUpperRightCornerAvatar));
 
     /**
      * @return возвращает имейл пользователя с карточки после нажатия на аватарку справа сверху
@@ -37,22 +45,12 @@ public class SuccessfulLoginPageSelenide {
     }
 
     /**
-     * Текстовое поле с именем и фамилией пользователя на карточке после нажатия на аватарку справа сверху
-     */
-    private TextBlock nameBlock = new TextBlock($x(xpathForUserNameOnCard));
-
-    /**
      * @return Возвращает имя и фамилию с карточки после нажатия на аватарку справа сверху
      */
     public String getNameFromCard() {
         $x(xpathForUserNameOnCard).shouldBe(Condition.visible);
         return nameBlock.getText();
     }
-
-    /**
-     * Аватарка справа сверху
-     */
-    private Image upperRightCornereAvatar = new Image($x(xpathForUpperRightCornerAvatar));
 
     /**
      * Кликает по аватарке в правом верхнем углу экрана.

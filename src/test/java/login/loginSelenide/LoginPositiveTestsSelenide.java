@@ -1,6 +1,5 @@
 package login.loginSelenide;
 
-import com.codeborne.selenide.Configuration;
 import helpers.TestBaseSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ public class LoginPositiveTestsSelenide extends TestBaseSelenide {
         webdriver().shouldHave(url("https://tt-testing.quality-lab.ru/report/group/edit"));
         SuccessfulLoginPageSelenide slps = new SuccessfulLoginPageSelenide();
         slps.clickUpperRightCornerAvatar();
-        Configuration.timeout = 10000;
         Assertions.assertAll(
                 () -> Assertions.assertEquals("Авто Пользователь", slps.getNameFromCard(), "Имя не равно ожидаемому"),
                 () -> Assertions.assertEquals("124124@m.r", slps.getEmailFromCard(), "Имейл не равен ожидаемому")

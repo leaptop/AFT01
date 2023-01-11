@@ -7,14 +7,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pages.selenide.calendar.CalendarPO;
 import pages.selenide.calendar.Day;
+import pages.selenide.calendar.Snippet;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.Instant;
-import java.util.Date;
-import java.util.Locale;
+import java.time.*;
+import java.util.ArrayList;
 
 import static com.codeborne.selenide.Selenide.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /*
@@ -32,7 +32,44 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
     public CalendarPO calendarPO;
 
     /**
-     * Открываем календарь и ждём появления сообщения о загрузке. Потом ждём его исчезновения.
+     * Проверка существования выходных и рабочих дней в календаре
+     */
+    private void holidaysAndWorkDaysExistenceCheck() {
+        ArrayList<Day> days = calendarPO.fillTheCalendar();
+        boolean foundHoliday = false;
+        boolean foundWorkDay = false;
+        for (Day day : days) {
+            if (day.isBelongsToThisMonth()) {
+                day.getLinkToClick().click();
+                Snippet snippet = calendarPO.fillSnippet();
+                if (day.getEvents().get(0).equals("") && !foundHoliday) {//поиск выходных
+                    if (snippet.getEvents().get(1).equals("Выходной")) {
+                        foundHoliday = true;
+                    }
+                } else {//поиск рабочих дней:
+                    for (int i = 0; i < day.getEvents().size(); i++) {
+                        if (snippet.getEvents().get(1).equals("Рабочий день")
+                                ||snippet.getEvents().get(1).equals("Рабочее время")) {
+                            foundWorkDay = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (foundHoliday && foundWorkDay) {
+                break;
+            }
+        }
+        boolean finalFoundWorkDay = foundWorkDay;
+        boolean finalFoundHoliday = foundHoliday;
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(finalFoundWorkDay, "Не найдены рабочие дни в месяце"),
+                () -> Assertions.assertTrue(finalFoundHoliday, "Не найдены выходные дни в месяце")
+        );
+    }
+
+    /**
+     * Открываем календарь и ждём исчезновения Progress bar.
      */
     @BeforeEach
     public void openCalendar() {
@@ -41,7 +78,7 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
     }
 
     /**
-     * 1Сценарий: проверка текущего месяца
+     * 1 Сценарий: проверка текущего месяца
      * Проверить:
      * месяц и год совпадают с текущими
      * в месяце есть рабочие дни (зеленые)
@@ -49,21 +86,18 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      */
     @Test
     public void checkCurrentMonthAndYear() {
-        Date date = Date.from(Instant.now());
-        SimpleDateFormat newDateFormat = new SimpleDateFormat("LLLL yyyy", Locale.getDefault());
-        String result = newDateFormat.format(date);
         Assertions.assertAll(
-                () -> Assertions.assertEquals(result, calendarPO.getCurrentMonthAndYear(),
-                        "Текущие месяц и год не совпадают с выведенными на сайте"),
-                () -> Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
-                        "Не найдены рабочие дни в месяце"),
-                () -> Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0,
-                        "Не найдены выходные дни в месяце")
+                () -> assertEquals(LocalDateTime.now().getMonth(), calendarPO.getMonth(),
+                        "Текущий месяц не совпадает с выведенным на календаре"),
+                () -> assertEquals(Year.of(LocalDateTime.now().getYear()), calendarPO.getYear(),
+                        "Текущий год не совпадает с выведенным на календаре")
         );
+        holidaysAndWorkDaysExistenceCheck();
     }
 
+
     /**
-     * 2Сценарий: проверка переключения месяца
+     * 2 Сценарий: проверка переключения месяца
      * Выбрать следующий месяц и нажать кнопку “Применить”
      * Проверить:
      * в месяце есть рабочие дни (зеленые)
@@ -71,18 +105,13 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      */
     @Test
     public void checkMonthSwitch() {
-        calendarPO.chooseMonthAndYear("Янв 2023");
+        calendarPO.chooseNextMonth();
         calendarPO.waitForCalendarToLoad();
-        Assertions.assertAll(
-                () -> Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
-                        "Не найдены рабочие дни в месяце"),
-                () -> Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0,
-                        "Не найдены выходные дни в месяце")
-        );
+        holidaysAndWorkDaysExistenceCheck();
     }
 
     /**
-     * 3Сценарий: проверка графика другого сотрудника:
+     * 3 Сценарий: проверка графика другого сотрудника:
      * Выбрать любого другого сотрудника (в тест-методе использовать фиксированную фамилию) и нажать кнопку “Применить”
      * Проверить:
      * в месяце есть рабочие дни (зеленые)
@@ -91,12 +120,7 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
     @Test
     public void checkOtherEmployee() {
         calendarPO.chooseEmployee("Якина");
-        Assertions.assertAll(
-                () -> Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
-                        "Не найдены рабочие дни в месяце"),
-                () -> Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0,
-                        "Не найдены выходные дни в месяце")
-        );
+        holidaysAndWorkDaysExistenceCheck();
     }
 
     /**
@@ -108,41 +132,28 @@ public class CalendarTest extends AuthorizedTestBaseSelenide {
      */
     @Test
     public void checkSideSnippetSwitch() {
-        WebDriverRunner.driver().getWebDriver().manage().timeouts()
-                .implicitlyWait(Duration.ofSeconds(30));
-        calendarPO.fillTheCalendar();
-        for (Day day : calendarPO.days) {
+        WebDriverRunner.driver().getWebDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+        ArrayList<Day> days = calendarPO.fillTheCalendar();
+        for (Day day : days) {
             if (day.isBelongsToThisMonth()) {
                 day.getLinkToClick().click();
-                calendarPO.fillSnippet();
-                String dateToCheck = day.getDate();
-                String formattedDateToCheck = "";
-                formattedDateToCheck += dateToCheck.substring(8);
-                formattedDateToCheck += ".";
-                formattedDateToCheck += dateToCheck.substring(5, 7);
-                formattedDateToCheck += ".";
-                formattedDateToCheck += dateToCheck.substring(2, 4);
-                if (formattedDateToCheck//проверка даты дня
-                        .equals(calendarPO.snippet.getDate())) {
-                } else {
+                Snippet snippet = calendarPO.fillSnippet();
+                if (!day.getDate().equals(snippet.getDate())) {//проверка даты дня
                     fail(String.format("В сниппете справа сверху дата должна быть %s, а фактически %s"
-                                    , formattedDateToCheck
-                                    , calendarPO.snippet.getDate()
+                                    , day.getDate().toString()
+                                    , snippet.getDate().toString()
                             )
                     );
                 }
-
                 if (day.getEvents().get(0).equals("")) {//проверка выходных
-                    Assertions.assertEquals("Выходной",
-                            calendarPO.snippet.getEvents().get(1), "В " +
-                                    "сниппете неверная информация о дне " + day.getDate());
-                    continue;
+                    assertEquals("Выходной",
+                            snippet.getEvents().get(1), String.format(
+                                    "В сниппете неверная информация о дне %s, он д.б. подписан как \"Выходной\".",
+                                    day.getDate().toString()));
                 } else {//проверка рабочих дней:
                     for (int i = 0; i < day.getEvents().size(); i++) {
-                        Assertions.assertEquals(day.getEvents().get(i),
-                                calendarPO.snippet.getEvents().get(i * 2),
-                                "В сниппете неверная информация о дне "
-                                        + day.getDate());
+                        assertEquals(day.getEvents().get(i), snippet.getEvents().get(i * 2),
+                                "В сниппете неверная информация о дне " + day.getDate().toString());
                     }
                 }
             }

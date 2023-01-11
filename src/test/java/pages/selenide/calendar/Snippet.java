@@ -1,5 +1,6 @@
 package pages.selenide.calendar;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -10,10 +11,10 @@ import java.util.ArrayList;
  */
 public class Snippet {
 
-    private String date;//дата дня
+    private LocalDate date;//дата дня
     private ArrayList<String> events;//события дня
 
-    public Snippet(String date, ArrayList<String> events) {
+    public Snippet(LocalDate date, ArrayList<String> events) {
         this.date = date;
         this.events = events;
     }
@@ -22,7 +23,7 @@ public class Snippet {
         return events;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 }

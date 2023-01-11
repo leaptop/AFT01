@@ -11,10 +11,6 @@ import properties.interfaces.CredentialsProperties;
 public class Properties {
     /**
      * Создаём объект MainProperties на основе интерфейса MainProperties для доступа к переменным из файла .property.
-     *
-     * @author Степан Алексеев
      */
     public static CredentialsProperties credentialsProperties = ConfigFactory.create(CredentialsProperties.class);
-//    Reader reader = new BufferedReader(new InputStreamReader(
-//            getClass().getResourceAsStream("messages.properties"), "utf-8")));
 }

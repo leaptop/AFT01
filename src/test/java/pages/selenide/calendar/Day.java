@@ -2,6 +2,7 @@ package pages.selenide.calendar;
 
 import com.codeborne.selenide.SelenideElement;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -12,14 +13,14 @@ import java.util.ArrayList;
  */
 public class Day {
     private String fcDayNumber;//число (день месяца)
-    private String date;//дата дня
+    private LocalDate date;//дата дня
     private SelenideElement linkToClick;//ссылка для клика в календаре
     private boolean belongsToThisMonth;//принадлежность текущему месяцу
     private String row1tdContents;//содержимое первого ряда
     private ArrayList<String> events;//события дня
     private int dayOfWeek;//день недели
 
-    public Day(String fcDayNumber, String date,
+    public Day(String fcDayNumber, LocalDate date,
                SelenideElement linkToClick, boolean belongsToThisMonth,
                String row1tdContents, ArrayList<String> events,
                int dayOfWeek) {
@@ -36,7 +37,7 @@ public class Day {
         return fcDayNumber;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
