@@ -1,23 +1,19 @@
 package pages.calendar;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$x;
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -30,6 +26,42 @@ public class CalendarPO {
 
     }
 
+    /**
+     * первый ряд tr таблицы
+     */
+    private String firstRow = "./div[@class='fc-content-skeleton']//tbody/tr[1]";
+    /**
+     * заголовки дней текущей недели
+     */
+    private String currentWeekHeaders = ".//td[contains(@class,'fc-day-top')]";
+    /**
+     * Недели. Обычно их 6 в этом календаре
+     */
+    private String weeks = "//div[@class='fc-row fc-week fc-widget-content']";
+    /**
+     * ряды w-й недели
+     */
+    private String rowsOfwWeek = ".//div[@class='fc-content-skeleton']//tbody/tr";
+    /**
+     * Дата в сниппете
+     */
+    private String snippetDateXPath = "//div[contains(@class,'schedule-right-panel')]//h3";
+    /**
+     * Кнопка месяца
+     */
+    private String monthButton = "//div[@class='datepicker-months']//span[contains(@class,'month') and text()='%s']";
+    /**
+     * Элементы с текстом в сниппете
+     */
+    private String snippetTextsXPath = "//div[contains(@class,'schedule-right-panel')]//div[@class='render-badge']/span";
+    /**
+     * Строка над календарём с месяцем и годом
+     */
+    private String calendarDateXPath = "//input[@name='filter-date']";
+    /**
+     * Progress bar загрузки календаря
+     */
+    private String calendarProgressBarXPath = "//span[contains(@class, 'btn-primary m-loader')]";
     /**
      * Кнопка "Применить"
      */
@@ -54,6 +86,7 @@ public class CalendarPO {
      * @return Возвращает кнопку вызова выпадающего списка работников
      */
     private SelenideElement nameDropDownMenuButton = $x("//span[@id='select2--container']");
+
     /**
      * Элемент списка работников, найденный по части имени
      *
@@ -63,6 +96,7 @@ public class CalendarPO {
     private SelenideElement listChosenEmployeeByNamePart(String namePart) {
         return $x("//li[contains(text(),'" + namePart + "')]");
     }
+
     /**
      * Это называется метод-локатор.
      * Выбор месяца в выпадающем меню по названию в виде "Янв"
@@ -71,8 +105,18 @@ public class CalendarPO {
      * @return возвращает элемент кнопки с месяцем
      */
     private SelenideElement getMonthButton(Month month) {//надо передать в xpath в виде "Янв", "Мар" и т.д.
-        return $x(String.format("//div[@class='datepicker-months']//span[contains(@class,'month') and text()='%s']",
+        return $x(String.format(monthButton,
                 month.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru")).substring(0, 3)));
+    }
+
+    /**
+     * Нажимает на день текущего месяца по его номеру
+     *
+     * @param number
+     */
+    public void clickDayOfThisMonthByNumber(int number) {
+        $x(String.format("//td[not(contains(@class,'fc-other-month'))]/span[@class='fc-day-number' and text()='%d']",
+                number)).click();
     }
 
     /**
@@ -83,11 +127,8 @@ public class CalendarPO {
     public CalendarPO chooseNextMonth() {
         Month month = getMonth();
         Year year = getYear();
-        if (month.getValue() == 12) {
-            chooseMonthAndYear(month.JANUARY, year.plus(1, ChronoUnit.YEARS));
-        } else {
-            chooseMonthAndYear(month.plus(1), year);
-        }
+        YearMonth yearMonth = YearMonth.of(year.getValue(), month).plusMonths(1);
+        chooseMonthAndYear(yearMonth.getMonth(), Year.of(yearMonth.getYear()));
         return this;
     }
 
@@ -95,7 +136,7 @@ public class CalendarPO {
      * @return Возвращает месяц отображённый вверху календаря
      */
     public Month getMonth() {
-        String monthToParse = $x("//input[@name='filter-date']")
+        String monthToParse = $x(calendarDateXPath)
                 .getValue().split("\\s")[0].toLowerCase().substring(0, 3);
         DateTimeFormatter formatter3 = DateTimeFormatter.ofPattern("d-MMM-yyyy");
         LocalDate localDateFromCalendar = LocalDate.parse(String.format("1-%s-1980", monthToParse), formatter3);
@@ -106,7 +147,7 @@ public class CalendarPO {
      * @return возвращает год, отображённый вверху календаря
      */
     public Year getYear() {
-        String yearToParse = $x("//input[@name='filter-date']")
+        String yearToParse = $x(calendarDateXPath)
                 .getValue()
                 .split("\\s")[1];
         return Year.of(Integer.parseInt(yearToParse));
@@ -122,7 +163,7 @@ public class CalendarPO {
     public CalendarPO chooseMonthAndYear(Month month, Year year) {
         buttonForDateChoice.click();
         int neededYear = year.getValue();
-        int currentYear = LocalDate.now().getYear();
+        int currentYear = getYear().getValue();
         int diffInYears = neededYear - currentYear;
         if (diffInYears > 0) {
             for (int i = 0; i < diffInYears; i++) {
@@ -159,8 +200,9 @@ public class CalendarPO {
      * @return this
      */
     public CalendarPO waitForCalendarToLoad() {
-        $x("//span[contains(@class, 'btn-primary m-loader')]")
-                .should(Condition.disappear, Duration.ofSeconds(30));
+        //  $x(calendarProgressBarXPath).should(Condition.disappear, Duration.ofSeconds(30));
+        $x(calendarProgressBarXPath).shouldBe(visible);
+        $x(calendarProgressBarXPath).shouldNotBe(visible, Duration.ofSeconds(10));
         return this;
     }
 
@@ -168,18 +210,20 @@ public class CalendarPO {
      * Возвращает события расписанные в сниппете через Selenium.
      */
     private List<WebElement> getSnippetEvents() {
-        return WebDriverRunner.driver().getWebDriver().findElements(By.xpath(
-                "//div[contains(@class,'schedule-right-panel')" +
-                        "]//div[@class='render-badge']/span"));
+        return WebDriverRunner.driver().getWebDriver().findElements(By.xpath(snippetTextsXPath));
     }
 
     /**
      * Возвращает дату из сниппета
      */
-    private LocalDate getSnippetDate() {//проверить работу
-        return LocalDate.parse(WebDriverRunner.driver().getWebDriver().findElement(By.xpath(
-                        "//div[contains(@class,'schedule-right-panel')]//h3"))
-                .getText(), DateTimeFormatter.ofPattern("dd.MM.yy"));
+    private LocalDate getSnippetDate() {
+        return LocalDate
+                .parse(WebDriverRunner
+                        .driver()
+                        .getWebDriver()
+                        .findElement(By.xpath(snippetDateXPath))
+                        .getText(), DateTimeFormatter
+                        .ofPattern("dd.MM.yy"));
     }
 
     /**
@@ -194,27 +238,29 @@ public class CalendarPO {
         return new Snippet(getSnippetDate(), snippetEventsString);
     }
 
+
     /**
      * Данный метод сохраняет всю информацию о днях из календаря в виде
      * массива days.
      */
     public ArrayList<Day> fillTheCalendar() {
+
         ArrayList<Day> days = new ArrayList<>();
-        ElementsCollection aw = $$x(
-                "//div[@class='fc-row fc-week fc-widget-content']"
-        );//Недели. Обычно их 6 в этом календаре.
+        ElementsCollection aw = $$x(weeks);
         boolean foundFirst = false;//найден первый день месяца
         boolean belongsToM = false;//день принадлежит текущему месяцу
         for (int w = 0; w < aw.size(); w++) {//Проход по неделям
             int n = 1;//индекс номера дня для второго и последующих рядов. Он
             // нужен на случай появления выходного дня.
-            SelenideElement row1 = aw.get(w).$x(//первый ряд tr таблицы
-                    "./div[@class='fc-content-skeleton']//tbody/tr[1]");
+            SelenideElement row1 = aw.get(w).$x(firstRow);//первый ряд tr таблицы
             List<String> fstRow = new ArrayList<>();//тексты td первого ряда
-            ElementsCollection awh = aw.get(w).$$x(".//td[contains(@class," +
-                    "'fc-day-top')]");//заголовки дней текущей недели
+            ElementsCollection awh = aw.get(w).$$x(currentWeekHeaders);
             for (int d = 0; d < awh.size(); d++) {//Проход по дням недели
+                boolean isWorkDay = false;//рабочий день
+                boolean isHoliday = false;//выходной день
+                boolean isVacationDay = false;//день отпуска
                 fstRow.add(row1.$x(String.format("./td[%d]", (d + 1))).getText());
+
                 if ((w == 0)//ищем 1й день месяца
                         && !foundFirst
                         && (Integer.parseInt(awh.get(d).$x("./span")
@@ -226,10 +272,19 @@ public class CalendarPO {
                         && Integer.parseInt(awh.get(d).$x("./span").getText()) == 1) {
                     belongsToM = false;
                 }
+                if (belongsToM) {
+                    String aClassAttribute = row1.$x(String.format("./td[%d]//a", (d + 1))).getAttribute("class");
+                    if (aClassAttribute.contains("schedule-badge--default")) {
+                        isWorkDay = true;
+                    } else if (aClassAttribute.contains("schedule-badge--no-event")) {
+                        isHoliday = true;
+                    } else if (aClassAttribute.contains("schedule-badge--vacation")) {
+                        isVacationDay = true;
+                    }
+                }
                 ArrayList<String> eventsOfOneDay = new ArrayList<>();//сюда
                 // помещаем информацию о всех записях для d-го дня
-                ElementsCollection wRows = aw.get(w).$$x(//ряды wй недели
-                        ".//div[@class='fc-content-skeleton']//tbody/tr");
+                ElementsCollection wRows = aw.get(w).$$x(rowsOfwWeek);
                 String fstRowd = fstRow.get(d);//получил событие из 1й строки
                 // для d-го дня
                 eventsOfOneDay.add(fstRowd);//добавил в список дня d-е событие
@@ -240,8 +295,7 @@ public class CalendarPO {
                     // строки), то это - рабочий день или день отпуска, иначе выходной или
                     // день другого месяца.
                     if (belongsToM && fstRowd.length() > 0 && wRows.size() > 1) {
-                        eventsOfOneDay.add(wRows.get(r).$x(String.format("./td" +
-                                        "[%d]",
+                        eventsOfOneDay.add(wRows.get(r).$x(String.format("./td[%d]",
                                 (n++))).getText());//добавляю в список события
                         // Проходимся по второму ряду (и, возможно, следующим),
                         // инкрементируя индекс только в момент добавления
@@ -249,11 +303,12 @@ public class CalendarPO {
                     }
                 }
                 String row1Content = fstRow.get(d);
-                days.add(new Day(
+                days.add(new Day(isWorkDay,
+                        isHoliday,
+                        isVacationDay,
                         awh.get(d).$x("./span").getText(),
                         LocalDate.parse(awh.get(d).getAttribute("data-date"),
                                 DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        awh.get(d),
                         belongsToM,
                         row1Content,
                         eventsOfOneDay,

@@ -25,6 +25,7 @@ public class SuccessfulLoginPage {
     /**
      * Текстовое поле с имейлом пользователя на карточке после нажатия на аватарку справа сверху
      */
+
     private TextBlock emailBlock = new TextBlock($x(xpathForUserEmailOnCard));
     /**
      * Текстовое поле с именем и фамилией пользователя на карточке после нажатия на аватарку справа сверху

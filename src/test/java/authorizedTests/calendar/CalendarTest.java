@@ -10,10 +10,11 @@ import pages.calendar.Day;
 import pages.calendar.Snippet;
 
 import java.time.Duration;
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.Year;
 import java.util.ArrayList;
 
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -39,22 +40,10 @@ public class CalendarTest extends AuthorizedTestBase {
         boolean foundHoliday = false;
         boolean foundWorkDay = false;
         for (Day day : days) {
-            if (day.isBelongsToThisMonth()) {
-                day.getLinkToClick().click();
-                Snippet snippet = calendarPO.fillSnippet();
-                if (day.getEvents().get(0).equals("") && !foundHoliday) {//поиск выходных
-                    if (snippet.getEvents().get(1).equals("Выходной")) {
-                        foundHoliday = true;
-                    }
-                } else {//поиск рабочих дней:
-                    for (int i = 0; i < day.getEvents().size(); i++) {
-                        if (snippet.getEvents().get(1).equals("Рабочий день")
-                                || snippet.getEvents().get(1).equals("Рабочее время")) {
-                            foundWorkDay = true;
-                            break;
-                        }
-                    }
-                }
+            if (day.isWorkDay()) {
+                foundWorkDay = true;
+            } else if (day.isHoliday()) {
+                foundHoliday = true;
             }
             if (foundHoliday && foundWorkDay) {
                 break;
@@ -95,7 +84,6 @@ public class CalendarTest extends AuthorizedTestBase {
         holidaysAndWorkDaysExistenceCheck();
     }
 
-
     /**
      * 2 Сценарий: проверка переключения месяца
      * Выбрать следующий месяц и нажать кнопку “Применить”
@@ -106,7 +94,6 @@ public class CalendarTest extends AuthorizedTestBase {
     @Test
     public void checkMonthSwitch() {
         calendarPO.chooseNextMonth();
-        calendarPO.waitForCalendarToLoad();
         holidaysAndWorkDaysExistenceCheck();
     }
 
@@ -136,7 +123,7 @@ public class CalendarTest extends AuthorizedTestBase {
         ArrayList<Day> days = calendarPO.fillTheCalendar();
         for (Day day : days) {
             if (day.isBelongsToThisMonth()) {
-                day.getLinkToClick().click();
+                calendarPO.clickDayOfThisMonthByNumber(Integer.parseInt(day.getFcDayNumber()));
                 Snippet snippet = calendarPO.fillSnippet();
                 if (!day.getDate().equals(snippet.getDate())) {//проверка даты дня
                     fail(String.format("В сниппете справа сверху дата должна быть %s, а фактически %s"

@@ -8,6 +8,12 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class LoginPage {
     /**
+     * @return true если текст о неверных логине/пароле выведен
+     */
+    public boolean invalidCredentialsTextIsVisible() {
+        return $x(xpathForInvalidCredentialsText).exists();
+    }
+    /**
      * xpath для текста, появляющегося при неверном логине и/или пароле
      */
     private String xpathForInvalidCredentialsText = "//div[contains(text(), 'Invalid credentials.')]";
@@ -15,13 +21,6 @@ public class LoginPage {
      * xpath для кнопки "Войти"
      */
     private String xpathForEnterButton = "//*[@value='Войти']";
-
-    /**
-     * @return true если текст о неверных логине/пароле выведен
-     */
-    public boolean invalidCredentialsTextIsVisible() {
-        return $x(xpathForInvalidCredentialsText).exists();
-    }
 
     /**
      * Яндексовский элемент для работы с инпутами. Находит поле ввода логина.
