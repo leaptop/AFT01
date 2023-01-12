@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.annotations.BeforeMethod;
 
 /**
  * Класс для реализации базового функционала для всех тестов, написанных с использованием Selenium.
@@ -20,7 +21,7 @@ public class TestBase {
     /**
      * Инициализируем вебдрайвер, настраиваем его перед запуском каждого теста.
      */
-    @BeforeEach
+    @BeforeMethod
     void initTests() {
         System.setProperty("webdriver.chrome.driver", System.getenv("CHROME_DRIVER"));
         ChromeOptions options = new ChromeOptions();
