@@ -28,7 +28,7 @@ implicitWait будет работать (ждать заданное время
  * @author Алексеев Степан
  * @date 25.12.2022
  */
-public class CalendarTest extends AuthorizedTestBaseSelenide {
+public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
 
     /**
