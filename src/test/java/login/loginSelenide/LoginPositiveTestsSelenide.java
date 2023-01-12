@@ -4,12 +4,14 @@ import com.codeborne.selenide.Configuration;
 import helpers.TestBaseSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import pages.selenide.LoginPageSelenide;
 import pages.selenide.SuccessfulLoginPageSelenide;
 
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Алексеев Степан
@@ -19,6 +21,7 @@ public class LoginPositiveTestsSelenide extends TestBaseSelenide {
     /**
      * Проверка авторизации. Позитивный вариант.
      */
+    @Execution(CONCURRENT)
     @Test
     void checkCorrectAuthorizationInput() {
         open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class)

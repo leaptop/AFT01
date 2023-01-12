@@ -2,10 +2,13 @@ package login.loginSelenium;
 
 import helpers.TestBase;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import pages.selenium.LoginPage;
 import pages.selenium.SuccessfulLoginPage;
+
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * Класс, содержащий позитивные тесты
@@ -48,6 +51,7 @@ public class LoginPositiveTests extends TestBase {
      * @param name логин
      * @param pass пароль
      */
+    @Execution(CONCURRENT)
     @ParameterizedTest(name = "{displayName}: {arguments}")
     @CsvSource({"Авто Пользователь, 12345678, 124124@m.r", "Тест, Тест, 1@m.r"})
     void checkCorrectAuthorizationInputViaParameters

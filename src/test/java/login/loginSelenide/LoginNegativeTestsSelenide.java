@@ -4,15 +4,18 @@ import com.codeborne.selenide.Configuration;
 import helpers.TestBaseSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import pages.selenide.LoginPageSelenide;
 
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverConditions.url;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Алексеев Степан
  * @date 19.12.2022
  */
+@Execution(CONCURRENT)
 public class LoginNegativeTestsSelenide extends TestBaseSelenide {
     /**
      * Проверка того, что текст о неверных данных (о логине и пароле) не выведется при нажатии на кнопку "Войти"
@@ -20,6 +23,7 @@ public class LoginNegativeTestsSelenide extends TestBaseSelenide {
      * <p>
      * Проверка того, что не произойдёт перенаправления на какие-либо другие страницы при вышеописанных действиях.
      */
+    @Execution(CONCURRENT)
     @Test
     public void checkEmptyLoginPassword() {
         Configuration.browserSize = "1920x1080";
@@ -33,6 +37,7 @@ public class LoginNegativeTestsSelenide extends TestBaseSelenide {
      * Проверка того, что при вводе неверных логина и пароля будет выведено сообщение "Invalid Credentials".
      * Также проверка того, что введённое ранее имя пользователя сохранилось в поле ввода, а пароль исчез.
      */
+    @Execution(CONCURRENT)
     @Test
     public void incorrectUserNameAndPassword() {
         LoginPageSelenide lps = open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class)

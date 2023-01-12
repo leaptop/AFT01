@@ -3,7 +3,10 @@ package login.loginSelenium;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import helpers.TestBase;
+import org.junit.jupiter.api.parallel.Execution;
 import pages.selenium.LoginPage;
+
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * Класс, содержащий негативные тесты
@@ -18,6 +21,7 @@ public class LoginNegativeTests extends TestBase {
      * <p>
      * Проверка того, что не произойдёт перенаправления на какие-либо другие страницы при вышеописанных действиях.
      */
+    @Execution(CONCURRENT)
     @Test
     void task7point2() {
         chromedriver.get("https://tt-testing.quality-lab.ru/login");

@@ -4,10 +4,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import pages.selenium.LoginPage;
+
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Алексеев Степан
@@ -43,6 +46,7 @@ public class LoginTest {
      * В конце добавлены проверки из задания 7:
      * Проверка того, что введённое ранее имя пользователя сохранилось в поле ввода, а пароль исчез.
      */
+    @Execution(CONCURRENT)
     @Test
     void incorrectUserNameAndPassword() {
         chromedriver.get("https://tt-testing.quality-lab.ru/login");

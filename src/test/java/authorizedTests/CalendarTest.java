@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import pages.selenide.CalendarPO;
 
 import java.text.SimpleDateFormat;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static com.codeborne.selenide.Selenide.open;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /*
 5 Выясни какие значения таймаутов стоят по-умолчанию для разных неявных ожиданий
@@ -28,6 +30,7 @@ implicitWait будет работать (ждать заданное время
  * @author Алексеев Степан
  * @date 25.12.2022
  */
+@Execution(CONCURRENT)
 public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
 

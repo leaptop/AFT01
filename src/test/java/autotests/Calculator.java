@@ -2,8 +2,10 @@ package autotests;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * Задание 4 АФТ
@@ -11,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Алексеев Степан
  * @date 21.12.2022
  */
+@Execution(CONCURRENT)
 public class Calculator {
     public int sum(int a, int b) {
         return a + b;
