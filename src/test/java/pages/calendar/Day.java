@@ -15,13 +15,40 @@ import java.util.ArrayList;
 @Data
 @AllArgsConstructor
 public class Day {
-    private boolean isWorkDay = false;//рабочий день
-    private boolean isHoliday = false;//выходной день
-    private boolean isVacationDay = false;//день отпуска
-    private String fcDayNumber;//число (день месяца)
-    private LocalDate date;//дата дня
-    private boolean belongsToThisMonth;//принадлежность текущему месяцу
-    private String row1tdContents;//содержимое первого ряда
-    private ArrayList<String> events;//события дня
-    private int dayOfWeek;//день недели
+    /**
+     * это рабочий день
+     */
+    private boolean isWorkDay = false;
+    /**
+     * это выходной день
+     */
+    private boolean isHoliday = false;
+    /**
+     * это день отпуска
+     */
+    private boolean isVacationDay = false;
+    /**
+     * число (день месяца)
+     */
+    private String fcDayNumber;
+    /**
+     * дата дня
+     */
+    private LocalDate date;
+    /**
+     * принадлежность текущему месяцу
+     */
+    private boolean belongsToThisMonth;
+    /**
+     * содержимое первого ряда в таблице недели (обычно если там пусто, то и в остальных рядах пусто)
+     */
+    private String row1tdContents;
+    /**
+     * события дня
+     */
+    private ArrayList<String> events;
+    /**
+     * номер дня недели
+     */
+    private int dayOfWeek;
 }

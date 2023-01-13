@@ -119,7 +119,6 @@ public class CalendarTest extends AuthorizedTestBase {
      */
     @Test
     public void checkSideSnippetSwitch() {
-        WebDriverRunner.driver().getWebDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         ArrayList<Day> days = calendarPO.fillTheCalendar();
         for (Day day : days) {
             if (day.isBelongsToThisMonth()) {

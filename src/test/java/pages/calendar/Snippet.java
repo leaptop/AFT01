@@ -1,5 +1,8 @@
 package pages.calendar;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -9,21 +12,16 @@ import java.util.ArrayList;
  * <p>
  * Класс для сохранения содержимого сниппета справа сверху
  */
+@Data
+@AllArgsConstructor
 public class Snippet {
 
-    private LocalDate date;//дата дня
-    private ArrayList<String> events;//события дня
-
-    public Snippet(LocalDate date, ArrayList<String> events) {
-        this.date = date;
-        this.events = events;
-    }
-
-    public ArrayList<String> getEvents() {
-        return events;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
+    /**
+     * дата дня
+     */
+    private LocalDate date;
+    /**
+     * события дня
+     */
+    private ArrayList<String> events;
 }

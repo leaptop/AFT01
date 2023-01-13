@@ -200,7 +200,6 @@ public class CalendarPO {
      * @return this
      */
     public CalendarPO waitForCalendarToLoad() {
-        //  $x(calendarProgressBarXPath).should(Condition.disappear, Duration.ofSeconds(30));
         $x(calendarProgressBarXPath).shouldBe(visible);
         $x(calendarProgressBarXPath).shouldNotBe(visible, Duration.ofSeconds(10));
         return this;
