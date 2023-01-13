@@ -1,12 +1,9 @@
 package login.loginSelenium;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import helpers.TestBase;
-import org.junit.jupiter.api.parallel.Execution;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import pages.selenium.LoginPage;
-
-import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * Класс, содержащий негативные тесты
@@ -21,15 +18,16 @@ public class LoginNegativeTests extends TestBase {
      * <p>
      * Проверка того, что не произойдёт перенаправления на какие-либо другие страницы при вышеописанных действиях.
      */
-    @Execution(CONCURRENT)
     @Test
     void task7point2() {
         chromedriver.get("https://tt-testing.quality-lab.ru/login");
         LoginPage lp = new LoginPage(chromedriver);
         lp.clickEnterButton();
-        Assertions.assertFalse(lp.invalidCredentialsTextIsVisible(),
+        SoftAssert soft = new SoftAssert();
+        soft.assertFalse(lp.invalidCredentialsTextIsVisible(),
                 "Исключение не было выброшено, т.к. элемент был найден");
-        Assertions.assertEquals("https://tt-testing.quality-lab.ru/login",
+        soft.assertEquals("https://tt-testing.quality-lab.ru/login",
                 chromedriver.getCurrentUrl(), "URL-адрес изменился");
+        soft.assertAll();
     }
 }

@@ -2,20 +2,19 @@ package login.loginSelenide;
 
 import com.codeborne.selenide.Configuration;
 import helpers.TestBaseSelenide;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import pages.selenide.LoginPageSelenide;
 
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
-import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
+import static org.testng.Assert.assertFalse;
 
 /**
  * @author Алексеев Степан
  * @date 19.12.2022
  */
-@Execution(CONCURRENT)
 public class LoginNegativeTestsSelenide extends TestBaseSelenide {
     /**
      * Проверка того, что текст о неверных данных (о логине и пароле) не выведется при нажатии на кнопку "Войти"
@@ -23,13 +22,13 @@ public class LoginNegativeTestsSelenide extends TestBaseSelenide {
      * <p>
      * Проверка того, что не произойдёт перенаправления на какие-либо другие страницы при вышеописанных действиях.
      */
-    @Execution(CONCURRENT)
     @Test
     public void checkEmptyLoginPassword() {
         Configuration.browserSize = "1920x1080";
         LoginPageSelenide lps = open("https://tt-testing.quality-lab.ru/login",
                 LoginPageSelenide.class).clickEnterButton();
-        Assertions.assertFalse(lps.invalidCredentialsTextIsVisible());
+        SoftAssert soft = new SoftAssert();
+        assertFalse(lps.invalidCredentialsTextIsVisible());
         webdriver().shouldHave(url("https://tt-testing.quality-lab.ru/login"));
     }
 
@@ -37,15 +36,17 @@ public class LoginNegativeTestsSelenide extends TestBaseSelenide {
      * Проверка того, что при вводе неверных логина и пароля будет выведено сообщение "Invalid Credentials".
      * Также проверка того, что введённое ранее имя пользователя сохранилось в поле ввода, а пароль исчез.
      */
-    @Execution(CONCURRENT)
     @Test
     public void incorrectUserNameAndPassword() {
         LoginPageSelenide lps = open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class)
                 .sendLogin("TestUser")
                 .sendPassword("Password")
                 .clickEnterButton();
-        Assertions.assertTrue(lps.invalidCredentialsTextIsVisible(), "Надпись Invalid Credentials не появилась");
-        Assertions.assertEquals("TestUser", lps.getLoginInputText(), "Введённое ранее имя пользователя не сохранилось");
-        Assertions.assertEquals("", lps.getPasswordInputText(), "В поле пароль есть какой-то текст");
+        SoftAssert soft = new SoftAssert();
+
+        soft.assertTrue(lps.invalidCredentialsTextIsVisible(), "Надпись Invalid Credentials не появилась");
+        soft.assertEquals("TestUser", lps.getLoginInputText(), "Введённое ранее имя пользователя не сохранилось");
+        soft.assertEquals("", lps.getPasswordInputText(), "В поле пароль есть какой-то текст");
+        soft.assertAll();
     }
 }

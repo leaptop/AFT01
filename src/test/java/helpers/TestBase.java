@@ -1,11 +1,9 @@
 package helpers;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 /**
@@ -14,7 +12,6 @@ import org.testng.annotations.BeforeMethod;
  * @author Алексеев Степан
  * @date 20.12.2022
  */
-@ExtendWith(MyTestWatcher.class)
 public class TestBase {
     public WebDriver chromedriver;
 
@@ -36,7 +33,7 @@ public class TestBase {
      * иначе нельзя получить доступ к вебдрайверу (он закрывается здесь до
      * запуска методов из MyTestWatcher).
      */
-    // @AfterEach
+     @AfterMethod
     void finishTest() {
         if (chromedriver != null)
             chromedriver.quit();

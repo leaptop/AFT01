@@ -33,12 +33,12 @@
         <!--        Убрать когда подберу правильную комбинацию зависимостей.-->
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>5.9.0</version>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter-params</artifactId>-->
+<!--            <version>5.9.0</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 <!--        <dependency>&lt;!&ndash;        <Переезжаю на TestNG>&ndash;&gt;-->
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.7.0</version>
+            <version>6.14.3</version>
             <scope>test</scope>
         </dependency>
 
@@ -123,11 +123,11 @@
                 <configuration>
                     <properties>
                         <configurationParameters>
-                            junit.jupiter.conditions.deactivate = *
-                            junit.jupiter.extensions.autodetection.enabled = true
-                            junit.jupiter.testinstance.lifecycle.default = per_class
-                            junit.jupiter.execution.parallel.enabled = true
-                            junit.jupiter.execution.parallel.mode.default = concurrent
+<!--                            junit.jupiter.conditions.deactivate = *-->
+<!--                            junit.jupiter.extensions.autodetection.enabled = true-->
+<!--                            junit.jupiter.testinstance.lifecycle.default = per_class-->
+<!--                            junit.jupiter.execution.parallel.enabled = true-->
+<!--                            junit.jupiter.execution.parallel.mode.default = concurrent-->
                         </configurationParameters>
                     </properties>
                     <testFailureIgnore>false</testFailureIgnore>
@@ -137,7 +137,8 @@
                     <systemProperties>
                         <property>
                             <name>
-                                junit.jupiter.extensions.autodetection.enabled
+<!--                                autotests.testNG-->
+<!--                                junit.jupiter.extensions.autodetection.enabled-->
                             </name>
                             <value>true</value>
                         </property>

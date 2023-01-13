@@ -2,8 +2,6 @@ package helpers;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 

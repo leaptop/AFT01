@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.testng.Assert.fail;
 
 /**
  * @author Алексеев Степан

@@ -2,7 +2,7 @@ package authorizedTests;
 
 import com.codeborne.selenide.WebDriverRunner;
 import okhttp3.*;
-import org.junit.jupiter.api.BeforeEach;
+import org.testng.annotations.BeforeMethod;
 import pages.selenide.CalendarPO;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ import static properties.AeonBitsProperties.credentialsProperties;
 public class AuthorizedTestBase {
     public CalendarPO calendarPO;
 
-    @BeforeEach
+    @BeforeMethod
     public void authorizeViaHTTP() {
         CookieManager cookieManager = new CookieManager();//1 start
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -72,7 +72,5 @@ public class AuthorizedTestBase {
             );
             WebDriverRunner.driver().getWebDriver().manage().addCookie(cookie);
         });
-//        calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
-//                .waitForCalendarToLoad();
     }
 }

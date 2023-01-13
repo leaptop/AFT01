@@ -2,16 +2,14 @@ package login.loginSelenide;
 
 import com.codeborne.selenide.Configuration;
 import helpers.TestBaseSelenide;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import pages.selenide.LoginPageSelenide;
 import pages.selenide.SuccessfulLoginPageSelenide;
 
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
-import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Алексеев Степан
@@ -21,7 +19,6 @@ public class LoginPositiveTestsSelenide extends TestBaseSelenide {
     /**
      * Проверка авторизации. Позитивный вариант.
      */
-    @Execution(CONCURRENT)
     @Test
     void checkCorrectAuthorizationInput() {
         open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class)
@@ -32,7 +29,9 @@ public class LoginPositiveTestsSelenide extends TestBaseSelenide {
         SuccessfulLoginPageSelenide slps = new SuccessfulLoginPageSelenide();
         slps.clickUpperRightCornerAvatar();
         Configuration.timeout = 10000;
-        Assertions.assertEquals("Авто Пользователь", slps.getNameFromCard(), "Имя не равно ожидаемому");
-        Assertions.assertEquals("124124@m.r", slps.getEmailFromCard(), "Имейл не равен ожидаемому");
+        SoftAssert soft = new SoftAssert();
+        soft.assertEquals("Авто Пользователь", slps.getNameFromCard(), "Имя не равно ожидаемому");
+        soft.assertEquals("124124@m.r", slps.getEmailFromCard(), "Имейл не равен ожидаемому");
+        soft.assertAll();
     }
 }

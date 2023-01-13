@@ -1,10 +1,8 @@
 package authorizedTests;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import pages.selenide.CalendarPO;
 
 import java.text.SimpleDateFormat;
@@ -13,7 +11,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import static com.codeborne.selenide.Selenide.open;
-import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /*
 5 Выясни какие значения таймаутов стоят по-умолчанию для разных неявных ожиданий
@@ -30,7 +27,7 @@ implicitWait будет работать (ждать заданное время
  * @author Алексеев Степан
  * @date 25.12.2022
  */
-@Execution(CONCURRENT)
+
 public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
 
@@ -38,7 +35,7 @@ public class CalendarTest extends AuthorizedTestBase {
      * Открываем календарь и ждём появления сообщения о загрузке. Потом ждём его исчезновения.
      */
 
-    @BeforeEach
+    @BeforeMethod
     public void openCalendar() {
         calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
                 .waitForCalendarToLoad();
@@ -51,20 +48,19 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть рабочие дни (зеленые)
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
-    @DisplayName("1 Сценарий: проверка текущего месяца")
     @Test()
     public void checkCurrentMonthAndYear() {
         Date date = Date.from(Instant.now());
         SimpleDateFormat newDateFormat = new SimpleDateFormat("LLLL yyyy", Locale.getDefault());
         String result = newDateFormat.format(date);
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(result, calendarPO.getCurrentMonthAndYear(),
-                        "Текущие месяц и год не совпадают с выведенными на сайте"),
-                () -> Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
-                        "Не найдены рабочие дни в месяце"),
-                () -> Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0,
-                        "Не найдены выходные дни в месяце")
-        );
+        SoftAssert soft = new SoftAssert();
+        soft.assertEquals(result, calendarPO.getCurrentMonthAndYear(),
+                "Текущие месяц и год не совпадают с выведенными на сайте");
+        soft.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
+                "Не найдены рабочие дни в месяце");
+        soft.assertTrue(calendarPO.getHolidayLinks().size() > 0,
+                "Не найдены выходные дни в месяце");
+        soft.assertAll();
     }
 
     /**
@@ -74,17 +70,16 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть рабочие дни (зеленые)
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
-    @DisplayName("2 Сценарий: проверка переключения месяца")
     @Test
     public void checkMonthSwitch() {
         calendarPO.chooseMonthAndYear("Янв 2023");
         calendarPO.waitForCalendarToLoad();
-        Assertions.assertAll(
-                () -> Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
-                        "Не найдены рабочие дни в месяце"),
-                () -> Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0,
-                        "Не найдены выходные дни в месяце")
-        );
+        SoftAssert soft = new SoftAssert();
+        soft.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
+                "Не найдены рабочие дни в месяце");
+        soft.assertTrue(calendarPO.getHolidayLinks().size() > 0,
+                "Не найдены выходные дни в месяце");
+        soft.assertAll();
     }
 
     /**
@@ -94,16 +89,15 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть рабочие дни (зеленые)
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
-    @DisplayName("3 Сценарий: проверка графика другого сотрудника")
     @Test
     public void checkOtherEmployee() {
         calendarPO.chooseEmployee("Якина");
-        Assertions.assertAll(
-                () -> Assertions.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
-                        "Не найдены рабочие дни в месяце"),
-                () -> Assertions.assertTrue(calendarPO.getHolidayLinks().size() > 0,
-                        "Не найдены выходные дни в месяце")
-        );
+        SoftAssert soft = new SoftAssert();
+        soft.assertTrue(calendarPO.getWorkDayLInks().size() > 0,
+                        "Не найдены рабочие дни в месяце");
+        soft.assertTrue(calendarPO.getHolidayLinks().size() > 0,
+                        "Не найдены выходные дни в месяце");
+        soft.assertAll();
     }
 
     /**
@@ -117,7 +111,6 @@ public class CalendarTest extends AuthorizedTestBase {
      * строках. Непонятно как их организовать...Да это и не нужно... Вроде... Хотя дату надо тоже проверить
      * наверное... Так что, вероятно, придётся хранить очень структурированно...
      */
-    @DisplayName("4 Сценарий: проверка переключения бокового сниппета")
     @Test
     public void checkSideSnippetSwitch() {
         calendarPO.checkCalendarSnippetInteraction();
