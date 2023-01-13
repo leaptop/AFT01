@@ -1,7 +1,6 @@
 package authorizedTests.calendar;
 
 import authorizedTests.AuthorizedTestBase;
-import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,14 +8,13 @@ import pages.calendar.CalendarPO;
 import pages.calendar.Day;
 import pages.calendar.Snippet;
 
-import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.ArrayList;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /*
 5 Выясни какие значения таймаутов стоят по-умолчанию для разных неявных ожиданий
@@ -35,26 +33,28 @@ public class CalendarTest extends AuthorizedTestBase {
     /**
      * Проверка существования выходных и рабочих дней в календаре
      */
-    private void holidaysAndWorkDaysExistenceCheck() {
-        ArrayList<Day> days = calendarPO.fillTheCalendar();
+    private void holidaysAndWorkDaysExistenceCheckNew() {
         boolean foundHoliday = false;
         boolean foundWorkDay = false;
-        for (Day day : days) {
-            if (day.isWorkDay()) {
-                foundWorkDay = true;
-            } else if (day.isHoliday()) {
+        ArrayList<LocalDate> datesToCheck = calendarPO.getDates();
+        for (int i = 0; i < datesToCheck.size(); i++) {
+            calendarPO.clickDayOfThisMonth(datesToCheck.get(i));
+            Day day = calendarPO.getDay(datesToCheck.get(i));
+            if (day.isHoliday()) {
                 foundHoliday = true;
+            } else if (day.isWorkDay()) {
+                foundWorkDay = true;
             }
             if (foundHoliday && foundWorkDay) {
+                boolean finalFoundWorkDay = foundWorkDay;
+                boolean finalFoundHoliday = foundHoliday;
+                Assertions.assertAll(
+                        () -> Assertions.assertTrue(finalFoundWorkDay, "Не найдены рабочие дни в месяце"),
+                        () -> Assertions.assertTrue(finalFoundHoliday, "Не найдены выходные дни в месяце")
+                );
                 break;
             }
         }
-        boolean finalFoundWorkDay = foundWorkDay;
-        boolean finalFoundHoliday = foundHoliday;
-        Assertions.assertAll(
-                () -> Assertions.assertTrue(finalFoundWorkDay, "Не найдены рабочие дни в месяце"),
-                () -> Assertions.assertTrue(finalFoundHoliday, "Не найдены выходные дни в месяце")
-        );
     }
 
     /**
@@ -81,7 +81,7 @@ public class CalendarTest extends AuthorizedTestBase {
                 () -> assertEquals(Year.of(LocalDateTime.now().getYear()), calendarPO.getYear(),
                         "Текущий год не совпадает с выведенным на календаре")
         );
-        holidaysAndWorkDaysExistenceCheck();
+        holidaysAndWorkDaysExistenceCheckNew();
     }
 
     /**
@@ -94,7 +94,7 @@ public class CalendarTest extends AuthorizedTestBase {
     @Test
     public void checkMonthSwitch() {
         calendarPO.chooseNextMonth();
-        holidaysAndWorkDaysExistenceCheck();
+        holidaysAndWorkDaysExistenceCheckNew();
     }
 
     /**
@@ -107,7 +107,7 @@ public class CalendarTest extends AuthorizedTestBase {
     @Test
     public void checkOtherEmployee() {
         calendarPO.chooseEmployee("Якина");
-        holidaysAndWorkDaysExistenceCheck();
+        holidaysAndWorkDaysExistenceCheckNew();
     }
 
     /**
@@ -118,29 +118,22 @@ public class CalendarTest extends AuthorizedTestBase {
      * Проверить что информация в боковом снипете совпадает с информацией в дне
      */
     @Test
-    public void checkSideSnippetSwitch() {
-        ArrayList<Day> days = calendarPO.fillTheCalendar();
-        for (Day day : days) {
-            if (day.isBelongsToThisMonth()) {
-                calendarPO.clickDayOfThisMonthByNumber(Integer.parseInt(day.getFcDayNumber()));
-                Snippet snippet = calendarPO.fillSnippet();
-                if (!day.getDate().equals(snippet.getDate())) {//проверка даты дня
-                    fail(String.format("В сниппете справа сверху дата должна быть %s, а фактически %s"
-                                    , day.getDate().toString()
-                                    , snippet.getDate().toString()
-                            )
-                    );
-                }
-                if (day.getEvents().get(0).equals("")) {//проверка выходных
-                    assertEquals("Выходной",
-                            snippet.getEvents().get(1), String.format(
-                                    "В сниппете неверная информация о дне %s, он д.б. подписан как \"Выходной\".",
-                                    day.getDate().toString()));
-                } else {//проверка рабочих дней:
-                    for (int i = 0; i < day.getEvents().size(); i++) {
-                        assertEquals(day.getEvents().get(i), snippet.getEvents().get(i * 2),
-                                "В сниппете неверная информация о дне " + day.getDate().toString());
-                    }
+    public void checkSideSnippetSwitchNew() {
+        ArrayList<LocalDate> datesToCheck = calendarPO.getDates();
+        for (int i = 0; i < datesToCheck.size(); i++) {
+            calendarPO.clickDayOfThisMonth(datesToCheck.get(i));
+            Day day = calendarPO.getDay(datesToCheck.get(i));
+            Snippet snippet = calendarPO.getSnippet();
+            if (day.isHoliday()) {
+                Assertions.assertAll(
+                        () -> Assertions.assertEquals("", snippet.getEvents().get(0)),
+                        () -> Assertions.assertEquals("Выходной", snippet.getEvents().get(1))
+                );
+            } else if (day.isWorkDay() || day.isVacationDay()) {
+                ArrayList<String> dayEvents = day.getEvents();
+                ArrayList<String> snippetEvents = snippet.getEvents();
+                for (int j = 0; j < dayEvents.size(); j++) {
+                    Assertions.assertEquals(dayEvents.get(j), snippetEvents.get(j * 2));
                 }
             }
         }

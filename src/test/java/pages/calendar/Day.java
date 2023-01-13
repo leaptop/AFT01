@@ -16,6 +16,10 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class Day {
     /**
+     * Подтверждение существования дня в календаре
+     */
+    private boolean dayExistsInCalendar = false;
+    /**
      * это рабочий день
      */
     private boolean isWorkDay = false;
@@ -28,21 +32,9 @@ public class Day {
      */
     private boolean isVacationDay = false;
     /**
-     * число (день месяца)
-     */
-    private String fcDayNumber;
-    /**
      * дата дня
      */
     private LocalDate date;
-    /**
-     * принадлежность текущему месяцу
-     */
-    private boolean belongsToThisMonth;
-    /**
-     * содержимое первого ряда в таблице недели (обычно если там пусто, то и в остальных рядах пусто)
-     */
-    private String row1tdContents;
     /**
      * события дня
      */

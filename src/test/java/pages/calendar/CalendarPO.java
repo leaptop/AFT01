@@ -27,6 +27,14 @@ public class CalendarPO {
     }
 
     /**
+     * заголовки с датами текущего месяца
+     */
+    private String currentMonthHeadersXPath = "//thead//td[not(contains(@class,'fc-other-month'))and @data-date]";
+    /**
+     * часть календаря: номер дня вверху ячейки дня для клика. Определяется по дате %s
+     */
+    private String dayNumberXPath = "//div[@class='fc-content-skeleton']//td[@data-date='%s']";
+    /**
      * первый ряд tr таблицы
      */
     private String firstRow = "./div[@class='fc-content-skeleton']//tbody/tr[1]";
@@ -114,9 +122,20 @@ public class CalendarPO {
      *
      * @param number
      */
-    public void clickDayOfThisMonthByNumber(int number) {
+    public void clickDayOfThisMonth(int number) {
         $x(String.format("//td[not(contains(@class,'fc-other-month'))]/span[@class='fc-day-number' and text()='%d']",
                 number)).click();
+    }
+
+    /**
+     * Кликает день по дате
+     *
+     * @param date дата для клика
+     */
+    public CalendarPO clickDayOfThisMonth(LocalDate date) {
+        String dateStr = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        $x(String.format(dayNumberXPath, dateStr)).click();
+        return this;
     }
 
     /**
@@ -226,9 +245,23 @@ public class CalendarPO {
     }
 
     /**
-     * Здесь получаем содержимое сниппета и заносим его в переменную snippet.
+     * @return возвращает все даты текущего месяца
      */
-    public Snippet fillSnippet() {
+    public ArrayList<LocalDate> getDates() {
+        ArrayList<LocalDate> dates = new ArrayList<>();
+        ElementsCollection datesSelenide =
+                $$x(currentMonthHeadersXPath);
+        for (int i = 0; i < datesSelenide.size(); i++) {
+            dates.add(LocalDate.parse(datesSelenide.get(i).getAttribute("data-date"), DateTimeFormatter
+                    .ofPattern("yyyy-MM-dd")));
+        }
+        return dates;
+    }
+
+    /**
+     * Возвращает объект сниппета
+     */
+    public Snippet getSnippet() {
         List<WebElement> listEv = getSnippetEvents();
         ArrayList<String> snippetEventsString = new ArrayList<>();
         for (int i = 0; i < listEv.size(); i++) {
@@ -237,42 +270,31 @@ public class CalendarPO {
         return new Snippet(getSnippetDate(), snippetEventsString);
     }
 
-
     /**
-     * Данный метод сохраняет всю информацию о днях из календаря в виде
-     * массива days.
+     * @param dateOfDay дата для создания объекта Day
+     * @return возвращает объекты дня по дате
      */
-    public ArrayList<Day> fillTheCalendar() {
-
-        ArrayList<Day> days = new ArrayList<>();
+    public Day getDay(LocalDate dateOfDay) {
+        Day day = new Day(false,
+                false,
+                false,
+                false,//"Здесь уже никто не работает. Всё делают роботы."
+                LocalDate.of(3023, 01, 13),
+                new ArrayList<>(),
+                1
+        );
         ElementsCollection aw = $$x(weeks);
-        boolean foundFirst = false;//найден первый день месяца
-        boolean belongsToM = false;//день принадлежит текущему месяцу
         for (int w = 0; w < aw.size(); w++) {//Проход по неделям
-            int n = 1;//индекс номера дня для второго и последующих рядов. Он
-            // нужен на случай появления выходного дня.
             SelenideElement row1 = aw.get(w).$x(firstRow);//первый ряд tr таблицы
-            List<String> fstRow = new ArrayList<>();//тексты td первого ряда
             ElementsCollection awh = aw.get(w).$$x(currentWeekHeaders);
-            for (int d = 0; d < awh.size(); d++) {//Проход по дням недели
-                boolean isWorkDay = false;//рабочий день
-                boolean isHoliday = false;//выходной день
-                boolean isVacationDay = false;//день отпуска
-                fstRow.add(row1.$x(String.format("./td[%d]", (d + 1))).getText());
-
-                if ((w == 0)//ищем 1й день месяца
-                        && !foundFirst
-                        && (Integer.parseInt(awh.get(d).$x("./span")
-                        .getText()) == 1)) {
-                    foundFirst = true;
-                    belongsToM = true;
-                }
-                if ((w == (aw.size() - 1) || w == (aw.size() - 2))//ищем первый день нового месяца
-                        && Integer.parseInt(awh.get(d).$x("./span").getText()) == 1) {
-                    belongsToM = false;
-                }
-                if (belongsToM) {
-                    String aClassAttribute = row1.$x(String.format("./td[%d]//a", (d + 1))).getAttribute("class");
+            for (int dayOfWeek = 0; dayOfWeek < awh.size(); dayOfWeek++) {//Проход по дням недели
+                LocalDate localDate = LocalDate.parse(awh.get(dayOfWeek).getAttribute("data-date"),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                if (localDate.equals(dateOfDay)) {
+                    boolean isWorkDay = false;//рабочий день
+                    boolean isHoliday = false;//выходной день
+                    boolean isVacationDay = false;//день отпуска
+                    String aClassAttribute = row1.$x(String.format("./td[%d]//a", (dayOfWeek + 1))).getAttribute("class");
                     if (aClassAttribute.contains("schedule-badge--default")) {
                         isWorkDay = true;
                     } else if (aClassAttribute.contains("schedule-badge--no-event")) {
@@ -280,42 +302,26 @@ public class CalendarPO {
                     } else if (aClassAttribute.contains("schedule-badge--vacation")) {
                         isVacationDay = true;
                     }
-                }
-                ArrayList<String> eventsOfOneDay = new ArrayList<>();//сюда
-                // помещаем информацию о всех записях для d-го дня
-                ElementsCollection wRows = aw.get(w).$$x(rowsOfwWeek);
-                String fstRowd = fstRow.get(d);//получил событие из 1й строки
-                // для d-го дня
-                eventsOfOneDay.add(fstRowd);//добавил в список дня d-е событие
-                for (int r = 1; r < wRows.size(); r++) {//иду по рядам
-                    //Нужно вытащить инфу о всех остальных рядах недели для
-                    // текущего (d) дня. Буду считать,
-                    // что если первый tr содержит информацию (помимо пустой
-                    // строки), то это - рабочий день или день отпуска, иначе выходной или
-                    // день другого месяца.
-                    if (belongsToM && fstRowd.length() > 0 && wRows.size() > 1) {
-                        eventsOfOneDay.add(wRows.get(r).$x(String.format("./td[%d]",
-                                (n++))).getText());//добавляю в список события
-                        // Проходимся по второму ряду (и, возможно, следующим),
-                        // инкрементируя индекс только в момент добавления
-                        // элемента.
+                    ArrayList<String> eventsOfOneDay = new ArrayList<>();
+                    ElementsCollection wRows = aw.get(w).$$x(rowsOfwWeek);
+                    for (int r = 0; r < wRows.size(); r++) {//иду по рядам событий дня
+                        if (!isHoliday) {
+                            eventsOfOneDay.add(wRows.get(r).$x(String.format("./td[%d]", (r + 1))).getText());
+                        }
                     }
+                    day = new Day(true,
+                            isWorkDay,
+                            isHoliday,
+                            isVacationDay,
+                            dateOfDay,
+                            eventsOfOneDay,
+                            dayOfWeek + 1
+                    );
+                    break;
                 }
-                String row1Content = fstRow.get(d);
-                days.add(new Day(isWorkDay,
-                        isHoliday,
-                        isVacationDay,
-                        awh.get(d).$x("./span").getText(),
-                        LocalDate.parse(awh.get(d).getAttribute("data-date"),
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        belongsToM,
-                        row1Content,
-                        eventsOfOneDay,
-                        d + 1
-                ));
             }
         }
-        return days;
+        return day;
     }
 }
 
