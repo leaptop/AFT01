@@ -6,6 +6,7 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
@@ -45,6 +46,7 @@ import static org.hamcrest.Matchers.*;
 public class Main {
     static ResponseSpecBuilder responseStatus = new ResponseSpecBuilder();
     static ResponseSpecBuilder responseError = new ResponseSpecBuilder();
+    static ResponseSpecBuilder responseCurrentYear = new ResponseSpecBuilder();
 
     @BeforeClass
     public static void setup() {
@@ -58,6 +60,8 @@ public class Main {
         //Общие проверки для всех ответов
         responseStatus.expectStatusCode(200);
         responseError.expectBody("response.messages.type", not(hasItem("error")));
+        responseCurrentYear.expectBody("response.items.date",
+                everyItem(startsWith(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy")))));
 
 //        RestAssured.responseSpecification = responseStatus.build();//с одним объектом срабатывает
         // RestAssured.responseSpecification = responseError.build();//с двумя уже нет
@@ -80,8 +84,9 @@ public class Main {
                 //Если первой проверкой стоит та, которая выдаст падение теста, то последующие, как я понимаю,
                 // вызываться не будут.
                 .spec(responseStatus.build())
-                .body("response.items.date",
-                        everyItem(startsWith(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy")))))
+//                .body("response.items.date",
+//                        everyItem(startsWith(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy")))))
+                .spec(responseCurrentYear.build())
                 .extract()
                 .body().jsonPath();
         List<HolidayItem> items = jsonPath.getList("response.items", HolidayItem.class);
@@ -90,7 +95,7 @@ public class Main {
         boolean shortdayFound = false;
         for (HolidayItem item : items) {
             soft.assertEquals(item.getDateParsed().getYear(), LocalDate.now().getYear(),
-                    "Текущий год и год в теле не совпадают");
+                    "Текущий год не совпадает с годом в теле ответа");
             switch (item.getType_id()) {
                 case 2:
                     holidayFound = true;
@@ -109,13 +114,64 @@ public class Main {
 
     }
 
+    /**
+     * b year = 2019, day_type не указан:
+     * * 1 Возвращается HTTP-код 200
+     * * 2 В ответе присутствуют записи только за 2019 год
+     * * 3 В ответе присутствую записи обоих типов: короткий день и выходной
+     */
     @Test
-    void testo() {
-        LocalDate ld = LocalDate.parse("2023-01-02", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String str = "";
+    void testB() {
+        when()
+                .get("/Calendar/GetHolidays?year=2019")
+                .then()
+                .spec(responseError.build())
+                .spec(responseStatus.build())
+                .body("response.items.date",
+                        everyItem(startsWith(LocalDate.of(2019, 01, 01)
+                                .format(DateTimeFormatter.ofPattern("yyyy")))))
+                .body("response.items.type_id", both(hasItem(2)).and(hasItem(1)));
     }
 
+    /**
+     * c day_type =SHORT_DAY, year не указан
+     * 1 Возвращается HTTP-код 200
+     * 2 В ответе присутствуют записи только за текущий год
+     * 3 В ответе присутствуют записи только указанного типа
+     */
+    @Test
+    void testC() {
+        when()
+                .get("/Calendar/GetHolidays?day_type=short_day")
+                .then()
+                .spec(responseStatus.build())
+                .spec(responseError.build())
+                .spec(responseCurrentYear.build())
+                .body("response.items.type", everyItem(startsWith("short_day")))
+
+    }
+
+    /**
+     * d day_type =HOLY_DAY, year не указан
+     * 1 Возвращается HTTP-код 200
+     * 2 В ответе присутствуют записи только за текущий год
+     * 3 В ответе присутствуют записи только указанного типа
+     */
+    @Test
+    void testD() {
+
+    }
+
+    /**
+     * Подумай какие можно реализовать негативные автотесты и реализуй несколько на свое усмотрение. Инъекции не
+     * используем!
+     */
+    @Test
+    void testE() {
+
+    }
 }
+
 
 @Data
 class HolidayItem {
