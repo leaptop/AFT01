@@ -1,74 +1,86 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
+import ru.yandex.qatools.htmlelements.element.Button;
+import ru.yandex.qatools.htmlelements.element.TextInput;
 
-/**
- * Page Object для страницы с вводом логина и пароля.
- */
+import static com.codeborne.selenide.Selenide.*;
+
 public class LoginPage {
-    WebDriver chromedriver;
-
-    public LoginPage(WebDriver we) {
-        chromedriver = we;
-    }
-
     /**
-     * @return Возвращает текст Invalid credentials.
-     */
-    public String getInvalidCredentialsText() {
-        return chromedriver.findElement(By.xpath("//div[contains(text(), 'Invalid credentials.')]")).getText();
-    }
-
-    /**
-     * Нажимает кнопку "Войти"
-     */
-    public void clickEnterButton() {
-        chromedriver.findElement(By.xpath("//*[@value='Войти']")).click();
-    }
-
-    /**
-     * @return возвращает текст из поля ввода логина
-     */
-    public String getTextFromUserNameInput() {
-        return chromedriver.findElement(By.name("_username")).getAttribute("value");
-    }
-
-    /**
-     * @return возвращает текст из поля ввода пароля
-     */
-    public String getTextFromPasswordInput() {
-        return chromedriver.findElement(By.id("password")).getAttribute("value");
-    }
-
-    /**
-     * Прописывает текст в поле ввода логина
-     *
-     * @param textToSend логин
-     */
-    public void sendTextToUserInput(String textToSend) {
-        chromedriver.findElement(By.name("_username")).sendKeys(textToSend);
-    }
-
-    /**
-     * Прописывает текст в поле ввода пароля
-     *
-     * @param textToSend пароль
-     */
-    public void sendTextToPasswordInput(String textToSend) {
-        chromedriver.findElement(By.id("password")).sendKeys(textToSend);
-    }
-
-    /**
-     * @return true, если надпись о неверном логине и/или пароле появилась.
+     * @return true если текст о неверных логине/пароле выведен
      */
     public boolean invalidCredentialsTextIsVisible() {
-        try {
-            chromedriver.findElement(By.xpath("//div[contains(text(), 'Invalid credentials.')]"));
-        } catch (NoSuchElementException nsee) {
-            return false;
-        }
-        return true;
+        return $x(xpathForInvalidCredentialsText).exists();
+    }
+    /**
+     * xpath для текста, появляющегося при неверном логине и/или пароле
+     */
+    private String xpathForInvalidCredentialsText = "//div[contains(text(), 'Invalid credentials.')]";
+    /**
+     * xpath для кнопки "Войти"
+     */
+    private String xpathForEnterButton = "//*[@value='Войти']";
+
+    /**
+     * Яндексовский элемент для работы с инпутами. Находит поле ввода логина.
+     * Эти элементы м.б. публичными, т.к. они для этого и сделаны.
+     */
+    private TextInput inputLogin = new TextInput($("input[name='_username']"));
+
+    /**
+     * Яндексовский элемент для работы с инпутами. Находит поле ввода пароля.
+     */
+    private TextInput inputPassword = new TextInput($("input[id='password']"));
+
+    /**
+     * Яндексовский элемент для сохранения кнопки. Находит кнопку "Войти".
+     */
+    private Button enterButton = new Button($(By.xpath(xpathForEnterButton)));
+
+    /**
+     * Шлёт логин в поле логина
+     *
+     * @param name логин
+     * @return возвращает текущую страницу для продолжения вызова методов по цепочке
+     */
+    public LoginPage sendLogin(String name) {
+        inputLogin.sendKeys(name);
+        return this;
+    }
+
+    /**
+     * Шлёт пароль в поле пароля
+     *
+     * @param password пароль
+     * @return возвращает текущую страницу для продолжения вызова методов по цепочке
+     */
+    public LoginPage sendPassword(String password) {
+        inputPassword.sendKeys(password);
+        return this;
+    }
+
+    /**
+     * Кликает по кнопке ввода "Войти"
+     *
+     * @return возвращает текущую страницу для продолжения вызова методов по цепочке
+     */
+    public LoginPage clickEnterButton() {
+        enterButton.click();
+        return this;
+    }
+
+    /**
+     * @return возвращает текстовое поле для ввода логина
+     */
+    public TextInput getInputLogin() {
+        return inputLogin;
+    }
+
+    /**
+     * @return возвращает текстовое поле для ввода пароля
+     */
+    public TextInput getInputPassword() {
+        return inputPassword;
     }
 }

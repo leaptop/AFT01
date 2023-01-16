@@ -1,23 +1,26 @@
 package autotests;
 
+import autotests.FirstTest;
 import org.junit.jupiter.api.*;
 
 /**
  * На примере данного класса можно сделать вывод о порядке вызовов методов:
  * @BeforeAll родителя
  * @BeforeAll потомка
+ *
  * @BeforeEach родителя
  * @BeforeEach потомка
  * @Test
  * @AfterEach потомка
  * @AfterEach родителя
+ *
  * @AfterAll потомка
  * @AfterAll родителя
  */
 public class SecondTest extends FirstTest {
     @BeforeAll
     static void beforeAllSecond() {
-        System.out.println("autotests.SecondTest start");
+        System.out.println("SecondTest start");
     }
 
     @BeforeEach
@@ -30,9 +33,10 @@ public class SecondTest extends FirstTest {
         System.out.println("Тест остановлен");
     }
 
+
     @AfterAll
     static void afterAllSecond() {
-        System.out.println("autotests.SecondTest stop");
+        System.out.println("SecondTest stop");
     }
 
     @Test
