@@ -92,6 +92,15 @@
             <artifactId>okhttp</artifactId>
             <version>5.0.0-alpha.11</version>
         </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+<!--            <version>5.3.0</version>-->
+<!--            <version>4.3.1</version>-->
+            <version>4.2.0</version>  <!--  Только на этой версии не выдаёт ошибку в строке
+             RestAssured.baseURI="https://tt.quality-lab.ru";:-->
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -110,6 +119,12 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.14.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
             <scope>test</scope>
         </dependency>
 
