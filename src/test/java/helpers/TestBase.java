@@ -20,7 +20,7 @@ public class TestBase {
      * с календарём (в CalendarTests) как раз и нужно было использовать разные логины и пароли.
      */
     @BeforeEach
-    @Step
+    @Step("Устанавливаем разрешение экрана")
     public void before() {
         Configuration.browserSize = "1500x800";
     }
@@ -28,7 +28,7 @@ public class TestBase {
     /**
      * Закрываем вебдрайвер в конце каждого теста
      */
-    @Step
+    @Step("Закрываем вебдрайвер")
     @AfterEach
     public void after() {
         WebDriverRunner.closeWebDriver();

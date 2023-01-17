@@ -40,7 +40,7 @@ public class SuccessfulLoginPage {
     /**
      * @return возвращает текстовый блок с имейлом пользователя с карточки после нажатия на аватарку справа сверху
      */
-    @Step
+    @Step("Получаем объект с текстом имейла")
     public TextBlock getEmailTextBlock() {
         $x(xpathForUserEmailOnCard).shouldBe(Condition.visible);
         return emailBlock;
@@ -49,7 +49,7 @@ public class SuccessfulLoginPage {
     /**
      * @return Возвращает текстовый блок имени и фамилии с карточки после нажатия на аватарку справа сверху
      */
-    @Step
+    @Step("Получаем объект с текстом имени")
     public TextBlock getNameTextBlock() {
         $x(xpathForUserNameOnCard).shouldBe(Condition.visible);
         return nameBlock;
@@ -60,7 +60,7 @@ public class SuccessfulLoginPage {
      *
      * @return возвращает текущую страницу для возможности запуска других методов по цепочке.
      */
-    @Step
+    @Step("Кликаем по аватарке справа сверху")
     public SuccessfulLoginPage clickUpperRightCornerAvatar() {
         upperRightCornereAvatar.click();
         return this;

@@ -2,6 +2,7 @@ package login;
 
 import helpers.TestBase;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.LoginPage;
 
@@ -25,6 +26,7 @@ public class LoginNegativeTests extends TestBase {
      * Проверка того, что не произойдёт перенаправления на какие-либо другие страницы при вышеописанных действиях.
      */
     @Test
+    @DisplayName("Тест авторизации с пустыми полями логина, пароля")
     public void checkEmptyLoginPassword() {
         LoginPage lps = open(credentialsProperties.url()
                 , LoginPage.class).clickEnterButton();
@@ -37,6 +39,7 @@ public class LoginNegativeTests extends TestBase {
      * Также проверка того, что введённое ранее имя пользователя сохранилось в поле ввода, а пароль исчез.
      */
     @Test
+    @DisplayName("Тест авторизации с неверными логином, паролем")
     void incorrectUserNameAndPasswordNew() {
         LoginPage lps = open(credentialsProperties.url(), LoginPage.class)
                 .sendLogin(credentialsProperties.incorrectUserName())

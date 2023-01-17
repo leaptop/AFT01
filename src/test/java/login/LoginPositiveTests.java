@@ -2,6 +2,7 @@ package login;
 
 import helpers.TestBase;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.LoginPage;
 import pages.SuccessfulLoginPage;
@@ -20,6 +21,7 @@ public class LoginPositiveTests extends TestBase {
      * Проверка авторизации. Позитивный вариант.
      */
     @Test
+    @DisplayName("Тест авторизации с верными логином, паролем, проверкой имейла, имени")
     void checkCorrectAuthorizationInputNew() {
         open(credentialsProperties.url(), LoginPage.class)
                 .sendLogin(credentialsProperties.autoUser())

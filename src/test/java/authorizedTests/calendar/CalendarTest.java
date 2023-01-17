@@ -4,6 +4,7 @@ import authorizedTests.AuthorizedTestBase;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.calendar.CalendarPO;
 import pages.calendar.Day;
@@ -16,14 +17,17 @@ import java.util.ArrayList;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+/**
+ * @author Алексеев Степан
+ * @date 25.12.2022
+ */
 public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
 
     /**
      * Проверка существования выходных и рабочих дней в календаре
      */
-    @Step
+    @Step("Проверка существования выходных и рабочих дней в календаре")
     private void holidaysAndWorkDaysExistenceCheckNew() {
         boolean foundHoliday = false;
         boolean foundWorkDay = false;
@@ -52,7 +56,7 @@ public class CalendarTest extends AuthorizedTestBase {
      * Открываем календарь и ждём появления и исчезновения Progress bar.
      */
     @BeforeEach
-    @Step
+    @Step("Открываем календарь и ждём появления и исчезновения Progress bar-а")
     public void openCalendar() {
         calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
                 .waitForCalendarToLoad();
@@ -66,6 +70,7 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
     @Test
+    @DisplayName("1 Сценарий: проверка текущего месяца")
     public void checkCurrentMonthAndYear() {
         Assertions.assertAll(
                 () -> assertEquals(LocalDateTime.now().getMonth(), calendarPO.getMonth(),
@@ -84,6 +89,7 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
     @Test
+    @DisplayName("2 Сценарий: проверка переключения месяца")
     public void checkMonthSwitch() {
         calendarPO.chooseNextMonth();
         holidaysAndWorkDaysExistenceCheckNew();
@@ -97,6 +103,7 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
     @Test
+    @DisplayName("3 Сценарий: проверка графика другого сотрудника")
     public void checkOtherEmployee() {
         calendarPO.chooseEmployee("Якина");
         holidaysAndWorkDaysExistenceCheckNew();
@@ -110,6 +117,7 @@ public class CalendarTest extends AuthorizedTestBase {
      * Проверить что информация в боковом снипете совпадает с информацией в дне
      */
     @Test
+    @DisplayName("4 Сценарий: проверка переключения бокового сниппета")
     public void checkSideSnippetSwitchNew() {
         ArrayList<LocalDate> datesToCheck = calendarPO.getDates();
         for (int i = 0; i < datesToCheck.size(); i++) {

@@ -47,7 +47,7 @@ public class LoginPage {
      * @param name логин
      * @return возвращает текущую страницу для продолжения вызова методов по цепочке
      */
-    @Step
+  //  @Step("Шлём логин в поле логина")//раскомментировать когда научусь скрывать параметр от аллюра
     public LoginPage sendLogin(String name) {
         inputLogin.sendKeys(name);
         return this;
@@ -59,7 +59,7 @@ public class LoginPage {
      * @param password пароль
      * @return возвращает текущую страницу для продолжения вызова методов по цепочке
      */
-    @Step
+    // @Step("Шлём пароль в поле пароля")//раскомментировать когда научусь скрывать параметр от аллюра
     public LoginPage sendPassword(String password) {
         inputPassword.sendKeys(password);
         return this;
@@ -70,7 +70,7 @@ public class LoginPage {
      *
      * @return возвращает текущую страницу для продолжения вызова методов по цепочке
      */
-    @Step
+    @Step("Жмём кнопку \"Войти\"")
     public LoginPage clickEnterButton() {
         enterButton.click();
         return this;
@@ -79,7 +79,7 @@ public class LoginPage {
     /**
      * @return возвращает текстовое поле для ввода логина
      */
-    @Step
+    @Step("Получаем текстовое поле для ввода логина")
     public TextInput getInputLogin() {
         return inputLogin;
     }
@@ -87,7 +87,7 @@ public class LoginPage {
     /**
      * @return возвращает текстовое поле для ввода пароля
      */
-    @Step
+    @Step("Получаем текстовое поле для ввода пароля")
     public TextInput getInputPassword() {
         return inputPassword;
     }
