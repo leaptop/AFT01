@@ -1,7 +1,7 @@
 # My files. Yo need to specify a full name including file extension
 **/credentials
 **/credentials.properties
-
+allure-results
 # Compiled class file
 *.class
 # Log file

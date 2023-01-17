@@ -1,4 +1,4 @@
-package pages.selenide;
+package pages;
 
 import com.codeborne.selenide.Condition;
 import ru.yandex.qatools.htmlelements.element.Image;
@@ -8,17 +8,12 @@ import static com.codeborne.selenide.Selenide.*;
 
 /**
  * Класс, реализующий паттерн Page Object для страницы, показываемой после успешного входа в систему по логину и паролю.
- *
- * @author Алексеев Степан
- * @date 19.12.2022
  */
-public class SuccessfulLoginPageSelenide {
-
+public class SuccessfulLoginPage {
     /**
      * xpath для поиска аватарки пользователя справа вверху.
      */
-    private String xpathForUpperRightCornerAvatar =
-            "//span[@class='m-topbar__userpic']//div[@class='avatarCover']";
+    private String xpathForUpperRightCornerAvatar = "//span[@class='m-topbar__userpic']//div[@class='avatarCover']";
     /**
      * xpath для поля логина
      */
@@ -30,30 +25,31 @@ public class SuccessfulLoginPageSelenide {
     /**
      * Текстовое поле с имейлом пользователя на карточке после нажатия на аватарку справа сверху
      */
+
     private TextBlock emailBlock = new TextBlock($x(xpathForUserEmailOnCard));
-    /**
-     * Аватарка справа сверху
-     */
-    private Image upperRightCornereAvatar = new Image($x(xpathForUpperRightCornerAvatar));
     /**
      * Текстовое поле с именем и фамилией пользователя на карточке после нажатия на аватарку справа сверху
      */
     private TextBlock nameBlock = new TextBlock($x(xpathForUserNameOnCard));
+    /**
+     * Аватарка справа сверху
+     */
+    private Image upperRightCornereAvatar = new Image($x(xpathForUpperRightCornerAvatar));
 
     /**
-     * @return возвращает имейл пользователя с карточки после нажатия на аватарку справа сверху
+     * @return возвращает текстовый блок с имейлом пользователя с карточки после нажатия на аватарку справа сверху
      */
-    public String getEmailFromCard() {
+    public TextBlock getEmailTextBlock() {
         $x(xpathForUserEmailOnCard).shouldBe(Condition.visible);
-        return emailBlock.getText();
+        return emailBlock;
     }
 
     /**
-     * @return Возвращает имя и фамилию с карточки после нажатия на аватарку справа сверху
+     * @return Возвращает текстовый блок имени и фамилии с карточки после нажатия на аватарку справа сверху
      */
-    public String getNameFromCard() {
+    public TextBlock getNameTextBlock() {
         $x(xpathForUserNameOnCard).shouldBe(Condition.visible);
-        return nameBlock.getText();
+        return nameBlock;
     }
 
     /**
@@ -61,7 +57,7 @@ public class SuccessfulLoginPageSelenide {
      *
      * @return возвращает текущую страницу для возможности запуска других методов по цепочке.
      */
-    public SuccessfulLoginPageSelenide clickUpperRightCornerAvatar() {
+    public SuccessfulLoginPage clickUpperRightCornerAvatar() {
         upperRightCornereAvatar.click();
         return this;
     }
