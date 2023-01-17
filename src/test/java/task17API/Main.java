@@ -62,10 +62,6 @@ public class Main {
         responseError.expectBody("response.messages.type", not(hasItem("error")));
         responseCurrentYear.expectBody("response.items.date",
                 everyItem(startsWith(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy")))));
-
-//        RestAssured.responseSpecification = responseStatus.build();//с одним объектом срабатывает
-        // RestAssured.responseSpecification = responseError.build();//с двумя уже нет
-        // RestAssured.responseSpecification = responseValidations.build();
     }
 
     /**
@@ -79,13 +75,8 @@ public class Main {
         JsonPath jsonPath = when()
                 .get("/Calendar/GetHolidays")
                 .then()
-                .spec(responseError.build())//ошибку не ищет почему-то... Это потому что её нет.
-                //  Нужно поставить (hasItem("eTrror"), а не  not(hasItem("eTrror"))
-                //Если первой проверкой стоит та, которая выдаст падение теста, то последующие, как я понимаю,
-                // вызываться не будут.
+                .spec(responseError.build())
                 .spec(responseStatus.build())
-//                .body("response.items.date",
-//                        everyItem(startsWith(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy")))))
                 .spec(responseCurrentYear.build())
                 .extract()
                 .body().jsonPath();
@@ -110,8 +101,24 @@ public class Main {
         soft.assertTrue(holidayFound, "Не найдено ни одного дня с типом holy_day");
         soft.assertTrue(shortdayFound, "Не найдено ни одного дня с типом short_day");
         soft.assertAll();
-
-
+    }
+    /**
+     * Подумай какие можно реализовать негативные автотесты и реализуй несколько на свое усмотрение. Инъекции не
+     * используем!
+     * Вызываю метод неправильно, ожидая перенаправления на страницу с текстом о необходимости залогироваться.
+     * Переделать наверное надо. Как-то неточно проверяется
+     */
+    @Test
+    void testE1() {
+       // JsonPath jsonPath =
+                when()
+                .get("/Calendar/GetHoliday")
+                .then()
+                //.extract()
+                .body(containsString("login"))
+                      //  .jsonPath()
+                ;
+        String str="";
     }
 
     /**
@@ -147,8 +154,7 @@ public class Main {
                 .spec(responseStatus.build())
                 .spec(responseError.build())
                 .spec(responseCurrentYear.build())
-                .body("response.items.type", everyItem(startsWith("short_day")))
-
+                .body("response.items.type", everyItem(equalTo("short_day")));
     }
 
     /**
@@ -159,17 +165,16 @@ public class Main {
      */
     @Test
     void testD() {
-
+        when()
+                .get("/Calendar/GetHolidays?day_type=holy_day")
+                .then()
+                .spec(responseStatus.build())
+                .spec(responseError.build())
+                .spec(responseCurrentYear.build())
+                .body("response.items.type", everyItem(equalTo("holy_day")));
     }
 
-    /**
-     * Подумай какие можно реализовать негативные автотесты и реализуй несколько на свое усмотрение. Инъекции не
-     * используем!
-     */
-    @Test
-    void testE() {
 
-    }
 }
 
 
