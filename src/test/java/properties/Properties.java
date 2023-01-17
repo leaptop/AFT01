@@ -6,7 +6,8 @@ import properties.interfaces.CredentialsProperties;
 /**
  * Класс, содержащий ссылку для доступа к файлу .property.
  *
- * @author Степан Алексеев
+ * @author Алексеев Степан
+ * @date 22.12.2022
  */
 public class Properties {
     /**

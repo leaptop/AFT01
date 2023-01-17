@@ -1,6 +1,7 @@
 package pages;
 
 import com.codeborne.selenide.Condition;
+import io.qameta.allure.Step;
 import ru.yandex.qatools.htmlelements.element.Image;
 import ru.yandex.qatools.htmlelements.element.TextBlock;
 
@@ -39,6 +40,7 @@ public class SuccessfulLoginPage {
     /**
      * @return возвращает текстовый блок с имейлом пользователя с карточки после нажатия на аватарку справа сверху
      */
+    @Step
     public TextBlock getEmailTextBlock() {
         $x(xpathForUserEmailOnCard).shouldBe(Condition.visible);
         return emailBlock;
@@ -47,6 +49,7 @@ public class SuccessfulLoginPage {
     /**
      * @return Возвращает текстовый блок имени и фамилии с карточки после нажатия на аватарку справа сверху
      */
+    @Step
     public TextBlock getNameTextBlock() {
         $x(xpathForUserNameOnCard).shouldBe(Condition.visible);
         return nameBlock;
@@ -57,6 +60,7 @@ public class SuccessfulLoginPage {
      *
      * @return возвращает текущую страницу для возможности запуска других методов по цепочке.
      */
+    @Step
     public SuccessfulLoginPage clickUpperRightCornerAvatar() {
         upperRightCornereAvatar.click();
         return this;

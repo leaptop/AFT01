@@ -2,9 +2,7 @@ package pages.calendar;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import io.qameta.allure.Step;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -101,6 +99,7 @@ public class CalendarPO {
      * @param namePart часть имени/фамилии работника для выбора из списка
      * @return селенид элемент с выбранным работником
      */
+    @Step
     private SelenideElement listChosenEmployeeByNamePart(String namePart) {
         return $x("//li[contains(text(),'" + namePart + "')]");
     }
@@ -112,6 +111,7 @@ public class CalendarPO {
      * @param month указание месяца
      * @return возвращает элемент кнопки с месяцем
      */
+    @Step
     private SelenideElement getMonthButton(Month month) {//надо передать в xpath в виде "Янв", "Мар" и т.д.
         return $x(String.format(monthButton,
                 month.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru")).substring(0, 3)));
@@ -122,6 +122,7 @@ public class CalendarPO {
      *
      * @param number
      */
+    @Step
     public void clickDayOfThisMonth(int number) {
         $x(String.format("//td[not(contains(@class,'fc-other-month'))]/span[@class='fc-day-number' and text()='%d']",
                 number)).click();
@@ -132,6 +133,7 @@ public class CalendarPO {
      *
      * @param date дата для клика
      */
+    @Step
     public CalendarPO clickDayOfThisMonth(LocalDate date) {
         String dateStr = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         $x(String.format(dayNumberXPath, dateStr)).click();
@@ -143,6 +145,7 @@ public class CalendarPO {
      *
      * @return
      */
+    @Step
     public CalendarPO chooseNextMonth() {
         Month month = getMonth();
         Year year = getYear();
@@ -154,6 +157,7 @@ public class CalendarPO {
     /**
      * @return Возвращает месяц отображённый вверху календаря
      */
+    @Step
     public Month getMonth() {
         String monthToParse = $x(calendarDateXPath)
                 .getValue().split("\\s")[0].toLowerCase().substring(0, 3);
@@ -165,6 +169,7 @@ public class CalendarPO {
     /**
      * @return возвращает год, отображённый вверху календаря
      */
+    @Step
     public Year getYear() {
         String yearToParse = $x(calendarDateXPath)
                 .getValue()
@@ -178,7 +183,7 @@ public class CalendarPO {
      * @param month месяц, который нужно выбрать
      * @param year  год, который нужно выбрать
      */
-
+    @Step
     public CalendarPO chooseMonthAndYear(Month month, Year year) {
         buttonForDateChoice.click();
         int neededYear = year.getValue();
@@ -205,6 +210,7 @@ public class CalendarPO {
      * @param employee часть имени или фамилии сотрудника
      * @return возвращает текущий PO для вызовов методов по цепочке.
      */
+    @Step
     public CalendarPO chooseEmployee(String employee) {
         nameDropDownMenuButton.click();
         listChosenEmployeeByNamePart(employee).click();
@@ -218,6 +224,7 @@ public class CalendarPO {
      *
      * @return this
      */
+    @Step
     public CalendarPO waitForCalendarToLoad() {
         $x(calendarProgressBarXPath).shouldBe(visible);
         $x(calendarProgressBarXPath).shouldNotBe(visible, Duration.ofSeconds(10));
@@ -225,21 +232,19 @@ public class CalendarPO {
     }
 
     /**
-     * Возвращает события расписанные в сниппете через Selenium.
+     * Возвращает события расписанные в сниппете
      */
-    private List<WebElement> getSnippetEvents() {
-        return WebDriverRunner.driver().getWebDriver().findElements(By.xpath(snippetTextsXPath));
+    private ElementsCollection getSnippetEvents() {
+        return $$x(snippetTextsXPath);
     }
 
     /**
      * Возвращает дату из сниппета
      */
+    @Step
     private LocalDate getSnippetDate() {
         return LocalDate
-                .parse(WebDriverRunner
-                        .driver()
-                        .getWebDriver()
-                        .findElement(By.xpath(snippetDateXPath))
+                .parse($x(snippetDateXPath)
                         .getText(), DateTimeFormatter
                         .ofPattern("dd.MM.yy"));
     }
@@ -247,6 +252,7 @@ public class CalendarPO {
     /**
      * @return возвращает все даты текущего месяца
      */
+    @Step
     public ArrayList<LocalDate> getDates() {
         ArrayList<LocalDate> dates = new ArrayList<>();
         ElementsCollection datesSelenide =
@@ -261,8 +267,9 @@ public class CalendarPO {
     /**
      * Возвращает объект сниппета
      */
+    @Step
     public Snippet getSnippet() {
-        List<WebElement> listEv = getSnippetEvents();
+        ElementsCollection listEv = getSnippetEvents();
         ArrayList<String> snippetEventsString = new ArrayList<>();
         for (int i = 0; i < listEv.size(); i++) {
             snippetEventsString.add(listEv.get(i).getText());
@@ -274,6 +281,7 @@ public class CalendarPO {
      * @param dateOfDay дата для создания объекта Day
      * @return возвращает объекты дня по дате
      */
+    @Step
     public Day getDay(LocalDate dateOfDay) {
         Day day = new Day(false,
                 false,

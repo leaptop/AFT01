@@ -2,6 +2,7 @@ package helpers;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -19,6 +20,7 @@ public class TestBase {
      * с календарём (в CalendarTests) как раз и нужно было использовать разные логины и пароли.
      */
     @BeforeEach
+    @Step
     public void before() {
         Configuration.browserSize = "1500x800";
     }
@@ -26,6 +28,7 @@ public class TestBase {
     /**
      * Закрываем вебдрайвер в конце каждого теста
      */
+    @Step
     @AfterEach
     public void after() {
         WebDriverRunner.closeWebDriver();

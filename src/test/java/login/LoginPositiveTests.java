@@ -9,6 +9,7 @@ import pages.SuccessfulLoginPage;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
+import static properties.Properties.credentialsProperties;
 
 /**
  * Класс, содержащий позитивные тесты
@@ -20,15 +21,15 @@ public class LoginPositiveTests extends TestBase {
      */
     @Test
     void checkCorrectAuthorizationInputNew() {
-        open("https://tt-testing.quality-lab.ru/login", LoginPage.class)
-                .sendLogin("Авто пользователь")
-                .sendPassword("12345678")
+        open(credentialsProperties.url(), LoginPage.class)
+                .sendLogin(credentialsProperties.autoUser())
+                .sendPassword(credentialsProperties.autoUserPassword())
                 .clickEnterButton();
         webdriver().shouldHave(url("https://tt-testing.quality-lab.ru/report/group/edit"));
         SuccessfulLoginPage slps = new SuccessfulLoginPage();
         slps.clickUpperRightCornerAvatar();
         Assertions.assertAll(
-                () -> Assertions.assertEquals("Авто Пользователь", slps.getNameTextBlock().getText(),
+                () -> Assertions.assertEquals(credentialsProperties.autoUser(), slps.getNameTextBlock().getText(),
                         "Имя не равно ожидаемому"),
                 () -> Assertions.assertEquals("124124@m.r", slps.getEmailTextBlock().getText(),
                         "Имейл не равен ожидаемому")

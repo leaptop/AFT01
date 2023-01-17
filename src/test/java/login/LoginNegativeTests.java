@@ -8,6 +8,7 @@ import pages.LoginPage;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
+import static properties.Properties.credentialsProperties;
 
 /**
  * Класс, содержащий негативные тесты
@@ -25,10 +26,10 @@ public class LoginNegativeTests extends TestBase {
      */
     @Test
     public void checkEmptyLoginPassword() {
-        LoginPage lps = open("https://tt-testing.quality-lab.ru/login"
+        LoginPage lps = open(credentialsProperties.url()
                 , LoginPage.class).clickEnterButton();
         Assertions.assertFalse(lps.invalidCredentialsTextIsVisible());
-        webdriver().shouldHave(url("https://tt-testing.quality-lab.ru/login"));
+        webdriver().shouldHave(url(credentialsProperties.url()));
     }
 
     /**
@@ -37,14 +38,14 @@ public class LoginNegativeTests extends TestBase {
      */
     @Test
     void incorrectUserNameAndPasswordNew() {
-        LoginPage lps = open("https://tt-testing.quality-lab.ru/login", LoginPage.class)
-                .sendLogin("TestUser")
-                .sendPassword("Password")
+        LoginPage lps = open(credentialsProperties.url(), LoginPage.class)
+                .sendLogin(credentialsProperties.incorrectUserName())
+                .sendPassword(credentialsProperties.incorrectPassword())
                 .clickEnterButton();
         Assertions.assertAll(
                 () -> Assertions.assertTrue(lps.invalidCredentialsTextIsVisible(),
                         "Надпись Invalid Credentials не появилась"),
-                () -> Assertions.assertEquals("TestUser", lps.getInputLogin().getText(),
+                () -> Assertions.assertEquals(credentialsProperties.incorrectUserName(), lps.getInputLogin().getText(),
                         "Введённое ранее имя пользователя не сохранилось"),
                 () -> Assertions.assertEquals("", lps.getInputPassword().getText(),
                         "В поле \"пароль\" есть какой-то текст")

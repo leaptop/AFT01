@@ -1,6 +1,7 @@
 package authorizedTests.calendar;
 
 import authorizedTests.AuthorizedTestBase;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,23 +17,13 @@ import java.util.ArrayList;
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/*
-5 Выясни какие значения таймаутов стоят по-умолчанию для разных неявных ожиданий
-(т.е. не только для поиска элементов, а так же ожидание загрузки страницы и т.п.)
-Ответ:
-для implicit wait 0 секунд, для PageLoad 300 секунд, для script 30 секунд
-
-Выясни работает ли неявное ожидание при использовании метода findElements? Почему?
-Ответ: Если будет найден хотя бы один элемент, то ждать появления остальных этот метод не будет, просто проверит
-DOM-дерево, найдёт все элементы, поместит их в коллекцию и завершится. Если же ни одного элемента не будет найдено, то
-implicitWait будет работать (ждать заданное время) до появления первого элемента.
- */
 public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
 
     /**
      * Проверка существования выходных и рабочих дней в календаре
      */
+    @Step
     private void holidaysAndWorkDaysExistenceCheckNew() {
         boolean foundHoliday = false;
         boolean foundWorkDay = false;
@@ -46,21 +37,22 @@ public class CalendarTest extends AuthorizedTestBase {
                 foundWorkDay = true;
             }
             if (foundHoliday && foundWorkDay) {
-                boolean finalFoundWorkDay = foundWorkDay;
-                boolean finalFoundHoliday = foundHoliday;
-                Assertions.assertAll(
-                        () -> Assertions.assertTrue(finalFoundWorkDay, "Не найдены рабочие дни в месяце"),
-                        () -> Assertions.assertTrue(finalFoundHoliday, "Не найдены выходные дни в месяце")
-                );
                 break;
             }
         }
+        boolean finalFoundWorkDay = foundWorkDay;
+        boolean finalFoundHoliday = foundHoliday;
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(finalFoundWorkDay, "Не найдены рабочие дни в месяце"),
+                () -> Assertions.assertTrue(finalFoundHoliday, "Не найдены выходные дни в месяце")
+        );
     }
 
     /**
-     * Открываем календарь и ждём исчезновения Progress bar.
+     * Открываем календарь и ждём появления и исчезновения Progress bar.
      */
     @BeforeEach
+    @Step
     public void openCalendar() {
         calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
                 .waitForCalendarToLoad();

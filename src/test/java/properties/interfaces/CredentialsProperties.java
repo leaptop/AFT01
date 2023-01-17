@@ -44,7 +44,7 @@ public interface CredentialsProperties extends Config {
     String name();
 
     /**
-     * Логин из переменной среды
+     * Логин из переменной среды ОС
      */
     @Key("USERNAME2")
     String username();
@@ -60,4 +60,30 @@ public interface CredentialsProperties extends Config {
      */
     @Key("url")
     String url();
+
+    /**
+     * @return неверное имя пользователя из переменной среды, заданное через edit configurations - environment variables
+     */
+    @Key("INCORRECTUSERNAME")
+    String incorrectUserName();
+
+    /**
+     * @return неверный пароль из переменной среды, заданный через edit configurations - environment variables
+     */
+    @Key("INCORRECTPASSWORD")
+    String incorrectPassword();
+
+    /**
+     * @return логин из переменной среды, заданный через edit configurations - environment variables
+     */
+    @Key("AUTOUSER")
+    String autoUser();
+
+    /**
+     * @return пароль из файла пропертей
+     */
+    @Key("autoUserPassword")
+    String autoUserPassword();
+
+
 }
