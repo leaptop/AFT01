@@ -99,12 +99,12 @@
             <version>5.0.0-alpha.11</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-testng</artifactId>
-            <version>2.20.1</version>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.qameta.allure</groupId>-->
+<!--            <artifactId>allure-testng</artifactId>-->
+<!--            <version>2.20.1</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.testng/testng -->
 <!--        <dependency>-->
 <!--            <groupId>org.testng</groupId>-->
@@ -138,7 +138,7 @@
                         <property>
                             <name>
 <!--                                autotests.testNG-->
-<!--                                junit.jupiter.extensions.autodetection.enabled-->
+                                junit.jupiter.extensions.autodetection.enabled
                             </name>
                             <value>true</value>
                         </property>
