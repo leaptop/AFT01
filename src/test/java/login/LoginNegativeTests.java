@@ -1,51 +1,62 @@
 package login;
 
-import com.codeborne.selenide.Configuration;
-import helpers.TestBaseSelenide;
+import helpers.TestBase;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
-import pages.LoginPageSelenide;
+import pages.LoginPage;
 
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
 import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
+import static properties.Properties.credentialsProperties;
 
 /**
+ * Класс, содержащий негативные тесты
+ *
  * @author Алексеев Степан
  * @date 19.12.2022
  */
 @Execution(CONCURRENT)
-public class LoginNegativeTests extends TestBaseSelenide {
+public class LoginNegativeTests extends TestBase {
+
     /**
      * Проверка того, что текст о неверных данных (о логине и пароле) не выведется при нажатии на кнопку "Войти"
      * с пустыми полями логина и пароля.
      * <p>
      * Проверка того, что не произойдёт перенаправления на какие-либо другие страницы при вышеописанных действиях.
      */
-    @Execution(CONCURRENT)
     @Test
+    @Execution(CONCURRENT)
+    @DisplayName("Тест авторизации с пустыми полями логина, пароля")
     public void checkEmptyLoginPassword() {
-        Configuration.browserSize = "1920x1080";
-        LoginPageSelenide lps = open("https://tt-testing.quality-lab.ru/login",
-                LoginPageSelenide.class).clickEnterButton();
+        LoginPage lps = open(credentialsProperties.url()
+                , LoginPage.class).clickEnterButton();
         Assertions.assertFalse(lps.invalidCredentialsTextIsVisible());
-        webdriver().shouldHave(url("https://tt-testing.quality-lab.ru/login"));
+        webdriver().shouldHave(url(credentialsProperties.url()));
     }
 
     /**
      * Проверка того, что при вводе неверных логина и пароля будет выведено сообщение "Invalid Credentials".
      * Также проверка того, что введённое ранее имя пользователя сохранилось в поле ввода, а пароль исчез.
      */
-    @Execution(CONCURRENT)
     @Test
-    public void incorrectUserNameAndPassword() {
-        LoginPageSelenide lps = open("https://tt-testing.quality-lab.ru/login", LoginPageSelenide.class)
-                .sendLogin("TestUser")
-                .sendPassword("Password")
+    @Execution(CONCURRENT)
+    @DisplayName("Тест авторизации с неверными логином, паролем")
+    void incorrectUserNameAndPasswordNew() {
+        LoginPage lps = open(credentialsProperties.url(), LoginPage.class)
+                .sendLogin(credentialsProperties.incorrectUserName())
+                .sendPassword(credentialsProperties.incorrectPassword())
                 .clickEnterButton();
-        Assertions.assertTrue(lps.invalidCredentialsTextIsVisible(), "Надпись Invalid Credentials не появилась");
-        Assertions.assertEquals("TestUser", lps.getLoginInputText(), "Введённое ранее имя пользователя не сохранилось");
-        Assertions.assertEquals("", lps.getPasswordInputText(), "В поле пароль есть какой-то текст");
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(lps.invalidCredentialsTextIsVisible(),
+                        "Надпись Invalid Credentials не появилась"),
+                () -> Assertions.assertEquals(credentialsProperties.incorrectUserName(), lps.getInputLogin().getText(),
+                        "Введённое ранее имя пользователя не сохранилось"),
+                () -> Assertions.assertEquals("", lps.getInputPassword().getText(),
+                        "В поле \"пароль\" есть какой-то текст")
+        );
     }
 }

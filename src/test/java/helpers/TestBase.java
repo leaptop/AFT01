@@ -1,8 +1,11 @@
 package helpers;
 
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.WebDriverRunner;
+import io.qameta.allure.Step;
+import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -13,7 +16,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
  * @author Алексеев Степан
  * @date 20.12.2022
  */
-@ExtendWith(MyTestWatcher.class)
 public class TestBase {
     public WebDriver chromedriver;
 
@@ -21,11 +23,9 @@ public class TestBase {
      * Инициализируем вебдрайвер, настраиваем его перед запуском каждого теста.
      */
     @BeforeEach
-    void initTests() {
-        System.setProperty("webdriver.chrome.driver", System.getenv("CHROME_DRIVER"));
-        ChromeOptions options = new ChromeOptions();
-        chromedriver = new ChromeDriver(options);
-        chromedriver.manage().window().maximize();
+    @Step("Устанавливаем разрешение экрана")
+    public void before() {
+        Configuration.browserSize = "1500x800";
     }
 
     /**
@@ -35,9 +35,8 @@ public class TestBase {
      * иначе нельзя получить доступ к вебдрайверу (он закрывается здесь до
      * запуска методов из MyTestWatcher).
      */
-    // @AfterEach
+   // @AfterEach
     void finishTest() {
-        if (chromedriver != null)
-            chromedriver.quit();
+        WebDriverRunner.closeWebDriver();
     }
 }

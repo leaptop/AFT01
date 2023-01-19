@@ -12,7 +12,8 @@ import org.aeonbits.owner.Config;
 /** В случае @LoadPolicy(LoadType.FIRST) будет так:
  * Сначала OWNER будет пытаться загрузить проперти из "file:src/main/resources/properties/main.properties".
  * Если предыдущая попытка потерпит неудачу, то он попробует загрузить их из "system:properties" (Java System
- * AeonBitsProperties). Их можно загрузить как описано здесь: https://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html
+ * AeonBitsProperties). Их можно загрузить как описано здесь:
+ * https://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html
  * Дальше то же самое с переменными среды.
  * Только один файл пропертей будет использован (первый найденный). Остальные будут проигнорированы.
  * Если ничего не будет найдено, будет использованы значения помеченные  @DefaultValue.
@@ -44,7 +45,7 @@ public interface CredentialsProperties extends Config {
     String name();
 
     /**
-     * Логин из переменной среды
+     * Логин из переменной среды ОС
      */
     @Key("USERNAME2")
     String username();
@@ -60,4 +61,30 @@ public interface CredentialsProperties extends Config {
      */
     @Key("url")
     String url();
+
+    /**
+     * @return неверное имя пользователя из переменной среды, заданное через edit configurations - environment variables
+     */
+    @Key("INCORRECTUSERNAME")
+    String incorrectUserName();
+
+    /**
+     * @return неверный пароль из переменной среды, заданный через edit configurations - environment variables
+     */
+    @Key("INCORRECTPASSWORD")
+    String incorrectPassword();
+
+    /**
+     * @return логин из переменной среды, заданный через edit configurations - environment variables
+     */
+    @Key("AUTOUSER")
+    String autoUser();
+
+    /**
+     * @return пароль из файла пропертей
+     */
+    @Key("autoUserPassword")
+    String autoUserPassword();
+
+
 }
