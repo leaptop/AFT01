@@ -209,6 +209,6 @@ public class Main {
     @Test
     public void testAssertsInsideStreamInsideAssertAll() {
         assertAll("smt", ls.stream()
-                .map(a -> (() -> Assertions.assertTrue(a > 0))));
+                .map(a -> (() -> Assertions.assertTrue(a > 50))));
     }
 }
