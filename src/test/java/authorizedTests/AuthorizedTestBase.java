@@ -3,7 +3,7 @@ package authorizedTests;
 import com.codeborne.selenide.WebDriverRunner;
 import okhttp3.*;
 import org.junit.jupiter.api.BeforeEach;
-import pages.selenide.CalendarPO;
+import pages.calendar.CalendarPO;
 
 import java.io.IOException;
 import java.net.CookieManager;

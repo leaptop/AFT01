@@ -1,11 +1,11 @@
-package login.loginSelenide;
+package login;
 
 import com.codeborne.selenide.Configuration;
 import helpers.TestBaseSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
-import pages.selenide.LoginPageSelenide;
+import pages.LoginPageSelenide;
 
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverConditions.url;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
  * @date 19.12.2022
  */
 @Execution(CONCURRENT)
-public class LoginNegativeTestsSelenide extends TestBaseSelenide {
+public class LoginNegativeTests extends TestBaseSelenide {
     /**
      * Проверка того, что текст о неверных данных (о логине и пароле) не выведется при нажатии на кнопку "Войти"
      * с пустыми полями логина и пароля.

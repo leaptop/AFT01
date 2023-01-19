@@ -1,11 +1,12 @@
-package authorizedTests;
+package authorizedTests.calendar;
 
+import authorizedTests.AuthorizedTestBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
-import pages.selenide.CalendarPO;
+import pages.calendar.CalendarPO;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;

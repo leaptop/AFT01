@@ -1,4 +1,4 @@
-package pages.selenide;
+package pages;
 
 import com.codeborne.selenide.Condition;
 import ru.yandex.qatools.htmlelements.element.Image;

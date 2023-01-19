@@ -1,12 +1,12 @@
-package login.loginSelenide;
+package login;
 
 import com.codeborne.selenide.Configuration;
 import helpers.TestBaseSelenide;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
-import pages.selenide.LoginPageSelenide;
-import pages.selenide.SuccessfulLoginPageSelenide;
+import pages.LoginPageSelenide;
+import pages.SuccessfulLoginPageSelenide;
 
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.webdriver;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
  * @author Алексеев Степан
  * @date 19.12.2022
  */
-public class LoginPositiveTestsSelenide extends TestBaseSelenide {
+public class LoginPositiveTests extends TestBaseSelenide {
     /**
      * Проверка авторизации. Позитивный вариант.
      */
