@@ -1,6 +1,6 @@
 package task20;
 
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +11,11 @@ import java.util.Map;
  */
 public class Main {
     /**
-     * 1 Создай метод который считает остаток от деления одного числа на другое (передаем два параметра: делимое и делитель)
+     * 1 Создай метод который считает остаток от деления одного числа на другое (передаем два параметра:
+     * делимое и делитель)
      * <p>
-     * 6  В методе из задания 1 выбрасывай непроверяемое исключение, если остаток от деления = 1 и проверяемое исключение,
+     * 6  В методе из задания 1 выбрасывай непроверяемое исключение, если остаток от деления = 1 и
+     * проверяемое исключение,
      * * если остаток от деления равен 4
      *
      * @param a числитель
@@ -55,7 +57,6 @@ public class Main {
                 } catch (CheckedException4 | CheckedException55 | UncheckedException1 e) {
 
                 }
-
             }
         }
         System.out.println(String.format("Число пар делимое/делитель, которые выбрасывают арифметическое исключение: " +
@@ -73,7 +74,6 @@ class CheckedException4 extends Exception {//проверяемое
     public CheckedException4(String s) {
         System.out.println("Намеренно");
     }
-
 }
 
 /**
