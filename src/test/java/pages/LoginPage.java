@@ -1,10 +1,12 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import ru.yandex.qatools.htmlelements.element.Button;
 import ru.yandex.qatools.htmlelements.element.TextInput;
 
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$x;
 
 public class LoginPage {
     /**
@@ -13,6 +15,7 @@ public class LoginPage {
     public boolean invalidCredentialsTextIsVisible() {
         return $x(xpathForInvalidCredentialsText).exists();
     }
+
     /**
      * xpath для текста, появляющегося при неверном логине и/или пароле
      */
@@ -44,6 +47,7 @@ public class LoginPage {
      * @param name логин
      * @return возвращает текущую страницу для продолжения вызова методов по цепочке
      */
+  //  @Step("Шлём логин в поле логина")//раскомментировать когда научусь скрывать параметр от аллюра
     public LoginPage sendLogin(String name) {
         inputLogin.sendKeys(name);
         return this;
@@ -55,6 +59,7 @@ public class LoginPage {
      * @param password пароль
      * @return возвращает текущую страницу для продолжения вызова методов по цепочке
      */
+    // @Step("Шлём пароль в поле пароля")//раскомментировать когда научусь скрывать параметр от аллюра
     public LoginPage sendPassword(String password) {
         inputPassword.sendKeys(password);
         return this;
@@ -65,6 +70,7 @@ public class LoginPage {
      *
      * @return возвращает текущую страницу для продолжения вызова методов по цепочке
      */
+    @Step("Жмём кнопку \"Войти\"")
     public LoginPage clickEnterButton() {
         enterButton.click();
         return this;
@@ -73,6 +79,7 @@ public class LoginPage {
     /**
      * @return возвращает текстовое поле для ввода логина
      */
+    @Step("Получаем текстовое поле для ввода логина")
     public TextInput getInputLogin() {
         return inputLogin;
     }
@@ -80,6 +87,7 @@ public class LoginPage {
     /**
      * @return возвращает текстовое поле для ввода пароля
      */
+    @Step("Получаем текстовое поле для ввода пароля")
     public TextInput getInputPassword() {
         return inputPassword;
     }

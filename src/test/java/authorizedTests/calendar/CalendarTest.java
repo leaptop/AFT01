@@ -1,8 +1,10 @@
 package authorizedTests.calendar;
 
 import authorizedTests.AuthorizedTestBase;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.calendar.CalendarPO;
 import pages.calendar.Day;
@@ -15,17 +17,9 @@ import java.util.ArrayList;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-/*
-5 Выясни какие значения таймаутов стоят по-умолчанию для разных неявных ожиданий
-(т.е. не только для поиска элементов, а так же ожидание загрузки страницы и т.п.)
-Ответ:
-для implicit wait 0 секунд, для PageLoad 300 секунд, для script 30 секунд
-
-Выясни работает ли неявное ожидание при использовании метода findElements? Почему?
-Ответ: Если будет найден хотя бы один элемент, то ждать появления остальных этот метод не будет, просто проверит
-DOM-дерево, найдёт все элементы, поместит их в коллекцию и завершится. Если же ни одного элемента не будет найдено, то
-implicitWait будет работать (ждать заданное время) до появления первого элемента.
+/**
+ * @author Алексеев Степан
+ * @date 25.12.2022
  */
 public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
@@ -33,6 +27,7 @@ public class CalendarTest extends AuthorizedTestBase {
     /**
      * Проверка существования выходных и рабочих дней в календаре
      */
+    @Step("Проверка существования выходных и рабочих дней в календаре")
     private void holidaysAndWorkDaysExistenceCheckNew() {
         boolean foundHoliday = false;
         boolean foundWorkDay = false;
@@ -46,21 +41,22 @@ public class CalendarTest extends AuthorizedTestBase {
                 foundWorkDay = true;
             }
             if (foundHoliday && foundWorkDay) {
-                boolean finalFoundWorkDay = foundWorkDay;
-                boolean finalFoundHoliday = foundHoliday;
-                Assertions.assertAll(
-                        () -> Assertions.assertTrue(finalFoundWorkDay, "Не найдены рабочие дни в месяце"),
-                        () -> Assertions.assertTrue(finalFoundHoliday, "Не найдены выходные дни в месяце")
-                );
                 break;
             }
         }
+        boolean finalFoundWorkDay = foundWorkDay;
+        boolean finalFoundHoliday = foundHoliday;
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(finalFoundWorkDay, "Не найдены рабочие дни в месяце"),
+                () -> Assertions.assertTrue(finalFoundHoliday, "Не найдены выходные дни в месяце")
+        );
     }
 
     /**
-     * Открываем календарь и ждём исчезновения Progress bar.
+     * Открываем календарь и ждём появления и исчезновения Progress bar.
      */
     @BeforeEach
+    @Step("Открываем календарь и ждём появления и исчезновения Progress bar-а")
     public void openCalendar() {
         calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
                 .waitForCalendarToLoad();
@@ -74,6 +70,7 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
     @Test
+    @DisplayName("1 Сценарий: проверка текущего месяца")
     public void checkCurrentMonthAndYear() {
         Assertions.assertAll(
                 () -> assertEquals(LocalDateTime.now().getMonth(), calendarPO.getMonth(),
@@ -92,6 +89,7 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
     @Test
+    @DisplayName("2 Сценарий: проверка переключения месяца")
     public void checkMonthSwitch() {
         calendarPO.chooseNextMonth();
         holidaysAndWorkDaysExistenceCheckNew();
@@ -105,6 +103,7 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
     @Test
+    @DisplayName("3 Сценарий: проверка графика другого сотрудника")
     public void checkOtherEmployee() {
         calendarPO.chooseEmployee("Якина");
         holidaysAndWorkDaysExistenceCheckNew();
@@ -118,6 +117,7 @@ public class CalendarTest extends AuthorizedTestBase {
      * Проверить что информация в боковом снипете совпадает с информацией в дне
      */
     @Test
+    @DisplayName("4 Сценарий: проверка переключения бокового сниппета")
     public void checkSideSnippetSwitchNew() {
         ArrayList<LocalDate> datesToCheck = calendarPO.getDates();
         for (int i = 0; i < datesToCheck.size(); i++) {

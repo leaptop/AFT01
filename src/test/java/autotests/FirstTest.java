@@ -2,8 +2,17 @@ package autotests;
 
 import org.junit.jupiter.api.*;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
 
+/**
+ * @author Алексеев Степан
+ * @date 16.12.2022
+ */
 public class FirstTest {
+
     @BeforeAll
     static void beforeAll() {
         System.out.println("autotests.FirstTest class started (works for all descendands)");

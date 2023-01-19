@@ -2,15 +2,12 @@ package pages.calendar;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import io.qameta.allure.Step;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import static com.codeborne.selenide.Condition.visible;
@@ -101,6 +98,7 @@ public class CalendarPO {
      * @param namePart часть имени/фамилии работника для выбора из списка
      * @return селенид элемент с выбранным работником
      */
+    @Step("Получаем элемент списка с работником, содержащим \"{namePart}\" в имени ")
     private SelenideElement listChosenEmployeeByNamePart(String namePart) {
         return $x("//li[contains(text(),'" + namePart + "')]");
     }
@@ -112,6 +110,7 @@ public class CalendarPO {
      * @param month указание месяца
      * @return возвращает элемент кнопки с месяцем
      */
+    @Step("Получаем месяц по названию \"{month}\"")
     private SelenideElement getMonthButton(Month month) {//надо передать в xpath в виде "Янв", "Мар" и т.д.
         return $x(String.format(monthButton,
                 month.getDisplayName(TextStyle.FULL_STANDALONE, new Locale("ru")).substring(0, 3)));
@@ -122,6 +121,7 @@ public class CalendarPO {
      *
      * @param number
      */
+    @Step("Кликаем день текущего месяца по номеру \"{number}\"")
     public void clickDayOfThisMonth(int number) {
         $x(String.format("//td[not(contains(@class,'fc-other-month'))]/span[@class='fc-day-number' and text()='%d']",
                 number)).click();
@@ -132,6 +132,7 @@ public class CalendarPO {
      *
      * @param date дата для клика
      */
+    @Step("Кликаем день с датой \"{date}\"")
     public CalendarPO clickDayOfThisMonth(LocalDate date) {
         String dateStr = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         $x(String.format(dayNumberXPath, dateStr)).click();
@@ -143,6 +144,7 @@ public class CalendarPO {
      *
      * @return
      */
+    @Step("Выбираем следующий месяц в календаре")
     public CalendarPO chooseNextMonth() {
         Month month = getMonth();
         Year year = getYear();
@@ -154,6 +156,7 @@ public class CalendarPO {
     /**
      * @return Возвращает месяц отображённый вверху календаря
      */
+    @Step("Получаем месяц отображённый вверху календаря")
     public Month getMonth() {
         String monthToParse = $x(calendarDateXPath)
                 .getValue().split("\\s")[0].toLowerCase().substring(0, 3);
@@ -165,6 +168,7 @@ public class CalendarPO {
     /**
      * @return возвращает год, отображённый вверху календаря
      */
+    @Step("Получаем год, отображённый вверху календаря")
     public Year getYear() {
         String yearToParse = $x(calendarDateXPath)
                 .getValue()
@@ -178,7 +182,7 @@ public class CalendarPO {
      * @param month месяц, который нужно выбрать
      * @param year  год, который нужно выбрать
      */
-
+    @Step("Выбираем месяц \"{month}\" и год \"{year}\"")
     public CalendarPO chooseMonthAndYear(Month month, Year year) {
         buttonForDateChoice.click();
         int neededYear = year.getValue();
@@ -205,6 +209,7 @@ public class CalendarPO {
      * @param employee часть имени или фамилии сотрудника
      * @return возвращает текущий PO для вызовов методов по цепочке.
      */
+    @Step("Выбираем сотрудника по части имени \"{employee}\"")
     public CalendarPO chooseEmployee(String employee) {
         nameDropDownMenuButton.click();
         listChosenEmployeeByNamePart(employee).click();
@@ -218,6 +223,7 @@ public class CalendarPO {
      *
      * @return this
      */
+    @Step("Ждём появления сообщения о загрузке. Потом ждём его исчезновения")
     public CalendarPO waitForCalendarToLoad() {
         $x(calendarProgressBarXPath).shouldBe(visible);
         $x(calendarProgressBarXPath).shouldNotBe(visible, Duration.ofSeconds(10));
@@ -225,21 +231,20 @@ public class CalendarPO {
     }
 
     /**
-     * Возвращает события расписанные в сниппете через Selenium.
+     * Возвращает события расписанные в сниппете
      */
-    private List<WebElement> getSnippetEvents() {
-        return WebDriverRunner.driver().getWebDriver().findElements(By.xpath(snippetTextsXPath));
+    @Step("Получаем события, расписанные в сниппете")
+    private ElementsCollection getSnippetEvents() {
+        return $$x(snippetTextsXPath);
     }
 
     /**
      * Возвращает дату из сниппета
      */
+    @Step("Получаем дату из сниппета")
     private LocalDate getSnippetDate() {
         return LocalDate
-                .parse(WebDriverRunner
-                        .driver()
-                        .getWebDriver()
-                        .findElement(By.xpath(snippetDateXPath))
+                .parse($x(snippetDateXPath)
                         .getText(), DateTimeFormatter
                         .ofPattern("dd.MM.yy"));
     }
@@ -247,6 +252,7 @@ public class CalendarPO {
     /**
      * @return возвращает все даты текущего месяца
      */
+    @Step("Получаем все даты текущего месяца")
     public ArrayList<LocalDate> getDates() {
         ArrayList<LocalDate> dates = new ArrayList<>();
         ElementsCollection datesSelenide =
@@ -261,8 +267,9 @@ public class CalendarPO {
     /**
      * Возвращает объект сниппета
      */
+    @Step("Получаем объект сниппета")
     public Snippet getSnippet() {
-        List<WebElement> listEv = getSnippetEvents();
+        ElementsCollection listEv = getSnippetEvents();
         ArrayList<String> snippetEventsString = new ArrayList<>();
         for (int i = 0; i < listEv.size(); i++) {
             snippetEventsString.add(listEv.get(i).getText());
@@ -274,6 +281,7 @@ public class CalendarPO {
      * @param dateOfDay дата для создания объекта Day
      * @return возвращает объекты дня по дате
      */
+    @Step("Получаем объект дня по дате \"{dateOfDay}\"")
     public Day getDay(LocalDate dateOfDay) {
         Day day = new Day(false,
                 false,

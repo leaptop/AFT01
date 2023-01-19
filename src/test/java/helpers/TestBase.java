@@ -2,9 +2,16 @@ package helpers;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+/**
+ * Класс для реализации базового функционала для всех тестов, написанных с использованием Selenium.
+ *
+ * @author Алексеев Степан
+ * @date 20.12.2022
+ */
 public class TestBase {
     /**
      * Настраиваем тесты перед запуском.
@@ -13,6 +20,7 @@ public class TestBase {
      * с календарём (в CalendarTests) как раз и нужно было использовать разные логины и пароли.
      */
     @BeforeEach
+    @Step("Устанавливаем разрешение экрана")
     public void before() {
         Configuration.browserSize = "1500x800";
     }
@@ -20,6 +28,7 @@ public class TestBase {
     /**
      * Закрываем вебдрайвер в конце каждого теста
      */
+    @Step("Закрываем вебдрайвер")
     @AfterEach
     public void after() {
         WebDriverRunner.closeWebDriver();

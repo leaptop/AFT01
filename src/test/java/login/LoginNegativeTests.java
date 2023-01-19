@@ -1,17 +1,21 @@
 package login;
 
 import helpers.TestBase;
-import pages.LoginPage;
-
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pages.LoginPage;
 
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
+import static properties.Properties.credentialsProperties;
 
 /**
  * Класс, содержащий негативные тесты
+ *
+ * @author Алексеев Степан
+ * @date 19.12.2022
  */
 public class LoginNegativeTests extends TestBase {
 
@@ -22,11 +26,12 @@ public class LoginNegativeTests extends TestBase {
      * Проверка того, что не произойдёт перенаправления на какие-либо другие страницы при вышеописанных действиях.
      */
     @Test
+    @DisplayName("Тест авторизации с пустыми полями логина, пароля")
     public void checkEmptyLoginPassword() {
-        LoginPage lps = open("https://tt-testing.quality-lab.ru/login"
+        LoginPage lps = open(credentialsProperties.url()
                 , LoginPage.class).clickEnterButton();
         Assertions.assertFalse(lps.invalidCredentialsTextIsVisible());
-        webdriver().shouldHave(url("https://tt-testing.quality-lab.ru/login"));
+        webdriver().shouldHave(url(credentialsProperties.url()));
     }
 
     /**
@@ -34,15 +39,16 @@ public class LoginNegativeTests extends TestBase {
      * Также проверка того, что введённое ранее имя пользователя сохранилось в поле ввода, а пароль исчез.
      */
     @Test
+    @DisplayName("Тест авторизации с неверными логином, паролем")
     void incorrectUserNameAndPasswordNew() {
-        LoginPage lps = open("https://tt-testing.quality-lab.ru/login", LoginPage.class)
-                .sendLogin("TestUser")
-                .sendPassword("Password")
+        LoginPage lps = open(credentialsProperties.url(), LoginPage.class)
+                .sendLogin(credentialsProperties.incorrectUserName())
+                .sendPassword(credentialsProperties.incorrectPassword())
                 .clickEnterButton();
         Assertions.assertAll(
                 () -> Assertions.assertTrue(lps.invalidCredentialsTextIsVisible(),
                         "Надпись Invalid Credentials не появилась"),
-                () -> Assertions.assertEquals("TestUser", lps.getInputLogin().getText(),
+                () -> Assertions.assertEquals(credentialsProperties.incorrectUserName(), lps.getInputLogin().getText(),
                         "Введённое ранее имя пользователя не сохранилось"),
                 () -> Assertions.assertEquals("", lps.getInputPassword().getText(),
                         "В поле \"пароль\" есть какой-то текст")
