@@ -18,26 +18,8 @@ import java.util.ArrayList;
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.parallel.Execution;
-import pages.calendar.CalendarPO;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Date;
-import java.util.Locale;
-
-import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
-
-/*
-5 Выясни какие значения таймаутов стоят по-умолчанию для разных неявных ожиданий
-(т.е. не только для поиска элементов, а так же ожидание загрузки страницы и т.п.)
-Ответ:
-для implicit wait 0 секунд, для PageLoad 300 секунд, для script 30 секунд
-
-Выясни работает ли неявное ожидание при использовании метода findElements? Почему?
-Ответ: Если будет найден хотя бы один элемент, то ждать появления остальных этот метод не будет, просто проверит
-DOM-дерево, найдёт все элементы, поместит их в коллекцию и завершится. Если же ни одного элемента не будет найдено, то
-implicitWait будет работать (ждать заданное время) до появления первого элемента. */
 
 /**
  * @author Алексеев Степан

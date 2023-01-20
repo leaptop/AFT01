@@ -41,7 +41,7 @@ public interface CredentialsProperties extends Config {
     /**
      * Логин из credentials.properties
      */
-    @Key("name")
+    @Key("NAME")
     String name();
 
     /**
@@ -53,18 +53,18 @@ public interface CredentialsProperties extends Config {
     /**
      * Пароль из credentials.properties
      */
-    @Key("password")
+    @Key("PASSWORD")
     String password();
 
     /**
      * URL из credentials.properties
      */
-    @Key("url")
+    @Key("URL")
     String url();
     /**
      * URL testing
      */
-    @Key("urltesting")
+    @Key("URLTESTING")
     String urltesting();
 
     /**
@@ -88,7 +88,7 @@ public interface CredentialsProperties extends Config {
     /**
      * @return пароль из файла пропертей
      */
-    @Key("autoUserPassword")
+    @Key("AUTOUSERPASSWORD")
     String autoUserPassword();
 
 

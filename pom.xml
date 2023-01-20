@@ -22,25 +22,18 @@
         <allure.maven>2.10.0</allure.maven>
     </properties>
     <dependencies>
-        <!--    Это нужно в инструкции для вызова скриншотов по одной из статей.
-        Но добавление этого ломает сборку аллюр отчётов!: -->
-                <dependency>
-                    <groupId>io.qameta.allure</groupId>
-                    <artifactId>allure-selenide</artifactId>
-                    <version>2.13.6</version>
-                    <scope>test</scope>
-                </dependency>
-        <!--        Убрать когда подберу правильную комбинацию зависимостей.-->
-
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-selenide</artifactId>
+            <version>${qameta.allure}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
             <version>5.9.0</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -121,60 +114,6 @@
                     </properties>
                 </configuration>
             </plugin>
-            <!--            <plugin>-->
-            <!--                <artifactId>maven-surefire-plugin</artifactId>-->
-            <!--&lt;!&ndash;                <version>2.20</version>&ndash;&gt;-->
-            <!--                <version>3.0.0-M7</version>-->
-            <!--                <configuration>-->
-            <!--                    <properties>-->
-            <!--                        <configurationParameters>-->
-            <!--                            junit.jupiter.conditions.deactivate = *-->
-            <!--                            junit.jupiter.extensions.autodetection.enabled = true-->
-            <!--                            junit.jupiter.testinstance.lifecycle.default = per_class-->
-            <!--                            junit.jupiter.execution.parallel.enabled = true-->
-            <!--                            junit.jupiter.execution.parallel.mode.default = concurrent-->
-            <!--                            junit.jupiter.execution.parallel.config.dynamic.factor-->
-            <!--                        </configurationParameters>-->
-            <!--                    </properties>-->
-            <!--                    <testFailureIgnore>false</testFailureIgnore>-->
-            <!--                    <argLine>-->
-            <!--                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"-->
-            <!--                    </argLine>-->
-            <!--                    <systemProperties>-->
-            <!--                        <property>-->
-            <!--                            <name>-->
-            <!--                                junit.jupiter.extensions.autodetection.enabled-->
-            <!--                            </name>-->
-            <!--                            <value>true</value>-->
-            <!--                        </property>-->
-            <!--                    </systemProperties>-->
-            <!--                </configuration>-->
-            <!--                <dependencies>-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>org.junit.platform</groupId>-->
-            <!--                        <artifactId>junit-platform-surefire-provider-->
-            <!--                        </artifactId>-->
-            <!--                        <version>1.2.0</version>-->
-            <!--                    </dependency>-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>org.aspectj</groupId>-->
-            <!--                        <artifactId>aspectjweaver</artifactId>-->
-            <!--                        <version>${aspectj.version}</version>-->
-            <!--                    </dependency>-->
-            <!--                </dependencies>-->
-            <!--            </plugin>-->
-            <!--            <plugin>-->
-            <!--                <groupId>io.qameta.allure</groupId>-->
-            <!--                <artifactId>allure-maven</artifactId>-->
-            <!--                <version>${allure.maven}</version>-->
-            <!--                <configuration>-->
-            <!--                    <reportVersion>${allure.version}</reportVersion>-->
-            <!--                    <resultsDirectory>${basedir}/allure-results-->
-            <!--                    </resultsDirectory>-->
-            <!--                    <reportDirectory>${basedir}/target/allure-reports-->
-            <!--                    </reportDirectory>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
         </plugins>
     </build>
 

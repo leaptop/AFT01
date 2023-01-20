@@ -7,6 +7,7 @@ import ru.yandex.qatools.htmlelements.element.TextInput;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
+import static io.qameta.allure.Allure.step;
 
 public class LoginPage {
     /**
@@ -47,8 +48,8 @@ public class LoginPage {
      * @param name логин
      * @return возвращает текущую страницу для продолжения вызова методов по цепочке
      */
-  //  @Step("Шлём логин в поле логина")//раскомментировать когда научусь скрывать параметр от аллюра
     public LoginPage sendLogin(String name) {
+        step("Ввод логина", () -> {} ) ;
         inputLogin.sendKeys(name);
         return this;
     }
@@ -59,8 +60,8 @@ public class LoginPage {
      * @param password пароль
      * @return возвращает текущую страницу для продолжения вызова методов по цепочке
      */
-    // @Step("Шлём пароль в поле пароля")//раскомментировать когда научусь скрывать параметр от аллюра
     public LoginPage sendPassword(String password) {
+        step("Ввод пароля", () -> {} ) ;
         inputPassword.sendKeys(password);
         return this;
     }

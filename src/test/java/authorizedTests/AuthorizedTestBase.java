@@ -18,7 +18,9 @@ import static properties.Properties.credentialsProperties;
  * @date 25.12.2022
  */
 public class AuthorizedTestBase extends TestBase {
-
+    /**
+     * Авторизация по АПИ.
+     */
     @BeforeEach
     public void authorizeViaHTTP() {
         CookieManager cookieManager = new CookieManager();//1 start

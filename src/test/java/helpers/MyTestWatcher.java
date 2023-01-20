@@ -96,7 +96,7 @@ public class MyTestWatcher implements TestWatcher {
                 ".testFailed()");
         System.out.println("extensionContext = " + extensionContext);
         System.out.println("throwable = " + throwable);
-        Allure.addAttachment("Тест упал",
+        Allure.addAttachment("Тест упал",//это добавление скриншота работает при использовании Селениума
                 new ByteArrayInputStream(((TakesScreenshot) driver)
                         .getScreenshotAs(OutputType.BYTES)));
         WebDriverRunner.closeWebDriver();
