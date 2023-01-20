@@ -6,6 +6,7 @@ import io.qameta.allure.Step;
 import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -16,6 +17,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
  * @author Алексеев Степан
  * @date 20.12.2022
  */
+@ExtendWith(MyTestWatcher.class)
 public class TestBase {
     public WebDriver chromedriver;
 

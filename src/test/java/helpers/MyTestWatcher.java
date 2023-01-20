@@ -1,5 +1,6 @@
 package helpers;
 
+import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Allure;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
@@ -25,6 +26,7 @@ public class MyTestWatcher implements TestWatcher {
 
     /**
      * Получает ссылку на вебдрайвер из базового для тестового класса.
+     * Включать в начало методов ниже, если используется Селениум.
      */
     private void initWebDriver(ExtensionContext extensionContext) {
         Object test = extensionContext.getRequiredTestInstance();
@@ -47,43 +49,49 @@ public class MyTestWatcher implements TestWatcher {
     }
 
     /**
+     * Если используется Селениум, то включать вызов этого метода в конце каждого из: testAborted, testDisabled и т.д.
+     */
+    public void closeWebDriver() {
+        if (driver != null)
+            driver.quit();
+    }
+
+    /**
      * Вызывается если тест прерывается
+     *
      * @param extensionContext
      * @param throwable
      */
     @Override
     public void testAborted(ExtensionContext extensionContext, Throwable throwable) {
-        initWebDriver(extensionContext);
         System.out.println("MyTestWatcher.testAborted");
         System.out.println("extensionContext = " + extensionContext);
         System.out.println("throwable = " + throwable);
-        if (driver != null)
-            driver.quit();
+        WebDriverRunner.closeWebDriver();
     }
 
     /**
      * Вызывается если тест сломан
+     *
      * @param extensionContext
      * @param optional
      */
     @Override
     public void testDisabled(ExtensionContext extensionContext, Optional<String> optional) {
-        initWebDriver(extensionContext);
         System.out.println("MyTestWatcher.testDisabled");
         System.out.println("extensionContext = " + extensionContext);
         System.out.println("optional = " + optional);
-        if (driver != null)
-            driver.quit();
+        WebDriverRunner.closeWebDriver();
     }
 
     /**
      * Вызывается если тест упал
+     *
      * @param extensionContext
      * @param throwable
      */
     @Override
     public void testFailed(ExtensionContext extensionContext, Throwable throwable) {
-        initWebDriver(extensionContext);
         System.out.println("Тест провален. Вызван метод MyTestWatcher" +
                 ".testFailed()");
         System.out.println("extensionContext = " + extensionContext);
@@ -91,20 +99,18 @@ public class MyTestWatcher implements TestWatcher {
         Allure.addAttachment("Тест упал",
                 new ByteArrayInputStream(((TakesScreenshot) driver)
                         .getScreenshotAs(OutputType.BYTES)));
-        if (driver != null)
-            driver.quit();
+        WebDriverRunner.closeWebDriver();
     }
 
     /**
      * Вызывается если тест успешен.
+     *
      * @param extensionContext
      */
     @Override
     public void testSuccessful(ExtensionContext extensionContext) {
-        initWebDriver(extensionContext);
         System.out.println("MyTestWatcher.testSuccessful");
         System.out.println("extensionContext = " + extensionContext);
-        if (driver != null)
-            driver.quit();
+        WebDriverRunner.closeWebDriver();
     }
 }

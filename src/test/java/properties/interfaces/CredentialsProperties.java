@@ -61,6 +61,11 @@ public interface CredentialsProperties extends Config {
      */
     @Key("url")
     String url();
+    /**
+     * URL testing
+     */
+    @Key("urltesting")
+    String urltesting();
 
     /**
      * @return неверное имя пользователя из переменной среды, заданное через edit configurations - environment variables
