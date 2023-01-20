@@ -1,9 +1,9 @@
 package authorizedTests;
 
 import com.codeborne.selenide.WebDriverRunner;
+import helpers.TestBase;
 import okhttp3.*;
 import org.testng.annotations.BeforeMethod;
-import pages.selenide.CalendarPO;
 
 import java.io.IOException;
 import java.net.CookieManager;
@@ -11,15 +11,16 @@ import java.net.CookiePolicy;
 import java.nio.charset.StandardCharsets;
 
 import static com.codeborne.selenide.Selenide.open;
-import static properties.AeonBitsProperties.credentialsProperties;
+import static properties.Properties.credentialsProperties;
 
 /**
  * @author Алексеев Степан
- * @date 03.01.2023
+ * @date 25.12.2022
  */
-public class AuthorizedTestBase {
-    public CalendarPO calendarPO;
-
+public class AuthorizedTestBase extends TestBase {
+    /**
+     * Авторизация по АПИ.
+     */
     @BeforeMethod
     public void authorizeViaHTTP() {
         CookieManager cookieManager = new CookieManager();//1 start

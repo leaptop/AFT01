@@ -2,6 +2,7 @@
 **/credentials
 **/credentials.properties
 **/texts.json
+allure-results
 # Compiled class file
 *.class
 # Log file
