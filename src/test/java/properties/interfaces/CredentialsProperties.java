@@ -61,6 +61,7 @@ public interface CredentialsProperties extends Config {
      */
     @Key("URL")
     String url();
+
     /**
      * URL testing
      */
@@ -91,5 +92,27 @@ public interface CredentialsProperties extends Config {
     @Key("AUTOUSERPASSWORD")
     String autoUserPassword();
 
+    @Key("URLDEVELOP")
+    String urlDevelop();
 
+    @Key("URLDEVELOPCALENDAR")
+    String urlDevelopCalendar();
+
+    @Key("URLDEVLOPLOGINCHECK")
+    String urlDevelopLoginCheck();
+
+    @Key("URLDEVELOPLOGGED")
+    String urlDevelopLogged();
+
+    @Key("URLTESTINGEDIT")
+    String urlTestingEdit();
+
+    @Key("URLPRODCALENDAR")
+    String urlProdCalendar();
+
+    @Key("URLPRODNOLOGIN")
+    String urlProdNoLogin();
+
+    @Key("URLLOGINCHECK")
+    String urlLoginCheck();
 }

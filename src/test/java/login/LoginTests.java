@@ -1,12 +1,8 @@
 package login;
 
-import com.codeborne.selenide.logevents.SelenideLogger;
 import helpers.TestBase;
-import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -23,28 +19,21 @@ import static properties.Properties.credentialsProperties;
  * @author Алексеев Степан
  * @date 19.12.2022
  */
-public class LoginPositiveTests extends TestBase {
-    @BeforeAll
-    static void setupAllureReports() {
-        SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
-                .screenshots(true)
-                .savePageSource(false)
-        );
-    }
+@Execution(CONCURRENT)
+public class LoginTests extends TestBase {
     /**
-     * Проверка авторизации. Позитивный вариант.
+     * Проверка авторизации. Негативный и позитивный тесты
      */
-    @Execution(CONCURRENT)
     @ParameterizedTest(name = "{displayName}: {arguments}")
     @CsvSource({"Авто Пользователь, 12345678, 124124@m.r", "Тест, Тест, 1@m.r"})
-    @DisplayName("Тест авторизации с верными логином, паролем, проверкой имейла, имени")
-    void checkCorrectAuthorizationInputNew(
+    @DisplayName("Тест авторизации сначала с верными, потом с неверными логином, паролем, проверкой имейла, имени")
+    void checkParameterizedAuthorizationInput(
             String name, String pass, String mail) {
         open(credentialsProperties.urltesting(), LoginPage.class)
                 .sendLogin(name)
                 .sendPassword(pass)
                 .clickEnterButton();
-        webdriver().shouldHave(url("https://tt-testing.quality-lab.ru/report/group/edit"));
+        webdriver().shouldHave(url(credentialsProperties.urlTestingEdit()));
         SuccessfulLoginPage slps = new SuccessfulLoginPage();
         slps.clickUpperRightCornerAvatar();
         Assertions.assertAll(

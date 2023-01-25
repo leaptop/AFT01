@@ -49,8 +49,9 @@ public class LoginPage {
      * @return возвращает текущую страницу для продолжения вызова методов по цепочке
      */
     public LoginPage sendLogin(String name) {
-        step("Ввод логина", () -> {} ) ;
-        inputLogin.sendKeys(name);
+        step("Ввод логина", () -> {
+            inputLogin.sendKeys(name);
+        });
         return this;
     }
 
@@ -61,8 +62,9 @@ public class LoginPage {
      * @return возвращает текущую страницу для продолжения вызова методов по цепочке
      */
     public LoginPage sendPassword(String password) {
-        step("Ввод пароля", () -> {} ) ;
-        inputPassword.sendKeys(password);
+        step("Ввод пароля", () -> {
+            inputPassword.sendKeys(password);
+        });
         return this;
     }
 

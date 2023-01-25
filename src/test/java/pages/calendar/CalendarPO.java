@@ -225,7 +225,6 @@ public class CalendarPO {
      */
     @Step("Ждём появления сообщения о загрузке. Потом ждём его исчезновения")
     public CalendarPO waitForCalendarToLoad() {
-       // $x(calendarProgressBarXPath).shouldBe(visible);
         $x(calendarProgressBarXPath).shouldNotBe(visible, Duration.ofSeconds(10));
         return this;
     }

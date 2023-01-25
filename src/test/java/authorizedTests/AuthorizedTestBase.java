@@ -45,11 +45,11 @@ public class AuthorizedTestBase extends TestBase {
             throw new RuntimeException(e);
         }
         Request getRequest = new Request.Builder()//это нужно чтобы получить заголовки, без которых post не сработает
-                .url("https://tt.quality-lab.ru/login")
+                .url(credentialsProperties.url())
                 .addHeader("Connection", "keep-alive")
                 .build();
         Request postRequest = new Request.Builder()
-                .url("https://tt.quality-lab.ru/login_check")
+                .url(credentialsProperties.urlLoginCheck())
                 .addHeader("Connection", "keep-alive")
                 .post(formBody)
                 .build();
@@ -59,7 +59,7 @@ public class AuthorizedTestBase extends TestBase {
         } catch (IOException e) {
             e.printStackTrace();
         }//2 end
-        open("https://tt.quality-lab.ru");
+        open(credentialsProperties.urlProdNoLogin());
         WebDriverRunner.clearBrowserCache();
 
         cookieManager.getCookieStore().getCookies().forEach(httpCookie -> {//3c
