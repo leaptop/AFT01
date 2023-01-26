@@ -63,7 +63,7 @@ public class CalendarTest extends AuthorizedTestBase {
     @BeforeEach
     @Step("Открываем календарь и ждём появления и исчезновения Progress bar-а")
     public void openCalendar() {
-        calendarPO = open(credentialsProperties.urlProdCalendar(), CalendarPO.class)
+        calendarPO = open(credentialsProperties.urlCalendar(), CalendarPO.class)
                 .waitForCalendarToLoad();
     }
 

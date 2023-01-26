@@ -66,7 +66,7 @@ public class CalendarPO {
     /**
      * Progress bar загрузки календаря
      */
-    private String calendarProgressBarXPath = "//span[contains(@class, 'btn-primary m-loader')]";
+    private String calendarProgressBarXPath = "//span[contains(text(),'Обновление календаря')]";
     /**
      * Кнопка "Применить"
      */
@@ -225,6 +225,7 @@ public class CalendarPO {
      */
     @Step("Ждём появления сообщения о загрузке. Потом ждём его исчезновения")
     public CalendarPO waitForCalendarToLoad() {
+        $x(calendarProgressBarXPath).shouldBe(visible);
         $x(calendarProgressBarXPath).shouldNotBe(visible, Duration.ofSeconds(10));
         return this;
     }

@@ -29,11 +29,11 @@ public class LoginTests extends TestBase {
     @DisplayName("Тест авторизации сначала с верными, потом с неверными логином, паролем, проверкой имейла, имени")
     void checkParameterizedAuthorizationInput(
             String name, String pass, String mail) {
-        open(credentialsProperties.urltesting(), LoginPage.class)
+        open(credentialsProperties.url(), LoginPage.class)
                 .sendLogin(name)
                 .sendPassword(pass)
                 .clickEnterButton();
-        webdriver().shouldHave(url(credentialsProperties.urlTestingEdit()));
+        webdriver().shouldHave(url(credentialsProperties.urlReportEdit()));
         SuccessfulLoginPage slps = new SuccessfulLoginPage();
         slps.clickUpperRightCornerAvatar();
         Assertions.assertAll(

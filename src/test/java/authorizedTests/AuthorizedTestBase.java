@@ -36,7 +36,7 @@ public class AuthorizedTestBase extends TestBase {
             formBody
                     = new FormBody.Builder(StandardCharsets.UTF_8)//2
                     .add("_csrf_token", "")
-                    .add("_username", credentialsProperties.username())
+                    .add("_username", credentialsProperties.name())
                     .add("_password", credentialsProperties.password())
                     .add("_submit", "Войти")
                     .build();
@@ -59,7 +59,7 @@ public class AuthorizedTestBase extends TestBase {
         } catch (IOException e) {
             e.printStackTrace();
         }//2 end
-        open(credentialsProperties.urlProdNoLogin());
+        open(credentialsProperties.url());
         WebDriverRunner.clearBrowserCache();
 
         cookieManager.getCookieStore().getCookies().forEach(httpCookie -> {//3c
