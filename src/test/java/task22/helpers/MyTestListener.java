@@ -1,4 +1,4 @@
-package helpers;
+package task22.helpers;
 
 import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Attachment;

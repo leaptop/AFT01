@@ -1,4 +1,4 @@
-package pages.calendar;
+package task22.pages.calendar;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;

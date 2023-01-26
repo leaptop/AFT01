@@ -24,12 +24,12 @@
     <dependencies>
         <!--    Это нужно в инструкции для вызова скриншотов по одной из статей.
         Но добавление этого ломает сборку аллюр отчётов!: -->
-                <dependency>
-                    <groupId>io.qameta.allure</groupId>
-                    <artifactId>allure-selenide</artifactId>
-                    <version>${qameta.allure}</version>
-                    <scope>test</scope>
-                </dependency>
+<!--                <dependency>-->
+<!--                    <groupId>io.qameta.allure</groupId>-->
+<!--                    <artifactId>allure-selenide</artifactId>-->
+<!--                    <version>${qameta.allure}</version>-->
+<!--                    <scope>test</scope>-->
+<!--                </dependency>-->
         <!--        Убрать когда подберу правильную комбинацию зависимостей.-->
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->

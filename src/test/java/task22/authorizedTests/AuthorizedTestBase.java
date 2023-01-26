@@ -1,7 +1,7 @@
-package authorizedTests;
+package task22.authorizedTests;
 
 import com.codeborne.selenide.WebDriverRunner;
-import helpers.TestBase;
+import task22.helpers.TestBase;
 import okhttp3.*;
 import org.testng.annotations.BeforeMethod;
 
@@ -11,6 +11,7 @@ import java.net.CookiePolicy;
 import java.nio.charset.StandardCharsets;
 
 import static com.codeborne.selenide.Selenide.open;
+import static properties.Properties.credentialsProperties;
 //import static properties.Properties.credentialsProperties;
 
 /**
@@ -36,8 +37,8 @@ public class AuthorizedTestBase extends TestBase {
             formBody
                     = new FormBody.Builder(StandardCharsets.UTF_8)//2
                     .add("_csrf_token", "")
-                    .add("_username", "Авто Пользователь")
-                    .add("_password", "12345678")
+                    .add("_username", credentialsProperties.autoUserName())
+                    .add("_password", credentialsProperties.autoUserPassword())
                     .add("_submit", "Войти")
                     .build();
 
@@ -45,11 +46,11 @@ public class AuthorizedTestBase extends TestBase {
             throw new RuntimeException(e);
         }
         Request getRequest = new Request.Builder()//это нужно чтобы получить заголовки, без которых post не сработает
-                .url("https://tt.quality-lab.ru/login")
+                .url(credentialsProperties.urlTestingLogin())
                 .addHeader("Connection", "keep-alive")
                 .build();
         Request postRequest = new Request.Builder()
-                .url("https://tt.quality-lab.ru/login_check")
+                .url(credentialsProperties.urlTestingLoginCheck())
                 .addHeader("Connection", "keep-alive")
                 .post(formBody)
                 .build();
@@ -59,7 +60,7 @@ public class AuthorizedTestBase extends TestBase {
         } catch (IOException e) {
             e.printStackTrace();
         }//2 end
-        open("https://tt.quality-lab.ru");
+        open(credentialsProperties.urltesting());
         WebDriverRunner.clearBrowserCache();
 
         cookieManager.getCookieStore().getCookies().forEach(httpCookie -> {//3c
