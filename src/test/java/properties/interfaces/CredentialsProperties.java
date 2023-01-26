@@ -38,95 +38,26 @@ import org.aeonbits.owner.Config;
  * @author Алексеев Степан
  */
 public interface CredentialsProperties extends Config {
-    /**
-     * Логин из credentials.properties
-     */
-    @Key("NAME")
     String name();
 
-    /**
-     * Логин из переменной среды ОС
-     */
-    @Key("USERNAME2")
-    String username();
-
-    /**
-     * Пароль из credentials.properties
-     */
-    @Key("PASSWORD")
     String password();
 
-    /**
-     * URL из credentials.properties
-     */
-    @Key("URLLOGIN")
-    String urlLogin();
-
-    @Key("URL")
-    String url();
-
-    /**
-     * URL testing
-     */
-    @Key("URLTESTINGLOGIN")
-    String urltesting();
-
-    /**
-     * @return неверное имя пользователя из переменной среды, заданное через edit configurations - environment variables
-     */
-    @Key("INCORRECTUSERNAME")
-    String incorrectUserName();
-
-    /**
-     * @return неверный пароль из переменной среды, заданный через edit configurations - environment variables
-     */
-    @Key("INCORRECTPASSWORD")
-    String incorrectPassword();
-
-    /**
-     * @return логин из переменной среды, заданный через edit configurations - environment variables
-     */
-    @Key("AUTOUSER")
-    String autoUser();
-
-    /**
-     * @return пароль из файла пропертей
-     */
-    @Key("AUTOUSERPASSWORD")
-    String autoUserPassword();
-
-    @Key("URLDEVELOP")
-    String urlDevelop();
-
-    @Key("URLDEVELOPCALENDAR")
-    String urlDevelopCalendar();
-
-    @Key("URLDEVLOPLOGINCHECK")
-    String urlDevelopLoginCheck();
-
-    @Key("URLDEVELOPLOGGED")
-    String urlDevelopLogged();
-
-    @Key("URLCALENDAR")
-    String urlCalendar();
-
-
-    @Key("URLLOGINCHECK")
-    String urlLoginCheck();
-    @Key("URLTESTINGLOGINCHECK")
-    String urlTestingLoginCheck();
-    @Key("URLTESTINGREPORTEDIT")
-    String urlTestingReportEdit();
-
-    @Key("USERNAME3")
     String autoUserName();
 
-    @Key("URLREPORTEDIT")
+    String autoUserPassword();
+
+    String incorrectUserName();
+
+    String incorrectPassword();
+
+    String url();
+
+    String urlLogin();
+
     String urlReportEdit();
 
-    @Key("URLTESTING")
-    String urlTesting();
+    String urlLoginCheck();
 
-    @Key("URLTESTINGLOGIN")
-    String urlTestingLogin();
+    String urlCalendar();
+
 }

@@ -23,6 +23,7 @@ public class CalendarPO {
 
     }
 
+
     /**
      * заголовки с датами текущего месяца
      */
@@ -68,6 +69,10 @@ public class CalendarPO {
      */
     private String calendarProgressBarXPath = "//span[contains(@class, 'btn-primary m-loader')]";
     /**
+     * Кнопка "Изменить" в боковом сниппете
+     */
+    private String changeSnippetButtonXPath = "//button[@id='popup-change-schedule-button']";
+    /**
      * Кнопка "Применить"
      */
     private SelenideElement applyButton = $x("//button[text()='Применить']");
@@ -101,6 +106,11 @@ public class CalendarPO {
     @Step("Получаем элемент списка с работником, содержащим \"{namePart}\" в имени ")
     private SelenideElement listChosenEmployeeByNamePart(String namePart) {
         return $x("//li[contains(text(),'" + namePart + "')]");
+    }
+
+    public CalendarPO clickChangeSnippetButton() {
+        $x(changeSnippetButtonXPath).click();
+        return this;
     }
 
     /**
@@ -225,7 +235,7 @@ public class CalendarPO {
      */
     @Step("Ждём появления сообщения о загрузке. Потом ждём его исчезновения")
     public CalendarPO waitForCalendarToLoad() {
-       // $x(calendarProgressBarXPath).shouldBe(visible);
+        // $x(calendarProgressBarXPath).shouldBe(visible);
         $x(calendarProgressBarXPath).shouldNotBe(visible, Duration.ofSeconds(10));
         return this;
     }

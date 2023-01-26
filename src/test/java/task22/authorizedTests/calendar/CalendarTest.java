@@ -1,6 +1,7 @@
 package task22.authorizedTests.calendar;
 
 //import io.qameta.allure.selenide.AllureSelenide;
+
 import org.testng.annotations.Test;
 import task22.authorizedTests.AuthorizedTestBase;
 import task22.pages.SuccessfulLoginPage;
@@ -45,13 +46,12 @@ public class CalendarTest extends AuthorizedTestBase {
 
     @Test
     void testik() throws InterruptedException {
-        open(credentialsProperties.urlTestingReportEdit(), SuccessfulLoginPage.class);
+        open(credentialsProperties.urlReportEdit(), SuccessfulLoginPage.class);
         SuccessfulLoginPage slp = new SuccessfulLoginPage();
-       // slp.clickUpperRightCornerAvatar();
-        slp
-                //.clickMainMenuButton()
-                .hoverOnMenuItemNamed("Графики работы");
-        String str="";
+        slp.clickOnMenuItemNamed(4, "Графики работы");
+        calendarPO = new CalendarPO();
+        calendarPO.clickChangeSnippetButton();
+        String str = "";
     }
 
 }

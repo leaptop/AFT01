@@ -7,7 +7,6 @@ import ru.yandex.qatools.htmlelements.element.Image;
 import ru.yandex.qatools.htmlelements.element.TextBlock;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.actions;
 
 /**
  * Класс, реализующий паттерн Page Object для страницы, показываемой после успешного входа в систему по логину и паролю.
@@ -46,19 +45,9 @@ public class SuccessfulLoginPage {
     private Button rightMenuCalendarButton = new Button($x(xpathForMainMenuButton));
 
     @Step
-    public SuccessfulLoginPage hoverOnMenuItemNamed(String name) throws InterruptedException {
-        $x(xpathForMainMenuButton).hover();
-//        SelenideElement element = $x(String.format(//"//ul[@class='m-menu__subnav']" +
-//                "//span[text()='%s']", name));
-        actions().moveByOffset(0, 300)
-                .perform();
-        actions().moveToElement($x("//span[@class='m-menu__link-text' and text()='Графики работы']"))
-                .perform();
-        //  actions().moveToElement(element).click(element).perform();
-        $x(String.format(//"//ul[@class='m-menu__subnav']" +
-                "//span[text()='%s']", name))
-                //.shouldBe(Condition.visible)
-                .hover();
+    public SuccessfulLoginPage clickOnMenuItemNamed(int menuItemNumber, String name) {
+        $x(String.format("//ul[contains(@class, 'm-menu__nav')]/li[%d]", menuItemNumber)).hover();
+        $x(String.format("//ul[contains(@class, 'm-menu__nav')]/li//span[text()='%s']", name)).click();
         return this;
     }
 

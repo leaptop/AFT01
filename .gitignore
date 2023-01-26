@@ -1,6 +1,9 @@
 # My files. Yo need to specify a full name including file extension
 **/credentials
 **/credentials.properties
+**/credentialsDevelop.properties
+**/credentialsTest.properties
+**/credentialsProd.properties
 **/texts.json
 # Compiled class file
 *.class
