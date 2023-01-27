@@ -15,6 +15,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.*;
+import static properties.Properties.credentialsProperties;
 
 /**
  * Реализуй автотесты для метода GetHolidays . Проверки реализуй и через валидацию JSON и через перевод JSON к объекту
@@ -60,10 +61,10 @@ public class Main {
 
     @BeforeClass
     public static void setup() {
-        RestAssured.baseURI = "https://tt.quality-lab.ru";
+        RestAssured.baseURI = credentialsProperties.url();
         RestAssured.port = 443;
         RestAssured.basePath = "/api/v2/public";
-        //
+
         setMainParams();
         //Общие проверки для всех ответов
         responseStatus.expectStatusCode(200);

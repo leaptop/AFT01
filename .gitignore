@@ -2,6 +2,13 @@
 **/credentials
 **/credentials.properties
 **/texts.json
+**/credentialsDevelop.properties
+**/credentialsProd.properties
+**/credentialsTest.properties
+pict.png
+testng.xml
+/properties/
+allure-results
 # Compiled class file
 *.class
 # Log file
