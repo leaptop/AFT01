@@ -4,11 +4,13 @@ import helpers.TestBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import pages.LoginPage;
 
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 import static properties.Properties.credentialsProperties;
 
 /**
@@ -17,6 +19,7 @@ import static properties.Properties.credentialsProperties;
  * @author Алексеев Степан
  * @date 19.12.2022
  */
+@Execution(CONCURRENT)
 public class LoginNegativeTests extends TestBase {
 
     /**

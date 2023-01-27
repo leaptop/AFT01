@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import pages.calendar.CalendarPO;
 import pages.calendar.Day;
 import pages.calendar.Snippet;
@@ -17,10 +18,14 @@ import java.util.ArrayList;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
+import static properties.Properties.credentialsProperties;
+
 /**
  * @author Алексеев Степан
  * @date 25.12.2022
  */
+@Execution(CONCURRENT)
 public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
 
@@ -58,7 +63,7 @@ public class CalendarTest extends AuthorizedTestBase {
     @BeforeEach
     @Step("Открываем календарь и ждём появления и исчезновения Progress bar-а")
     public void openCalendar() {
-        calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
+        calendarPO = open(credentialsProperties.urlCalendar(), CalendarPO.class)
                 .waitForCalendarToLoad();
     }
 

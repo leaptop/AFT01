@@ -1,6 +1,12 @@
 # My files. Yo need to specify a full name including file extension
 **/credentials
 **/credentials.properties
+**/texts.json
+**/credentialsDevelop.properties
+**/credentialsProd.properties
+**/credentialsTest.properties
+
+/properties/
 allure-results
 # Compiled class file
 *.class

@@ -26,7 +26,8 @@ import org.aeonbits.owner.Config;
  * Можно просто использовать дефолтные значения. Последующую же конфигурацию через проперти файл оставить следующему
  * разработчику/пользователю.
  */
-@Config.Sources({"file:src/test/resources/properties/credentials.properties",
+@Config.Sources({
+        "file:src/test/resources/properties/credentials.properties",
         "system:properties",
         "system:env"
 })
@@ -38,53 +39,23 @@ import org.aeonbits.owner.Config;
  * @author Алексеев Степан
  */
 public interface CredentialsProperties extends Config {
-    /**
-     * Логин из credentials.properties
-     */
-    @Key("name")
     String name();
 
-    /**
-     * Логин из переменной среды ОС
-     */
-    @Key("USERNAME2")
-    String username();
-
-    /**
-     * Пароль из credentials.properties
-     */
-    @Key("password")
     String password();
 
-    /**
-     * URL из credentials.properties
-     */
-    @Key("url")
-    String url();
-
-    /**
-     * @return неверное имя пользователя из переменной среды, заданное через edit configurations - environment variables
-     */
-    @Key("INCORRECTUSERNAME")
-    String incorrectUserName();
-
-    /**
-     * @return неверный пароль из переменной среды, заданный через edit configurations - environment variables
-     */
-    @Key("INCORRECTPASSWORD")
-    String incorrectPassword();
-
-    /**
-     * @return логин из переменной среды, заданный через edit configurations - environment variables
-     */
-    @Key("AUTOUSER")
-    String autoUser();
-
-    /**
-     * @return пароль из файла пропертей
-     */
-    @Key("autoUserPassword")
     String autoUserPassword();
 
+    String incorrectUserName();
 
+    String incorrectPassword();
+
+    String url();
+
+    String urlLogin();
+
+    String urlReportEdit();
+
+    String urlLoginCheck();
+
+    String urlCalendar();
 }

@@ -3,8 +3,9 @@ package helpers;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Step;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.WebDriver;
 
 /**
  * Класс для реализации базового функционала для всех тестов, написанных с использованием Selenium.
@@ -12,12 +13,12 @@ import org.junit.jupiter.api.BeforeEach;
  * @author Алексеев Степан
  * @date 20.12.2022
  */
+@ExtendWith(MyTestWatcher.class)
 public class TestBase {
+    public WebDriver chromedriver;
+
     /**
-     * Настраиваем тесты перед запуском.
-     *
-     * Здесь дублируется прописывание разрешения экрана, как и в AuthorizedTestBase потому, что в заданиях до работы
-     * с календарём (в CalendarTests) как раз и нужно было использовать разные логины и пароли.
+     * Инициализируем вебдрайвер, настраиваем его перед запуском каждого теста.
      */
     @BeforeEach
     @Step("Устанавливаем разрешение экрана")
@@ -26,11 +27,14 @@ public class TestBase {
     }
 
     /**
-     * Закрываем вебдрайвер в конце каждого теста
+     * Метод завершает работу вебдрайвера после выполнения каждого теста.
+     *
+     * Его необходимо отключить на время использования MyTestWatcher, т.к.
+     * иначе нельзя получить доступ к вебдрайверу (он закрывается здесь до
+     * запуска методов из MyTestWatcher).
      */
-    @Step("Закрываем вебдрайвер")
-    @AfterEach
-    public void after() {
+   // @AfterEach
+    void finishTest() {
         WebDriverRunner.closeWebDriver();
     }
 }

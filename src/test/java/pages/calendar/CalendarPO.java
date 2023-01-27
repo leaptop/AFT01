@@ -66,7 +66,7 @@ public class CalendarPO {
     /**
      * Progress bar загрузки календаря
      */
-    private String calendarProgressBarXPath = "//span[contains(@class, 'btn-primary m-loader')]";
+    private String calendarProgressBarXPath = "//span[contains(text(),'Обновление календаря')]";
     /**
      * Кнопка "Применить"
      */
