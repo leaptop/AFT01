@@ -1,11 +1,8 @@
 package authorizedTests.calendar;
 
 import authorizedTests.AuthorizedTestBase;
-import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.Step;
-import io.qameta.allure.selenide.AllureSelenide;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -19,21 +16,17 @@ import java.time.Year;
 import java.util.ArrayList;
 
 import static com.codeborne.selenide.Selenide.open;
-import static org.testng.Assert.assertTrue;
+import static properties.Properties.credentialsProperties;
 
 /**
+ * Запускать на tt-testing с Авто Пользователем
+ *
  * @author Алексеев Степан
  * @date 25.12.2022
  */
 public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
-    @BeforeClass
-    static void setupAllureReports() {
-        SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
-                .screenshots(true)
-                .savePageSource(false)
-        );
-    }
+
     /**
      * Проверка существования выходных и рабочих дней в календаре
      */
@@ -66,10 +59,8 @@ public class CalendarTest extends AuthorizedTestBase {
      * Открываем календарь и ждём появления и исчезновения Progress bar.
      */
     @BeforeMethod
-    @Step("Открываем календарь и ждём появления и исчезновения Progress bar-а")
     public void openCalendar() {
-        calendarPO = open("https://tt.quality-lab.ru/calendar/", CalendarPO.class)
-                .waitForCalendarToLoad();
+        calendarPO = open(credentialsProperties.urlCalendar(), CalendarPO.class);
     }
 
     /**

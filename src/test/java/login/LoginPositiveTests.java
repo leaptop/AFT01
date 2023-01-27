@@ -1,9 +1,6 @@
 package login;
 
-import com.codeborne.selenide.logevents.SelenideLogger;
 import helpers.TestBase;
-//import io.qameta.allure.selenide.AllureSelenide;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -16,6 +13,8 @@ import static com.codeborne.selenide.WebDriverConditions.url;
 import static properties.Properties.credentialsProperties;
 
 /**
+ * Запускать на tt-testing
+ *
  * @author Алексеев Степан
  * @date 19.12.2022
  */
@@ -28,11 +27,11 @@ public class LoginPositiveTests extends TestBase {
     @Parameters({"name", "pass", "mail"})
     void checkCorrectAuthorizationInputNew(
             String name, String pass, String mail) {
-        open(credentialsProperties.urltesting(), LoginPage.class)
+        open(credentialsProperties.url(), LoginPage.class)
                 .sendLogin(name)
                 .sendPassword(pass)
                 .clickEnterButton();
-        webdriver().shouldHave(url("https://tt-testing.quality-lab.ru/report/group/edit"));
+        webdriver().shouldHave(url(credentialsProperties.urlReportEdit()));
         SuccessfulLoginPage slps = new SuccessfulLoginPage();
         slps.clickUpperRightCornerAvatar();
         SoftAssert soft = new SoftAssert();

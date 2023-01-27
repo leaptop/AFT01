@@ -20,8 +20,13 @@ import org.testng.ITestResult;
  */
 public class MyTestListener implements ITestListener {
     @Attachment
-    public byte[] saveFailureScreenShot(WebDriver driver) {
+    public static byte[] saveScreenShot(WebDriver driver) {
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+    }
+
+    public void finishTest() {
+        WebDriverRunner.clearBrowserCache();
+        WebDriverRunner.closeWebDriver();
     }
 
     @Override
@@ -31,6 +36,9 @@ public class MyTestListener implements ITestListener {
 
     @Override
     public void onTestSuccess(ITestResult iTestResult) {
+        WebDriver driver = WebDriverRunner.driver().getWebDriver();
+        saveScreenShot(driver);
+        finishTest();
         System.out.println("onTestSuccess");
     }
 
@@ -38,17 +46,20 @@ public class MyTestListener implements ITestListener {
     public void onTestFailure(ITestResult iTestResult) {
         System.out.println("onTestFailure");
         WebDriver driver = WebDriverRunner.driver().getWebDriver();
-        saveFailureScreenShot(driver);
+        saveScreenShot(driver);
+        finishTest();
     }
 
     @Override
     public void onTestSkipped(ITestResult iTestResult) {
+        finishTest();
         System.out.println("onTestSkipped");
     }
 
     @Override
     public void onTestFailedButWithinSuccessPercentage(ITestResult iTestResult) {
         System.out.println("onTestFailedButWithinSuccessPercentage");
+        finishTest();
     }
 
     @Override
@@ -59,6 +70,6 @@ public class MyTestListener implements ITestListener {
     @Override
     public void onFinish(ITestContext iTestContext) {
         System.out.println("onFinish");
-        WebDriverRunner.driver().close();
+        finishTest();
     }
 }
