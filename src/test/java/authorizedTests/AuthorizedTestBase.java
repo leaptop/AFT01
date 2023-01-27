@@ -3,7 +3,7 @@ package authorizedTests;
 import com.codeborne.selenide.WebDriverRunner;
 import helpers.TestBase;
 import okhttp3.*;
-import org.junit.jupiter.api.BeforeEach;
+import org.testng.annotations.BeforeMethod;
 
 import java.io.IOException;
 import java.net.CookieManager;
@@ -21,7 +21,7 @@ public class AuthorizedTestBase extends TestBase {
     /**
      * Авторизация по АПИ.
      */
-    @BeforeEach
+    @BeforeMethod
     public void authorizeViaHTTP() {
         CookieManager cookieManager = new CookieManager();//1 start
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -36,8 +36,8 @@ public class AuthorizedTestBase extends TestBase {
             formBody
                     = new FormBody.Builder(StandardCharsets.UTF_8)//2
                     .add("_csrf_token", "")
-                    .add("_username", credentialsProperties.name())
-                    .add("_password", credentialsProperties.password())
+                    .add("_username", credentialsProperties.autoUserName())
+                    .add("_password", credentialsProperties.autoUserPassword())
                     .add("_submit", "Войти")
                     .build();
 

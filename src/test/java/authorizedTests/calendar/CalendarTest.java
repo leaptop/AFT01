@@ -2,11 +2,10 @@ package authorizedTests.calendar;
 
 import authorizedTests.AuthorizedTestBase;
 import io.qameta.allure.Step;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import pages.calendar.CalendarPO;
 import pages.calendar.Day;
 import pages.calendar.Snippet;
@@ -17,15 +16,14 @@ import java.time.Year;
 import java.util.ArrayList;
 
 import static com.codeborne.selenide.Selenide.open;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 import static properties.Properties.credentialsProperties;
 
 /**
+ * Запускать на tt-testing с Авто Пользователем
+ *
  * @author Алексеев Степан
  * @date 25.12.2022
  */
-@Execution(CONCURRENT)
 public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
 
@@ -51,20 +49,18 @@ public class CalendarTest extends AuthorizedTestBase {
         }
         boolean finalFoundWorkDay = foundWorkDay;
         boolean finalFoundHoliday = foundHoliday;
-        Assertions.assertAll(
-                () -> Assertions.assertTrue(finalFoundWorkDay, "Не найдены рабочие дни в месяце"),
-                () -> Assertions.assertTrue(finalFoundHoliday, "Не найдены выходные дни в месяце")
-        );
+        SoftAssert soft = new SoftAssert();
+        soft.assertTrue(finalFoundWorkDay, "Не найдены рабочие дни в месяце");
+        soft.assertTrue(finalFoundHoliday, "Не найдены выходные дни в месяце");
+        soft.assertAll();
     }
 
     /**
      * Открываем календарь и ждём появления и исчезновения Progress bar.
      */
-    @BeforeEach
-    @Step("Открываем календарь и ждём появления и исчезновения Progress bar-а")
+    @BeforeMethod
     public void openCalendar() {
-        calendarPO = open(credentialsProperties.urlCalendar(), CalendarPO.class)
-                .waitForCalendarToLoad();
+        calendarPO = open(credentialsProperties.urlCalendar(), CalendarPO.class);
     }
 
     /**
@@ -75,14 +71,13 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
     @Test
-    @DisplayName("1 Сценарий: проверка текущего месяца")
     public void checkCurrentMonthAndYear() {
-        Assertions.assertAll(
-                () -> assertEquals(LocalDateTime.now().getMonth(), calendarPO.getMonth(),
-                        "Текущий месяц не совпадает с выведенным на календаре"),
-                () -> assertEquals(Year.of(LocalDateTime.now().getYear()), calendarPO.getYear(),
-                        "Текущий год не совпадает с выведенным на календаре")
-        );
+        SoftAssert soft = new SoftAssert();
+        soft.assertEquals(LocalDateTime.now().getMonth(), calendarPO.getMonth(),
+                "Текущий месяц не совпадает с выведенным на календаре");
+        soft.assertEquals(Year.of(LocalDateTime.now().getYear()).getValue(), calendarPO.getYear().getValue(),
+                "Текущий год не совпадает с выведенным на календаре");
+        soft.assertAll();
         holidaysAndWorkDaysExistenceCheckNew();
     }
 
@@ -94,7 +89,6 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
     @Test
-    @DisplayName("2 Сценарий: проверка переключения месяца")
     public void checkMonthSwitch() {
         calendarPO.chooseNextMonth();
         holidaysAndWorkDaysExistenceCheckNew();
@@ -108,7 +102,6 @@ public class CalendarTest extends AuthorizedTestBase {
      * в месяце есть выходные (визуально пустые, но внутри есть плашка аналогично рабочим дням, только белая)
      */
     @Test
-    @DisplayName("3 Сценарий: проверка графика другого сотрудника")
     public void checkOtherEmployee() {
         calendarPO.chooseEmployee("Якина");
         holidaysAndWorkDaysExistenceCheckNew();
@@ -122,7 +115,6 @@ public class CalendarTest extends AuthorizedTestBase {
      * Проверить что информация в боковом снипете совпадает с информацией в дне
      */
     @Test
-    @DisplayName("4 Сценарий: проверка переключения бокового сниппета")
     public void checkSideSnippetSwitchNew() {
         ArrayList<LocalDate> datesToCheck = calendarPO.getDates();
         for (int i = 0; i < datesToCheck.size(); i++) {
@@ -130,15 +122,15 @@ public class CalendarTest extends AuthorizedTestBase {
             Day day = calendarPO.getDay(datesToCheck.get(i));
             Snippet snippet = calendarPO.getSnippet();
             if (day.isHoliday()) {
-                Assertions.assertAll(
-                        () -> Assertions.assertEquals("", snippet.getEvents().get(0)),
-                        () -> Assertions.assertEquals("Выходной", snippet.getEvents().get(1))
-                );
+                SoftAssert soft = new SoftAssert();
+                soft.assertEquals("", snippet.getEvents().get(0));
+                soft.assertEquals("Выходной", snippet.getEvents().get(1));
+                soft.assertAll();
             } else if (day.isWorkDay() || day.isVacationDay()) {
                 ArrayList<String> dayEvents = day.getEvents();
                 ArrayList<String> snippetEvents = snippet.getEvents();
                 for (int j = 0; j < dayEvents.size(); j++) {
-                    Assertions.assertEquals(dayEvents.get(j), snippetEvents.get(j * 2));
+                    Assert.assertEquals(dayEvents.get(j), snippetEvents.get(j * 2));
                 }
             }
         }

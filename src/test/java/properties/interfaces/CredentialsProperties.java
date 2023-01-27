@@ -43,6 +43,8 @@ public interface CredentialsProperties extends Config {
 
     String password();
 
+    String autoUserName();
+
     String autoUserPassword();
 
     String incorrectUserName();
