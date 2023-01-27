@@ -5,6 +5,8 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import ru.yandex.qatools.htmlelements.element.Image;
 
 import java.io.File;
 import java.util.Random;
@@ -24,6 +26,27 @@ public class CalendarChangeSnippetFormPO {
     private String inputForImagesXPath = "//input[@type='file' and not (contains(@accept,'image'))]";
     private String saveScheduleButton = "//div[@id='popup-change-schedule']//button[contains(text(), 'Сохранить')]";
     private String progressBarForFileSuccessfullyUploaded = "//div[text()='Файл успешно загружен']";
+    private String chosenApproverNameXPath = "//li[@class='select2-selection__choice']";
+    private Image image;
+    private String uploadedImageNameXPath = "//div[@class='dz-filename']/span";
+public String getUploadedImageName(){
+    return $x(uploadedImageNameXPath).getOwnText();
+}
+    public Image getUploadedImage() {
+        return new Image($x("//div[@class='dz-image']/img"));
+    }
+
+    public boolean checkUploadedImage() {
+        return $x("//div[@class='dz-image']/img").isImage();
+    }
+
+    public Dimension getUploadedImageSize(Image image) {
+        return image.getSize();
+    }
+
+    public String getChosenApproverName() {
+        return $x(chosenApproverNameXPath).getAttribute("title");
+    }
 
     public CalendarChangeSnippetFormPO waitForProgressBarForFileSuccessfullyUploaded() {
         $x(progressBarForFileSuccessfullyUploaded).shouldBe(Condition.visible);
@@ -55,7 +78,7 @@ public class CalendarChangeSnippetFormPO {
      *
      * @return
      */
-    public CalendarChangeSnippetFormPO chooseRandomApprovingPerson() {
+    public String chooseRandomApprovingPerson() {
         ElementsCollection ec = $$x(approvingNamesA);
 //        int count = 0;
 //        while (ec.size() < 1 && count++ < 30) {//Раскомментировать, если не получится заполнить коллекцию
@@ -70,8 +93,9 @@ public class CalendarChangeSnippetFormPO {
         Random random = new Random();
         int r = random.nextInt(ec.size());
         SelenideElement se = ec.get(r);
+        String approverName = se.getText();
         se.hover().click();
-        return this;
+        return approverName;
     }
 
     /**

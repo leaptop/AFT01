@@ -2,7 +2,9 @@ package task22.authorizedTests.calendar;
 
 //import io.qameta.allure.selenide.AllureSelenide;
 
+import org.openqa.selenium.Dimension;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import task22.authorizedTests.AuthorizedTestBase;
 import task22.pages.SuccessfulLoginPage;
 import task22.pages.calendar.CalendarChangeSnippetFormPO;
@@ -12,6 +14,7 @@ import static com.codeborne.selenide.Selenide.open;
 import static properties.Properties.credentialsProperties;
 
 /**
+ * Запускать на tt-testing
  * 1 Создай ветку task22
  * 2 Реализуй следующий сценарий:
  * a. Предусловие: пользователь авторизован
@@ -23,9 +26,11 @@ import static properties.Properties.credentialsProperties;
  * II. Файлы для согласования: загрузить 1 файл (картинку можешь выбрать сам)
  * e. Нажать кнопку “Сохранить”
  * f. Проверить что появилось сообщение “Расписание успешно изменено”
+ * <p>
  * g. Не меняя текущего рабочего дня, в боковом снипете нажать кнопку “Изменить”
  * h. Во всплывающем окне “Изменение графика работы” проверить:
  * I. С кем согласовано: совпадает с введенным на шаге 4
+ * <p>
  * a. Файлы для согласование:
  * I. содержит картинку. Картинка имеет ненулевой отображаемый размер
  * II. при наведении на картинку выводится название файла, добавленного на шаге 4 (достаточно проверить наличие
@@ -39,19 +44,33 @@ public class CalendarTest extends AuthorizedTestBase {
 
     @Test
     void testik() {
+        String imageName = "pict.png";
         open(credentialsProperties.urlReportEdit(), SuccessfulLoginPage.class);
         SuccessfulLoginPage slp = new SuccessfulLoginPage();
         slp.hoverOnMenuItemNumber(4).clickOnSubMenuItemNamed("Графики работы");
         calendarPO = new CalendarPO();
         calendarPO.clickChangeSnippetButton();
         CalendarChangeSnippetFormPO ccsfpo = new CalendarChangeSnippetFormPO();
-        ccsfpo.clickChangeApprovingPeople()
-                .chooseRandomApprovingPerson()
-                .uploadFileViaSelenide("pict.png")
+        String randomApproverName = ccsfpo
+                .clickChangeApprovingPeople()
+                .chooseRandomApprovingPerson();
+        ccsfpo
+                .uploadFileViaSelenide(imageName)
                 .saveScheduleButtonClick()
         ;
         calendarPO.checkIfConfirmarionOfScheduleChangeAppeared();
+        calendarPO.clickChangeSnippetButton();
+        String existingApproverName = ccsfpo.getChosenApproverName();
+        SoftAssert soft = new SoftAssert();
+        soft.assertEquals(randomApproverName, existingApproverName, "Имена выбранного произвольного согласующего и " +
+                "находящегося на форме после повторного открытия не совпадают");
+
+        boolean b = ccsfpo.checkUploadedImage();
+        //Dimension dimension = ccsfpo.getUploadedImageSize(image);
+        String uploadedImageName = ccsfpo.getUploadedImageName();
+        soft.assertEquals(imageName, uploadedImageName, "Имена загруженных файлов не совпадают");
         String str = "";
+        soft.assertAll();
     }
 
 }
