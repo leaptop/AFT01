@@ -2,10 +2,15 @@ package task22.authorizedTests.calendar;
 
 //import io.qameta.allure.selenide.AllureSelenide;
 
+import com.codeborne.selenide.WebDriverRunner;
+import org.junit.jupiter.api.Assertions;
 import org.testng.annotations.Test;
 import task22.authorizedTests.AuthorizedTestBase;
 import task22.pages.SuccessfulLoginPage;
+import task22.pages.calendar.CalendarChangeSnippetFormPO;
 import task22.pages.calendar.CalendarPO;
+
+import java.util.Random;
 
 import static com.codeborne.selenide.Selenide.open;
 import static properties.Properties.credentialsProperties;
@@ -36,21 +41,16 @@ import static properties.Properties.credentialsProperties;
 public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
 
-//    @BeforeClass
-//    static void setupAllureReports() {
-//        SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
-//                .screenshots(true)
-//                .savePageSource(false)
-//        );
-//    }
-
     @Test
-    void testik() throws InterruptedException {
+    void testik() {
         open(credentialsProperties.urlReportEdit(), SuccessfulLoginPage.class);
         SuccessfulLoginPage slp = new SuccessfulLoginPage();
-        slp.clickOnMenuItemNamed(4, "Графики работы");
+        slp.hoverOnMenuItemNumber(4).clickOnSubMenuItemNamed("Графики работы");
         calendarPO = new CalendarPO();
         calendarPO.clickChangeSnippetButton();
+        CalendarChangeSnippetFormPO ccsfpo = new CalendarChangeSnippetFormPO();
+        ccsfpo.clickChangeApprovingPeople().chooseRandomApprovingPerson();
+
         String str = "";
     }
 

@@ -109,7 +109,7 @@ public class CalendarPO {
     }
 
     public CalendarPO clickChangeSnippetButton() {
-        $x(changeSnippetButtonXPath).click();
+        $x(changeSnippetButtonXPath).shouldBe(visible,Duration.ofSeconds(10)).click();
         return this;
     }
 

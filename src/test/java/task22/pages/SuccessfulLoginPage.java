@@ -29,8 +29,9 @@ public class SuccessfulLoginPage {
      */
     private String xpathForRightMenuCalendarButton =
             "//li[@class='m-menu__item m-menu__item--submenu']/a/i[@class='m-menu__link-icon flaticon-calendar-2']";
-    private String xpathForMainMenuButton =
-            "//a[@id='m_aside_left_minimize_toggle']";
+    private String xpathForMainMenuButton = "//a[@id='m_aside_left_minimize_toggle']";
+    private String xpathForSubMenu = "//ul[contains(@class, 'm-menu__nav')]/li//span[text()='%s']";
+    private String xpathForMainMenuItems = "//ul[contains(@class, 'm-menu__nav')]/li[%d]";
 
     private TextBlock emailBlock = new TextBlock($x(xpathForUserEmailOnCard));
     /**
@@ -44,10 +45,26 @@ public class SuccessfulLoginPage {
 
     private Button rightMenuCalendarButton = new Button($x(xpathForMainMenuButton));
 
-    @Step
-    public SuccessfulLoginPage clickOnMenuItemNamed(int menuItemNumber, String name) {
-        $x(String.format("//ul[contains(@class, 'm-menu__nav')]/li[%d]", menuItemNumber)).hover();
-        $x(String.format("//ul[contains(@class, 'm-menu__nav')]/li//span[text()='%s']", name)).click();
+    /**
+     * Сначала надо вызвать hoverOnMenuItemNumber, чтобы навести на пункт меню, потом вызывать этот метод для выбора
+     * пункта подменю по названию.
+     *
+     * @param name
+     * @return
+     */
+    public SuccessfulLoginPage clickOnSubMenuItemNamed(String name) {
+        $x(String.format(xpathForSubMenu, name)).click();
+        return this;
+    }
+
+    /**
+     * Наводит мышь на пункт главного меню по его номеру, считая сверху вниз.
+     *
+     * @param number
+     * @return
+     */
+    public SuccessfulLoginPage hoverOnMenuItemNumber(int number) {
+        $x(String.format(xpathForMainMenuItems, number)).hover();
         return this;
     }
 
