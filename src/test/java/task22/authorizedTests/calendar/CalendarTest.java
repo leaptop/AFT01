@@ -2,15 +2,11 @@ package task22.authorizedTests.calendar;
 
 //import io.qameta.allure.selenide.AllureSelenide;
 
-import com.codeborne.selenide.WebDriverRunner;
-import org.junit.jupiter.api.Assertions;
 import org.testng.annotations.Test;
 import task22.authorizedTests.AuthorizedTestBase;
 import task22.pages.SuccessfulLoginPage;
 import task22.pages.calendar.CalendarChangeSnippetFormPO;
 import task22.pages.calendar.CalendarPO;
-
-import java.util.Random;
 
 import static com.codeborne.selenide.Selenide.open;
 import static properties.Properties.credentialsProperties;
@@ -49,8 +45,12 @@ public class CalendarTest extends AuthorizedTestBase {
         calendarPO = new CalendarPO();
         calendarPO.clickChangeSnippetButton();
         CalendarChangeSnippetFormPO ccsfpo = new CalendarChangeSnippetFormPO();
-        ccsfpo.clickChangeApprovingPeople().chooseRandomApprovingPerson();
-
+        ccsfpo.clickChangeApprovingPeople()
+                .chooseRandomApprovingPerson()
+                .uploadFileViaSelenide("pict.png")
+                .saveScheduleButtonClick()
+        ;
+        calendarPO.checkIfConfirmarionOfScheduleChangeAppeared();
         String str = "";
     }
 

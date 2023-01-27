@@ -23,7 +23,12 @@ public class CalendarPO {
 
     }
 
-
+    /**
+     * Всплывающее окошко справа сверху о том, что расписание успешно сохранено после работы на форме по кнопке
+     * "Изменить".
+     */
+    private String confirmationOfScheduleChangeXPath =
+            "//div[@class='toast-message' and text()='Расписание успешно изменено']";
     /**
      * заголовки с датами текущего месяца
      */
@@ -96,6 +101,15 @@ public class CalendarPO {
      * @return Возвращает кнопку вызова выпадающего списка работников
      */
     private SelenideElement nameDropDownMenuButton = $x("//span[@id='select2--container']");
+    /**
+     * Проверка того, что расписание успешно сохранено после работы на форме по кнопке "Изменить".
+     *
+     * @return
+     */
+    public CalendarPO checkIfConfirmarionOfScheduleChangeAppeared() {
+         $x(confirmationOfScheduleChangeXPath).shouldBe(visible);
+         return this;
+    }
 
     /**
      * Элемент списка работников, найденный по части имени
@@ -109,7 +123,7 @@ public class CalendarPO {
     }
 
     public CalendarPO clickChangeSnippetButton() {
-        $x(changeSnippetButtonXPath).shouldBe(visible,Duration.ofSeconds(10)).click();
+        $x(changeSnippetButtonXPath).shouldBe(visible, Duration.ofSeconds(10)).click();
         return this;
     }
 

@@ -37,8 +37,8 @@ public class AuthorizedTestBase extends TestBase {
             formBody
                     = new FormBody.Builder(StandardCharsets.UTF_8)//2
                     .add("_csrf_token", "")
-                    .add("_username", credentialsProperties.name())
-                    .add("_password", credentialsProperties.password())
+                    .add("_username", credentialsProperties.autoUserName())
+                    .add("_password", credentialsProperties.autoUserPassword())
                     .add("_submit", "Войти")
                     .build();
 

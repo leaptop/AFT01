@@ -5,6 +5,7 @@
 **/credentialsTest.properties
 **/credentialsProd.properties
 **/texts.json
+pict.png
 # Compiled class file
 *.class
 # Log file

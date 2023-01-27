@@ -1,8 +1,12 @@
 package task22.pages.calendar;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
+import org.openqa.selenium.By;
 
+import java.io.File;
 import java.util.Random;
 
 import static com.codeborne.selenide.Selenide.$$x;
@@ -17,6 +21,31 @@ public class CalendarChangeSnippetFormPO {
     private String approvingNamesA = "//li[contains(@id,'select2-field-users-confirmation')]";
     private String approvingNamesB = "//li[@class='select2-results__option']";//а иногда имена так представлены в
     // DOM, однако такие элементы были not interactable
+    private String inputForImagesXPath = "//input[@type='file' and not (contains(@accept,'image'))]";
+    private String saveScheduleButton = "//div[@id='popup-change-schedule']//button[contains(text(), 'Сохранить')]";
+    private String progressBarForFileSuccessfullyUploaded = "//div[text()='Файл успешно загружен']";
+
+    public CalendarChangeSnippetFormPO waitForProgressBarForFileSuccessfullyUploaded() {
+        $x(progressBarForFileSuccessfullyUploaded).shouldBe(Condition.visible);
+        return this;
+    }
+
+    public CalendarChangeSnippetFormPO saveScheduleButtonClick() {
+        $x(saveScheduleButton).click();
+        return this;
+    }
+
+    public CalendarChangeSnippetFormPO uploadFileViaSelenium(String path) {
+        By fileInput = By.xpath(inputForImagesXPath);
+        WebDriverRunner.getWebDriver().findElement(fileInput).sendKeys(path);
+        return this;
+    }
+
+    public CalendarChangeSnippetFormPO uploadFileViaSelenide(String path) {
+        $x(inputForImagesXPath).uploadFile(new File(path));
+        waitForProgressBarForFileSuccessfullyUploaded();
+        return this;
+    }
 
     /**
      * Произвольно выбирает человека из списка "Выберите согласующих лиц". Иногда коллекция не заполняется, т.к.
@@ -41,7 +70,7 @@ public class CalendarChangeSnippetFormPO {
         Random random = new Random();
         int r = random.nextInt(ec.size());
         SelenideElement se = ec.get(r);
-        se.hover();
+        se.hover().click();
         return this;
     }
 
