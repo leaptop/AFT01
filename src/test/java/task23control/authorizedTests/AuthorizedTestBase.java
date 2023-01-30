@@ -3,6 +3,7 @@ package task23control.authorizedTests;
 import com.codeborne.selenide.WebDriverRunner;
 import okhttp3.*;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import task23control.helpers.TestBase;
 
 import java.io.IOException;
@@ -23,7 +24,8 @@ public class AuthorizedTestBase extends TestBase {
      * Авторизация по АПИ.
      */
     @BeforeMethod
-    public void authorizeViaHTTP() {
+    @Parameters({"name", "pass", "emoji"})
+    public void authorizeViaHTTP(String name, String pass, String emoji) {
         CookieManager cookieManager = new CookieManager();//1 start
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         JavaNetCookieJar cookieJar = new JavaNetCookieJar(cookieManager);
@@ -37,8 +39,8 @@ public class AuthorizedTestBase extends TestBase {
             formBody
                     = new FormBody.Builder(StandardCharsets.UTF_8)//2
                     .add("_csrf_token", "")
-                    .add("_username", credentialsProperties.autoUserName())
-                    .add("_password", credentialsProperties.autoUserPassword())
+                    .add("_username", name)
+                    .add("_password", pass)
                     .add("_submit", "Войти")
                     .build();
 

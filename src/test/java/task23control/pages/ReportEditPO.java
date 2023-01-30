@@ -8,7 +8,7 @@ import static com.codeborne.selenide.Selenide.$x;
  * @author Алексеев Степан
  * @date 30.01.2023
  */
-public class ReportEdit extends SuccessfulLoginPage {
+public class ReportEditPO extends SuccessfulLoginPage {
     private String blankEmojiXPath = "//div[@class='emoji-%s ']";
 
     /**

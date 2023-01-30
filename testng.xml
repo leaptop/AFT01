@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Correct authorization">
+    <test name="test">
+        <parameter name="name" value="Авто Пользователь"/>
+        <parameter name="pass" value="12345678"/>
+        <parameter name="emoji" value="inspired"/>
+        <classes>
+            <class name="task23control.authorizedTests.calendar.ReportEditPOTest"/>
+        </classes>
+    </test> <!-- Test -->
+
+    <test name="test 2">
+        <parameter name="name" value="Авто Мяу"/>
+        <parameter name="pass" value="12345"/>
+        <parameter name="emoji" value="happy"/>
+        <classes>
+            <class name="task23control.authorizedTests.calendar.ReportEditPOTest"/>
+        </classes>
+
+    </test> <!-- Test -->
+</suite> <!-- Suite -->
