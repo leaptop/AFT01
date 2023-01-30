@@ -39,7 +39,8 @@ public class ReportEditPOTest extends AuthorizedTestBase {
         calendarPO.clickSubmenuOfReportMenuNamed("Отчет за сегодня");
         ReportEditPO re = new ReportEditPO();
         re.clickEmoji(emoji);
-
+        re.checkIfModal8hoursWindowAppeared();
+        re.clickCancelModal8hours();
         String str = "";
     }
 }
