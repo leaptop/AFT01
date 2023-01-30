@@ -41,6 +41,5 @@ public class ReportEditPOTest extends AuthorizedTestBase {
         re.clickEmoji(emoji);
         re.checkIfModal8hoursWindowAppeared();
         re.clickCancelModal8hours();
-        String str = "";
     }
 }

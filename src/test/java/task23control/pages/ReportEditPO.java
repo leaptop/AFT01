@@ -12,6 +12,9 @@ import static com.codeborne.selenide.Selenide.$x;
  * @date 30.01.2023
  */
 public class ReportEditPO extends SuccessfulLoginPage {
+    /**
+     * Универсальный искпас для эмоджи
+     */
     private String blankEmojiXPath = "//div[@class='emoji-%s ']/div";
     /**
      * Всплывающее окно с надписью о логировании неправильного числа часов
@@ -26,9 +29,13 @@ public class ReportEditPO extends SuccessfulLoginPage {
     /**
      * Кликает кнопку "Отмена" модального окна, сообщающего о нестандартном числе залогированных часов
      */
-    public void clickCancelModal8hours(){
+    public void clickCancelModal8hours() {
         $x(cancelButtonOfModalWindow).click();
     }
+
+    /**
+     * Проверка того, что модальное окно о нестандартно залогированном времени появилось
+     */
     public void checkIfModal8hoursWindowAppeared() {
         $x(modalFadeShow).shouldBe(Condition.visible, Duration.ofSeconds(10));
     }
@@ -39,7 +46,6 @@ public class ReportEditPO extends SuccessfulLoginPage {
      * @param emoji вид эмоджи
      */
     public void clickEmoji(String emoji) {
-        $x(String.format(blankEmojiXPath, emoji))//.hover();
-                .click();
+        $x(String.format(blankEmojiXPath, emoji)).click();
     }
 }

@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 
 import static com.codeborne.selenide.Selenide.open;
 import static properties.Properties.credentialsProperties;
-//import static properties.Properties.credentialsProperties;
 
 /**
  * @author Алексеев Степан

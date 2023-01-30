@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Correct authorization">
+<suite thread-count="10" verbose="1" name="Check 8 hour message" annotations="JDK" parallel="tests">
     <test name="test">
         <parameter name="name" value="Авто Пользователь"/>
         <parameter name="pass" value="12345678"/>
-        <parameter name="emoji" value="angry"/>
+        <parameter name="emoji" value="inspired"/>
         <classes>
             <class name="task23control.authorizedTests.calendar.ReportEditPOTest"/>
         </classes>
