@@ -1,8 +1,5 @@
 package task22.authorizedTests.calendar;
 
-//import io.qameta.allure.selenide.AllureSelenide;
-
-import org.openqa.selenium.Dimension;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import task22.authorizedTests.AuthorizedTestBase;
@@ -43,7 +40,7 @@ public class CalendarTest extends AuthorizedTestBase {
     public CalendarPO calendarPO;
 
     @Test
-    void testik() {
+    void test() {
         String imageName = "pict.png";
         open(credentialsProperties.urlReportEdit(), SuccessfulLoginPage.class);
         SuccessfulLoginPage slp = new SuccessfulLoginPage();
@@ -56,21 +53,19 @@ public class CalendarTest extends AuthorizedTestBase {
                 .chooseRandomApprovingPerson();
         ccsfpo
                 .uploadFileViaSelenide(imageName)
-                .saveScheduleButtonClick()
-        ;
+                .saveScheduleButtonClick();
         calendarPO.checkIfConfirmarionOfScheduleChangeAppeared();
         calendarPO.clickChangeSnippetButton();
         String existingApproverName = ccsfpo.getChosenApproverName();
         SoftAssert soft = new SoftAssert();
-        soft.assertEquals(randomApproverName, existingApproverName, "Имена выбранного произвольного согласующего и " +
-                "находящегося на форме после повторного открытия не совпадают");
-
-        boolean b = ccsfpo.checkUploadedImage();
-        //Dimension dimension = ccsfpo.getUploadedImageSize(image);
+        soft.assertEquals(randomApproverName, existingApproverName, "Имена выбранного произвольного согласующего и "
+                + "находящегося на форме после повторного открытия не совпадают");
         String uploadedImageName = ccsfpo.getUploadedImageName();
         soft.assertEquals(imageName, uploadedImageName, "Имена загруженных файлов не совпадают");
-        String str = "";
+        int wi = ccsfpo.getUploadedImageWidth();
+        int he = ccsfpo.getUploadedImageHeight();
+        soft.assertTrue(wi > 0, "Ширина картинки меньше или равна нулю");
+        soft.assertTrue(he > 0, "Высота картинки меньше или равна нулю");
         soft.assertAll();
     }
-
 }

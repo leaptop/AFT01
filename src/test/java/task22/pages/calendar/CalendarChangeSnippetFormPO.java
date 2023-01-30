@@ -5,7 +5,6 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import ru.yandex.qatools.htmlelements.element.Image;
 
 import java.io.File;
@@ -29,41 +28,76 @@ public class CalendarChangeSnippetFormPO {
     private String chosenApproverNameXPath = "//li[@class='select2-selection__choice']";
     private Image image;
     private String uploadedImageNameXPath = "//div[@class='dz-filename']/span";
-public String getUploadedImageName(){
-    return $x(uploadedImageNameXPath).getOwnText();
-}
-    public Image getUploadedImage() {
-        return new Image($x("//div[@class='dz-image']/img"));
+    private String uploadedImageTagXpath = "//div[@class='dz-image']/img";
+
+    /**
+     * @return возвращает имя загруженной картинки
+     */
+    public String getUploadedImageName() {
+        return $x(uploadedImageNameXPath).getOwnText();
     }
 
-    public boolean checkUploadedImage() {
-        return $x("//div[@class='dz-image']/img").isImage();
+    /**
+     * @return возвращает ширину загруженной картинки
+     */
+    public int getUploadedImageWidth() {
+        $x(uploadedImageTagXpath).shouldBe(Condition.visible);
+        return WebDriverRunner.getWebDriver().findElement(By.xpath(uploadedImageTagXpath)).getSize().getWidth();
     }
 
-    public Dimension getUploadedImageSize(Image image) {
-        return image.getSize();
+    /**
+     * @return возвращает высоту загруженной картинки
+     */
+    public int getUploadedImageHeight() {
+        $x(uploadedImageTagXpath).shouldBe(Condition.visible);
+        return WebDriverRunner.getWebDriver().findElement(By.xpath(uploadedImageTagXpath)).getSize().getHeight();
     }
 
+    /**
+     * @return Возвращает имя выбранного согласующего лица
+     */
     public String getChosenApproverName() {
         return $x(chosenApproverNameXPath).getAttribute("title");
     }
 
+    /**
+     * Ждёт появления всплывающего сообщения об успешной загрузке файла
+     *
+     * @return
+     */
     public CalendarChangeSnippetFormPO waitForProgressBarForFileSuccessfullyUploaded() {
         $x(progressBarForFileSuccessfullyUploaded).shouldBe(Condition.visible);
         return this;
     }
 
+    /**
+     * Кнопка "Сохранить" на форме изменения графика работы
+     *
+     * @return
+     */
     public CalendarChangeSnippetFormPO saveScheduleButtonClick() {
         $x(saveScheduleButton).click();
         return this;
     }
 
+    /**
+     * Загружает файл через селениум
+     *
+     * @param path путь до файла
+     * @return
+     */
     public CalendarChangeSnippetFormPO uploadFileViaSelenium(String path) {
         By fileInput = By.xpath(inputForImagesXPath);
         WebDriverRunner.getWebDriver().findElement(fileInput).sendKeys(path);
         return this;
     }
 
+    /**
+     * Загружает файл через селенид
+     *
+     * @param path путь до файла
+     * @return
+     */
     public CalendarChangeSnippetFormPO uploadFileViaSelenide(String path) {
         $x(inputForImagesXPath).uploadFile(new File(path));
         waitForProgressBarForFileSuccessfullyUploaded();
