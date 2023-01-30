@@ -51,8 +51,7 @@ public class SuccessfulLoginPage {
     private Button rightMenuCalendarButton = new Button($x(xpathForMainMenuButton));
 
     /**
-     * Весь функционал меню слева нужно вынести в базовую пейджу
-     * Наводит мышь на картинку с графиком (Отчёты) и нажимает пункт подменю по имени
+     * Наводит мышь на пункт меню слева с картинкой с графиком (Отчёты) и нажимает пункт подменю по имени
      *
      * @param submenuItem имя пункта подменю
      * @return

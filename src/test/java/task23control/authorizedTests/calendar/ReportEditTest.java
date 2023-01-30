@@ -12,6 +12,7 @@ import static properties.Properties.credentialsProperties;
  * Шаги:
  * 1 Открыть страницу /calendar/
  * 2 Перейти в раздел Отчеты за сегодня через боковое меню (слева Отчеты - Отчеты за сегодня).
+ *
  * 3 Нажать на нужное настроение
  * 4 Проверить наличие всплывающего окна с надписью: “Вы хотите залогировать больше или меньше 8 часов, которые по
  * графику запланированы у вас на сегодня. “
@@ -25,8 +26,9 @@ import static properties.Properties.credentialsProperties;
  * @author Алексеев Степан
  * @date 30.01.2023
  */
-public class CalendarTest extends AuthorizedTestBase {
+public class ReportEditTest extends AuthorizedTestBase {
     @Test
+
     void test() {
         open(credentialsProperties.urlCalendar(), CalendarPO.class);
         CalendarPO calendarPO = new CalendarPO();
