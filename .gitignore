@@ -1,13 +1,8 @@
 # My files. Yo need to specify a full name including file extension
-**/credentials
-**/credentials.properties
 **/texts.json
-**/credentialsDevelop.properties
-**/credentialsProd.properties
-**/credentialsTest.properties
 pict.png
 testng.xml
-/properties/
+resources
 allure-results
 # Compiled class file
 *.class
