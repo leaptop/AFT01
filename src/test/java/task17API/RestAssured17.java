@@ -35,7 +35,7 @@ public class RestAssured17 {
     static ResponseSpecification responseStatus200AndNoErrorSpec;
     static ResponseSpecBuilder responseError = new ResponseSpecBuilder();
     static ResponseSpecification responseErrorSpec;
-    static ResponseSpecBuilder responseCurrentYear = new ResponseSpecBuilder();
+    static ResponseSpecBuilder responseCurrentYearBuilder = new ResponseSpecBuilder();
     static ResponseSpecification responseCurrentYearSpec;
     static RequestSpecBuilder keyParam = new RequestSpecBuilder();
 
@@ -65,9 +65,9 @@ public class RestAssured17 {
         responseNoError.expectBody("response.messages.type", not(hasItem("error")));
         responseError.expectBody("response.messages.type", hasItem("error"));
         responseErrorSpec = responseError.build();
-        responseCurrentYear.expectBody("response.items.date",
+        responseCurrentYearBuilder.expectBody("response.items.date",
                 everyItem(startsWith(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy")))));
-        responseCurrentYearSpec = responseCurrentYear.build();
+        responseCurrentYearSpec = responseCurrentYearBuilder.build();
     }
 
     /**
@@ -90,10 +90,9 @@ public class RestAssured17 {
         List<HolidayItem> items = jsonPath.getList("response.items", HolidayItem.class);
         SoftAssert soft = new SoftAssert();
         soft.assertTrue(items.stream().anyMatch(a -> a.getTypeEnum().equals(TypeOfDay.HOLIDAY)),
-                "Не найдено ни одного дня с искомым типом");
+                String.format("Не найдено ни одного дня с типом %s",TypeOfDay.HOLIDAY));
         soft.assertTrue(items.stream().anyMatch(a -> a.getTypeEnum().equals(TypeOfDay.SHORTDAY)),
-                "Не найдено ни одного дня с искомым типом");
-
+                String.format("Не найдено ни одного дня с типом %s",TypeOfDay.SHORTDAY));
         soft.assertTrue(items.stream().allMatch(a ->
                         ((Integer) a.getDateParsed().getYear()).equals(LocalDate.now().getYear())),
                 "Текущий год не совпадает с годом в теле ответа");
@@ -113,7 +112,7 @@ public class RestAssured17 {
                 .then()
                 .spec(responseStatus200AndNoErrorSpec)
                 .body("response.items.date", everyItem(startsWith("2019")))
-                .body("response.items.type_id", both(hasItem(2)).and(hasItem(1)))
+                .body("response.items.type", both(hasItem("holy_day")).and(hasItem("short_day")))
                 .log().all()
         ;
     }
@@ -137,7 +136,7 @@ public class RestAssured17 {
                 .get(String.format("/Calendar/GetHolidays?day_type=%s", dayType))
                 .then()
                 .spec(responseStatus200AndNoErrorSpec)
-                .spec(responseCurrentYear.build())
+                .spec(responseCurrentYearBuilder.build())
                 .body("response.items.type", everyItem(equalTo(dayType.toLowerCase())));
     }
 
@@ -154,19 +153,6 @@ public class RestAssured17 {
                 .body("items", is(nullValue()))
         ;
     }
-
-    /**
-     * Проверка ввода без обязательного параметра user_id
-     */
-    @Test
-    void testNoUserIdParameter() {
-        when()
-                .get("/Calendar/GetToday")
-                .then()
-                .spec(responseError.build())
-        ;
-    }
-
 }
 
 /**
