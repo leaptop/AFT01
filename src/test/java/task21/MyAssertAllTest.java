@@ -3,9 +3,11 @@ package task21;
 import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.function.Executable;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+
+import java.util.ArrayList;
 
 import static com.codeborne.selenide.Selenide.open;
+import static org.testng.Assert.*;
 
 /**
  * Пример вызова метода:
@@ -15,30 +17,36 @@ import static com.codeborne.selenide.Selenide.open;
  */
 
 public class MyAssertAllTest {
-
-
     /**
      * 1 напиши софт-ассерт для TestNG в стиле assertAll JUnit-а. Т.е. для TestNG у тебя должен быть метод,
      * который принимает список проверок и падает после выполнения всех проверок, а не после первой.
      * P.S. желательно не подглядывать в реализацию JUnit-а.
-     *
-     * @throws Throwable
      */
-    @Test
-    public void testAssertAll() throws Throwable {
-        SoftAssert soft = new SoftAssert();
-        MyAssertInterface<Executable> operationAssert = initInterfaceSoft(soft);
-        try {
-            operationAssert.myAssertAll(
-                    () -> soft.assertEquals(1, 1),
-                    () -> soft.assertEquals(2, 1),
-                    () -> soft.assertEquals(3, 3),
-                    () -> soft.assertEquals(5, 4),
-                    () -> soft.assertTrue(55 < 4, "проверка через assertTrue")
-            );
-        } catch (AssertionError ae) {
-            System.out.println("поймана ошибка");
+    public void mySoftAssert(Executable... exs) {
+        ArrayList<Throwable> e0 = new ArrayList<>();
+        for (int i = 0; i < exs.length; i++) {
+            try {
+                exs[i].execute();
+            } catch (Throwable e1) {
+                System.out.println(e1.getLocalizedMessage());
+                e0.add(e1);
+            }
+            if (i == (exs.length - 1) && !e0.isEmpty()) {
+                fail();
+            }
         }
+    }
+
+    @Test
+    public void testAssertAll() {
+        int a = 1, aa = 1, b = 2, c = 3, cc = 3, d = 4, e = 5, f = 55;
+        mySoftAssert(
+                () -> assertEquals(a, aa, "числа не равны:"),
+                () -> assertEquals(b, a, "числа не равны:"),
+                () -> assertEquals(c, cc, "числа не равны:"),
+                () -> assertEquals(e, d, "числа не равны:"),
+                () -> assertTrue(f < d, String.format("неравенство неверно, %d не меньше, чем %d", f, d))
+        );
     }
 
     /**
@@ -58,34 +66,11 @@ public class MyAssertAllTest {
         for (int i = 0; i < numTimes; i++) {
             try {
                 ex.execute();
-                Thread.sleep( 1000);
-            } catch (AssertionError ae) {
-                System.out.println("inside catching of AssertionError");
-                continue;
-            } catch (InterruptedException e) {
-                System.out.println("inside catching of InterruptedException");
-                continue;
+                Thread.sleep(1000);
             } catch (Throwable e) {
                 System.out.println("inside catching of Throwable");
-                continue;
-            }
-            if (i < (numTimes)) {
-                break;
             }
         }
-    }
-
-    MyAssertInterface<Executable> initInterfaceSoft(SoftAssert soft) throws AssertionError {
-        return (Executable... executables) -> {
-            for (int i = 0; i < executables.length; i++) {
-                executables[i].execute();
-            }
-            soft.assertAll();
-        };
-    }
-
-    interface MyAssertInterface<T> {
-        void myAssertAll(T... arr) throws AssertionError, Throwable;
     }
 
     /**

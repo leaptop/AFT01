@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Алексеев Степан
  * @date 17.01.2023
  */
-public class Main {
+public class WorkWithStreams {
     /**
      * создать список, состоящий из элементов исходного списка умноженных на 10
      * создать список, состоящий из элементов исходного списка, содержащих цифру 3
@@ -101,7 +101,7 @@ public class Main {
      * @return
      */
     public String getStringRemake(ArrayList<Integer> list) {
-        return list.stream().map(a -> ("!" + a + "!")).reduce("", (a, b) -> a + b);
+        return list.stream().map(a -> ("!" + a + "!")).collect(Collectors.joining());
     }
 
     /**
@@ -111,7 +111,7 @@ public class Main {
      * @return
      */
     public Boolean hasDividerOf347(ArrayList<Integer> list) {
-        return list.stream().filter(a -> 347 % a == 0).count() > 0;
+        return list.stream().anyMatch(a -> 347 % a == 0);
     }
 
     /**
@@ -121,7 +121,7 @@ public class Main {
      * @return
      */
     public Boolean checkIfNumberMore0AndLess101(ArrayList<Integer> list) {
-        return list.stream().filter(a -> a > 0).filter(a -> a < 101).count() == 100;
+        return list.stream().allMatch(a -> a > 0 && a < 101);
     }
 
     /**
