@@ -29,18 +29,11 @@ import static properties.Properties.credentialsProperties;
  * @date 16.01.2023
  */
 public class RestAssured17 {
-    static ResponseSpecBuilder responseStatus = new ResponseSpecBuilder();
-    static ResponseSpecBuilder responseNoError = new ResponseSpecBuilder();
-    static ResponseSpecBuilder responseStatus200AndNoError = new ResponseSpecBuilder();
     static ResponseSpecification responseStatus200AndNoErrorSpec;
-    static ResponseSpecBuilder responseError = new ResponseSpecBuilder();
-    static ResponseSpecification responseErrorSpec;
-    static ResponseSpecBuilder responseCurrentYearBuilder = new ResponseSpecBuilder();
     static ResponseSpecification responseCurrentYearSpec;
-    static RequestSpecBuilder keyParam = new RequestSpecBuilder();
 
     /**
-     * Общие параметры для всех запросов
+     * Определяет общие параметры для всех запросов
      */
     private static void setMainParams() {
         RequestSpecBuilder keyParameter = new RequestSpecBuilder();
@@ -48,26 +41,23 @@ public class RestAssured17 {
         RestAssured.requestSpecification = keyParameter.build();
     }
 
+    /**
+     * Создаёт спецификации для проверок, начальные настройки
+     */
     @BeforeClass
     public static void setup() {
         RestAssured.baseURI = credentialsProperties.url();
         RestAssured.port = 443;
         RestAssured.basePath = "/api/v2/public";
-
         setMainParams();
-        //Общие проверки для всех ответов
-        responseStatus200AndNoError
+        //Общие проверки, которые можно использовать для всех ответов:
+        responseStatus200AndNoErrorSpec = new ResponseSpecBuilder()
                 .expectStatusCode(200)
-                .expectBody("response.messages.type", not(hasItem("error")));
-        responseStatus200AndNoErrorSpec = responseStatus200AndNoError.build();
-
-        responseStatus.expectStatusCode(200);
-        responseNoError.expectBody("response.messages.type", not(hasItem("error")));
-        responseError.expectBody("response.messages.type", hasItem("error"));
-        responseErrorSpec = responseError.build();
-        responseCurrentYearBuilder.expectBody("response.items.date",
-                everyItem(startsWith(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy")))));
-        responseCurrentYearSpec = responseCurrentYearBuilder.build();
+                .expectBody("response.messages.type", not(hasItem("error")))
+                .build();
+        responseCurrentYearSpec = new ResponseSpecBuilder()
+                .expectBody("response.items.date",
+                        everyItem(startsWith(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))))).build();
     }
 
     /**
@@ -89,10 +79,9 @@ public class RestAssured17 {
                 .body().jsonPath();
         List<HolidayItem> items = jsonPath.getList("response.items", HolidayItem.class);
         SoftAssert soft = new SoftAssert();
-        soft.assertTrue(items.stream().anyMatch(a -> a.getTypeEnum().equals(TypeOfDay.HOLIDAY)),
-                String.format("Не найдено ни одного дня с типом %s",TypeOfDay.HOLIDAY));
-        soft.assertTrue(items.stream().anyMatch(a -> a.getTypeEnum().equals(TypeOfDay.SHORTDAY)),
-                String.format("Не найдено ни одного дня с типом %s",TypeOfDay.SHORTDAY));
+        soft.assertTrue(items.stream().allMatch(a -> a.getTypeEnum().equals(TypeOfDay.HOLIDAY) ||
+                a.getTypeEnum().equals(TypeOfDay.SHORTDAY)
+        ), String.format("Найдены другие типы дня помимо %s & %s", TypeOfDay.HOLIDAY, TypeOfDay.SHORTDAY));
         soft.assertTrue(items.stream().allMatch(a ->
                         ((Integer) a.getDateParsed().getYear()).equals(LocalDate.now().getYear())),
                 "Текущий год не совпадает с годом в теле ответа");
@@ -107,12 +96,13 @@ public class RestAssured17 {
      */
     @Test(description = "Проверка с годом 2019 и без указания day_type")
     void testYearAndNoDayType() {
+        String year = "2019";
         when()
-                .get("/Calendar/GetHolidays?year=2019")
+                .get(String.format("/Calendar/GetHolidays?year=%s", year))
                 .then()
                 .spec(responseStatus200AndNoErrorSpec)
-                .body("response.items.date", everyItem(startsWith("2019")))
-                .body("response.items.type", both(hasItem("holy_day")).and(hasItem("short_day")))
+                .body("response.items.date", everyItem(startsWith(year)))
+                .body("response.items.type", everyItem(either(is("holy_day")).or(is("short_day"))))
                 .log().all()
         ;
     }
@@ -130,13 +120,13 @@ public class RestAssured17 {
      * 2 В ответе присутствуют записи только за текущий год
      * 3 В ответе присутствуют записи только указанного типа
      */
-    @Test(dataProvider = "dayTypes")
+    @Test(description = "Проверка при неуказанном годе и разныx типах дня", dataProvider = "dayTypes")
     void testDayTypeAndNoYear(String dayType) {
         when()
                 .get(String.format("/Calendar/GetHolidays?day_type=%s", dayType))
                 .then()
                 .spec(responseStatus200AndNoErrorSpec)
-                .spec(responseCurrentYearBuilder.build())
+                .spec(responseCurrentYearSpec)
                 .body("response.items.type", everyItem(equalTo(dayType.toLowerCase())));
     }
 
@@ -151,6 +141,22 @@ public class RestAssured17 {
                 .statusCode(200)
                 .body("response.count.", equalTo(0))
                 .body("items", is(nullValue()))
+        ;
+    }
+
+    /**
+     * Проверка неправильно введённого типа дня
+     */
+    @Test
+    void testIncorrectDayType() {
+        when()
+                .get("/Calendar/GetHolidays?day_type=holiday")
+                .then()
+                .statusCode(200)
+                .body("response.messages.type", hasItem("error"))
+                .body("response.messages.text", hasItem(
+                        "Параметр day-type может отсутствовать или принимать одно из значений: SHORT_DAY, HOLY_DAY"))
+                .log().all()
         ;
     }
 }
@@ -183,6 +189,8 @@ class HolidayItem {
             case "short_day":
                 typeEnum = TypeOfDay.SHORTDAY;
                 break;
+            case "transfer_оff_day":
+                typeEnum = TypeOfDay.TRANSFEROFFDAY;
         }
         return typeEnum;
     }
@@ -193,5 +201,6 @@ class HolidayItem {
  */
 enum TypeOfDay {
     HOLIDAY,
-    SHORTDAY
+    SHORTDAY,
+    TRANSFEROFFDAY
 }
