@@ -4,13 +4,10 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
-import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.By;
-import org.w3c.dom.ranges.Range;
 import ru.yandex.qatools.htmlelements.element.Image;
 
 import java.io.File;
-import java.util.Random;
 
 import static com.codeborne.selenide.Selenide.$$x;
 import static com.codeborne.selenide.Selenide.$x;
@@ -21,9 +18,7 @@ import static com.codeborne.selenide.Selenide.$x;
  */
 public class CalendarChangeSnippetFormPO {
     private String changeApprovingPeople = "//label[contains(text(), 'C кем согласовано')]/following-sibling::span";
-    private String approvingNamesCaseA = "//li[contains(@id,'select2-field-users-confirmation')]";
-    private String approvingNamesCaseB = "//li[@class='select2-results__option']";//а иногда имена так представлены в
-    // DOM, однако такие элементы были not interactable
+    private String approvingNamesXPath = "//li[contains(@id,'select2-field-users-confirmation')]";
     private String inputForImagesXPath = "//input[@type='file' and not (contains(@accept,'image'))]";
     private String saveScheduleButton = "//div[@id='popup-change-schedule']//button[contains(text(), 'Сохранить')]";
     private String progressBarForFileSuccessfullyUploaded = "//div[text()='Файл успешно загружен']";
@@ -107,23 +102,6 @@ public class CalendarChangeSnippetFormPO {
     }
 
     /**
-     * Повторяет вызов кода, пока он не выполнится без выброса исключения
-     * @param ex код для вызова
-     * @param numTimes число попыток, после которого уже не будет пытаться запустить код.
-     */
-    public void repeatNTimes(Executable ex, int numTimes) {
-        for (int i = 0; i < numTimes; i++) {
-            try {
-                ex.execute();
-                Thread.sleep(1000);
-                break;
-            } catch (Throwable e) {
-                System.out.println("inside catching of Throwable");
-            }
-        }
-    }
-
-    /**
      * Произвольно выбирает человека из списка "Выберите согласующих лиц". Иногда коллекция не заполняется, т.к.
      * элементы представлены не в том формате, поэтому можно в цикле попробовать понажимать поле "Выберите
      * согласующих лиц", тогда DOM может поменяться. Если этого не произойдёт, можно попробовать работать с теми
@@ -132,22 +110,9 @@ public class CalendarChangeSnippetFormPO {
      * @return
      */
     public String chooseRandomApprovingPerson() {
-        ElementsCollection apprNamesColl = $$x(approvingNamesCaseA);
-//        int count = 0;
-//        while (apprNamesColl.size() < 1 && count++ < 30) {//Раскомментировать, если не получится заполнить коллекцию
-//            clickChangeApprovingPeople();
-//            clickChangeApprovingPeople();
-//            apprNamesColl = $$x(approvingNamesCaseA);
-//            System.out.println("clicked two times");
-//        }
-//        if (apprNamesColl.size() < 1) {
-//            apprNamesColl = $$x(approvingNamesCaseB);
-//        }
-
-//        Random random = new Random();
-//        int r = random.nextInt( apprNamesColl.size());
+        ElementsCollection apprNamesColl = $$x(approvingNamesXPath);
         int r =(int) ((Math.random() * (apprNamesColl.size() - 20)) + 20);//на тестовом стенде первые несколько
-        // (около 10) пользователей не имеют имён, выбрасывается исключение. Завести баг.
+        // (около 20) пользователей не имеют имён, выбрасывается исключение. Завести баг.
         SelenideElement chosenApproverElement = apprNamesColl.get(r);
         String approverName = chosenApproverElement.getText();
         chosenApproverElement.hover().click();

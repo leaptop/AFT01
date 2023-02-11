@@ -73,7 +73,7 @@ public class CalendarPO {
     /**
      * Progress bar загрузки календаря
      */
-    private String calendarProgressBarXPath ="//span[contains(text(),'Обновление календаря')]";
+    private String calendarProgressBarXPath = "//span[contains(text(),'Обновление календаря')]";
     // "//span[contains(@class, 'btn-primary m-loader')]";//удалить перед коммитом
     /**
      * Кнопка "Изменить" в боковом сниппете
@@ -103,14 +103,15 @@ public class CalendarPO {
      * @return Возвращает кнопку вызова выпадающего списка работников
      */
     private SelenideElement nameDropDownMenuButton = $x("//span[@id='select2--container']");
+
     /**
      * Проверка того, что расписание успешно сохранено после работы на форме по кнопке "Изменить".
      *
      * @return
      */
     public CalendarPO checkIfConfirmarionOfScheduleChangeAppeared() {
-         $x(confirmationOfScheduleChangeXPath).shouldBe(visible);
-         return this;
+        $x(confirmationOfScheduleChangeXPath).shouldBe(visible);
+        return this;
     }
 
     /**
@@ -150,7 +151,9 @@ public class CalendarPO {
     @Step("Кликаем день текущего месяца по номеру \"{number}\"")
     public void clickDayOfThisMonth(int number) {
         $x(String.format("//td[not(contains(@class,'fc-other-month'))]/span[@class='fc-day-number' and text()='%d']",
-                number)).shouldBe(Condition.interactable, Duration.ofSeconds(10)).click();
+                number))
+                .shouldBe(visible, Duration.ofSeconds(10))
+                .shouldBe(Condition.interactable, Duration.ofSeconds(10)).click();
     }
 
     /**
