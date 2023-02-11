@@ -1,9 +1,7 @@
 package task20;
 
-import javafx.util.Pair;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,33 +45,25 @@ public class WorkWithExceptions {
     void exceptionsTesting() {
         int arr1[] = {-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5};
         int arr2[] = {-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5};
-        Map<Integer, ArrayList<Pair<Integer, Integer>>> mapa = new HashMap<>();
+        Map<Integer, Integer> mapa = new HashMap<>();
         for (int i = 0; i < arr1.length; i++) {
             for (int j = 0; j < arr2.length; j++) {
                 Integer res = null;
                 try {
                     res = divisionMod(arr1[i], arr2[j]);
+                    mapa.merge(res, 1, Integer::sum);
                 } catch (ArithmeticException e) {
                     System.out.println("Бесконечность");
-                } catch (CheckedException4  | UncheckedException1 e) {
+                } catch (CheckedException4 | UncheckedException1 e) {
 
-                }catch (CheckedException55 ce55){
-                    throw ce55;
-                }
-                if (res != null) {
-                    if (mapa.containsKey(res)) {
-                        mapa.get(res).add(new Pair<>(arr1[i], arr2[j]));
-                    } else {
-                        ArrayList<Pair<Integer, Integer>> pairs = new ArrayList<>();
-                        pairs.add(new Pair<>(arr1[i], arr2[j]));
-                        mapa.put(res, pairs);
-                    }
+                } catch (CheckedException55 ce55) {
+                         throw ce55;
                 }
                 System.out.println(res);
             }
         }
         for (Integer in : mapa.keySet()) {
-            System.out.println(String.format("остаток : %d, число пар: %d", in, mapa.get(in).size()));
+            System.out.println(String.format("остаток : %d, число пар: %d", in, mapa.get(in)));
         }
     }
 }

@@ -67,6 +67,7 @@ public class MyAssertAllTest {
             try {
                 ex.execute();
                 Thread.sleep(1000);
+                break;
             } catch (Throwable e) {
                 System.out.println("inside catching of Throwable");
             }
@@ -90,7 +91,7 @@ public class MyAssertAllTest {
                     open("https://www.google.com/");
                     int rando = java.time.LocalDateTime.now().getSecond();
                     System.out.println("rando = " + rando);
-                    if (rando % 2 == 0) {
+                    if (rando % 2 == 0 || rando % 3 == 0) {
                         WebDriverRunner.closeWebDriver();
                         System.out.println("assertion is thrown");
                         throw new AssertionError();
