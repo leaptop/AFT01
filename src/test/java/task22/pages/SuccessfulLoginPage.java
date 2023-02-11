@@ -31,7 +31,7 @@ public class SuccessfulLoginPage {
             "//li[@class='m-menu__item m-menu__item--submenu']/a/i[@class='m-menu__link-icon flaticon-calendar-2']";
     private String xpathForMainMenuButton = "//a[@id='m_aside_left_minimize_toggle']";
     private String xpathForSubMenu = "//ul[contains(@class, 'm-menu__nav')]/li//span[text()='%s']";
-    private String xpathForMainMenuItems = "//ul[contains(@class, 'm-menu__nav')]/li[%d]";
+    private String xpathForMainMenuItems = "//a[@class='m-menu__link m-menu__toggle']//i[contains(@class,'%s')]";
 
     private TextBlock emailBlock = new TextBlock($x(xpathForUserEmailOnCard));
     /**
@@ -58,13 +58,13 @@ public class SuccessfulLoginPage {
     }
 
     /**
-     * Наводит мышь на пункт главного меню по его номеру, считая сверху вниз.
+     * Наводит мышь на пункт главного меню по части имени картинки.
      *
-     * @param number
+     * @param imageName часть имени картинки меню
      * @return
      */
-    public SuccessfulLoginPage hoverOnMenuItemNumber(int number) {
-        $x(String.format(xpathForMainMenuItems, number)).hover();
+    public SuccessfulLoginPage hoverOnMenuItemNamed(String imageName) {
+        $x(String.format(xpathForMainMenuItems, imageName)).hover();
         return this;
     }
 

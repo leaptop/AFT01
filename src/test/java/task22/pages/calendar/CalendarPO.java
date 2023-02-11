@@ -1,5 +1,6 @@
 package task22.pages.calendar;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
@@ -72,7 +73,8 @@ public class CalendarPO {
     /**
      * Progress bar загрузки календаря
      */
-    private String calendarProgressBarXPath = "//span[contains(@class, 'btn-primary m-loader')]";
+    private String calendarProgressBarXPath ="//span[contains(text(),'Обновление календаря')]";
+    // "//span[contains(@class, 'btn-primary m-loader')]";//удалить перед коммитом
     /**
      * Кнопка "Изменить" в боковом сниппете
      */
@@ -148,7 +150,7 @@ public class CalendarPO {
     @Step("Кликаем день текущего месяца по номеру \"{number}\"")
     public void clickDayOfThisMonth(int number) {
         $x(String.format("//td[not(contains(@class,'fc-other-month'))]/span[@class='fc-day-number' and text()='%d']",
-                number)).click();
+                number)).shouldBe(Condition.interactable, Duration.ofSeconds(10)).click();
     }
 
     /**
@@ -249,7 +251,7 @@ public class CalendarPO {
      */
     @Step("Ждём появления сообщения о загрузке. Потом ждём его исчезновения")
     public CalendarPO waitForCalendarToLoad() {
-        // $x(calendarProgressBarXPath).shouldBe(visible);
+        $x(calendarProgressBarXPath).shouldBe(visible);
         $x(calendarProgressBarXPath).shouldNotBe(visible, Duration.ofSeconds(10));
         return this;
     }
