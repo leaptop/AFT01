@@ -58,6 +58,3 @@ public interface CredentialsProperties extends Config {
     String urlReportEdit();
 
     String urlLoginCheck();
-
-    String urlCalendar();
-}
