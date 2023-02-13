@@ -26,7 +26,8 @@ import org.aeonbits.owner.Config;
  * Можно просто использовать дефолтные значения. Последующую же конфигурацию через проперти файл оставить следующему
  * разработчику/пользователю.
  */
-@Config.Sources({"file:src/test/resources/properties/credentials.properties",
+@Config.Sources({
+        "file:src/test/resources/properties/credentials.properties",
         "system:properties",
         "system:env"
 })

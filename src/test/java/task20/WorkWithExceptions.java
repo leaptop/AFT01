@@ -9,7 +9,7 @@ import java.util.Map;
  * @author Алексеев Степан
  * @date 19.01.2023
  */
-public class Main {
+public class WorkWithExceptions {
     /**
      * 1 Создай метод который считает остаток от деления одного числа на другое (передаем два параметра:
      * делимое и делитель)
@@ -38,31 +38,36 @@ public class Main {
      * 2 В тест-методе создай два массива, заполни их числами от -5 до 5
      * 3 Для каждого числа из первого массива выведи остаток от деления на каждое число из другого массива. В случае
      * невозможности деления выведи “Бесконечность”
-     * 4 Для каждого остатка из подзадания 3 посчитать количество пар делимое+делитель, приводящих к такому результату (да я
-     * * в курсе что тут не будет исключения, отрабатываем работу с коллекциями)
+     * 4 Для каждого остатка из подзадания 3 посчитать количество пар делимое+делитель, приводящих к такому результату
+     * (да я в курсе что тут не будет исключения, отрабатываем работу с коллекциями)
      */
     @Test
-    void test1() {
+    void exceptionsTesting() {
         int arr1[] = {-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5};
         int arr2[] = {-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5};
         Map<Integer, Integer> mapa = new HashMap<>();
         for (int i = 0; i < arr1.length; i++) {
             for (int j = 0; j < arr2.length; j++) {
+                Integer res = null;
                 try {
-                    int res = divisionMod(arr1[i], arr2[j]);
-                    System.out.println(res);
+                    res = divisionMod(arr1[i], arr2[j]);
+                    mapa.merge(res, 1, Integer::sum);
                 } catch (ArithmeticException e) {
-                    mapa.put(arr1[i], arr2[j]);
                     System.out.println("Бесконечность");
-                } catch (CheckedException4 | CheckedException55 | UncheckedException1 e) {
+                } catch (CheckedException4 | UncheckedException1 e) {
 
+                } catch (CheckedException55 ce55) {
+                         throw ce55;
                 }
+                System.out.println(res);
             }
         }
-        System.out.println(String.format("Число пар делимое/делитель, которые выбрасывают арифметическое исключение: " +
-                "%d", mapa.size()));
+        for (Integer in : mapa.keySet()) {
+            System.out.println(String.format("остаток : %d, число пар: %d", in, mapa.get(in)));
+        }
     }
 }
+
 
 /**
  * 5 Создай два своих типа исключения: одно непроверяемое, другое проверяемое
