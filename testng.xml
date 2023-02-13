@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Correct authorization">
+    <test name="checkCorrectAuthorizationInputNew">
+        <parameter name="name" value="Авто Пользователь"/>
+        <parameter name="pass" value="12345678"/>
+        <parameter name="mail" value="124124@m.r"/>
+        <classes>
+            <class name="login.LoginPositiveTests"/>
+        </classes>
+    </test> <!-- Test -->
+
+    <test name="Incorrect authorization">
+        <parameter name="name" value="Тест"/>
+        <parameter name="pass" value="Тест"/>
+        <parameter name="mail" value="1@m.r"/>
+        <classes>
+            <class name="login.LoginPositiveTests"/>
+        </classes>
+
+    </test> <!-- Test -->
+</suite> <!-- Suite -->

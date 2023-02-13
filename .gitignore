@@ -2,6 +2,7 @@
 **/resources/properties
 **/texts.json
 pict.png
+testng.xml
 # Compiled class file
 *.class
 # Log file
