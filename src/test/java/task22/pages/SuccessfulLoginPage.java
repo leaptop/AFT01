@@ -52,8 +52,16 @@ public class SuccessfulLoginPage {
      * @param name
      * @return
      */
-    public SuccessfulLoginPage clickOnSubMenuItemNamed(String name) {
+    private SuccessfulLoginPage clickOnSubMenuItemNamed(String name) {
         $x(String.format(xpathForSubMenu, name)).click();
+        return this;
+    }
+
+    /**
+     * Нажимает на пункт подменю "Графики работы" из пункта меню "Графики работы"
+     */
+    public SuccessfulLoginPage clickWorkingSchedules() {
+        clickOnSubMenuItemNamed("Графики работы");
         return this;
     }
 
@@ -63,8 +71,18 @@ public class SuccessfulLoginPage {
      * @param imageName часть имени картинки меню
      * @return
      */
-    public SuccessfulLoginPage hoverOnMenuItemNamed(String imageName) {
+    private SuccessfulLoginPage hoverOnMenuItemNamed(String imageName) {
         $x(String.format(xpathForMainMenuItems, imageName)).hover();
+        return this;
+    }
+
+    /**
+     * Наводит мышь на пункт меню "Календарь" с картинкой в виде календаря
+     *
+     * @return
+     */
+    public SuccessfulLoginPage hoverCalendarIcon() {
+        hoverOnMenuItemNamed("calendar-2");
         return this;
     }
 

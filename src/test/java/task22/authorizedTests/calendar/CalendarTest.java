@@ -45,7 +45,7 @@ public class CalendarTest extends AuthorizedTestBase {
         String imageName = "pict.png";
         open(credentialsProperties.urlReportEdit(), SuccessfulLoginPage.class);
         SuccessfulLoginPage successfulLoginPage = new SuccessfulLoginPage();
-        successfulLoginPage.hoverOnMenuItemNamed("calendar-2").clickOnSubMenuItemNamed("Графики работы");
+        successfulLoginPage.hoverCalendarIcon().clickWorkingSchedules();
         calendarPO = new CalendarPO();
         calendarPO.clickChangeSnippetButton();
         CalendarChangeSnippetFormPO modalForm = new CalendarChangeSnippetFormPO();

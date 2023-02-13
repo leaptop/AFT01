@@ -16,39 +16,17 @@
         <org.seleniumhq.selenium.version>4.7.2</org.seleniumhq.selenium.version>
         <com.codeborne.version>6.10.3</com.codeborne.version>
         <org.aeonbits.owner>1.0.12</org.aeonbits.owner>
-<!--        <allure.version>2.13.6</allure.version>-->
+        <!--        <allure.version>2.13.6</allure.version>-->
         <qameta.allure>2.13.6</qameta.allure>
         <aspectj.version>1.8.10</aspectj.version>
         <allure.maven>2.10.0</allure.maven>
     </properties>
     <dependencies>
-        <!--    Это нужно в инструкции для вызова скриншотов по одной из статей.
-        Но добавление этого ломает сборку аллюр отчётов!: -->
-<!--                <dependency>-->
-<!--                    <groupId>io.qameta.allure</groupId>-->
-<!--                    <artifactId>allure-selenide</artifactId>-->
-<!--                    <version>${qameta.allure}</version>-->
-<!--                    <scope>test</scope>-->
-<!--                </dependency>-->
-        <!--        Убрать когда подберу правильную комбинацию зависимостей.-->
-
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.junit.jupiter</groupId>-->
-        <!--            <artifactId>junit-jupiter-params</artifactId>-->
-        <!--            <version>5.9.0</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
-
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
-
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>${org.seleniumhq.selenium.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-api -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-api</artifactId>
@@ -77,18 +55,12 @@
             <version>${org.aeonbits.owner}</version>
             <scope>test</scope>
         </dependency>
-        <!--Переезжаю на TestNG>-->
-                <dependency>
-                    <groupId>org.junit.jupiter</groupId>
-                    <artifactId>junit-jupiter-api</artifactId>
-                    <version>${org.junit.jupiter.version}</version>
-                    <scope>test</scope>
-                </dependency>
-        <!--        <dependency>--><!--        <Переезжаю на TestNG>-->
-        <!--            <groupId>io.qameta.allure</groupId>-->
-        <!--            <artifactId>allure-junit5</artifactId>-->
-        <!--            <version>${qameta.allure}</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${org.junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
@@ -131,11 +103,6 @@
                 <configuration>
                     <properties>
                         <configurationParameters>
-                            <!--                            junit.jupiter.conditions.deactivate = *-->
-                            <!--                            junit.jupiter.extensions.autodetection.enabled = true-->
-                            <!--                            junit.jupiter.testinstance.lifecycle.default = per_class-->
-                            <!--                            junit.jupiter.execution.parallel.enabled = true-->
-                            <!--                            junit.jupiter.execution.parallel.mode.default = concurrent-->
                         </configurationParameters>
                     </properties>
                     <testFailureIgnore>false</testFailureIgnore>
@@ -146,21 +113,13 @@
                         <property>
                             <name>
                                 autotests.testNG
-                                                                junit.jupiter.extensions.autodetection.enabled
+                                junit.jupiter.extensions.autodetection.enabled
                             </name>
                             <value>true</value>
                         </property>
                     </systemProperties>
                 </configuration>
                 <dependencies>
-                    <!-- проблема появилась при добавлении этого: начало -->
-                    <!--                    <dependency>-->
-                    <!--                        <groupId>org.junit.platform</groupId>-->
-                    <!--                        <artifactId>junit-platform-surefire-provider</artifactId>-->
-                    <!--                        <version>1.2.0</version>-->
-                    <!--&lt;!&ndash;                        <version>1.3.0-M1</version>&ndash;&gt;-->
-                    <!--                    </dependency>-->
-                    <!-- проблема появилась при добавлении этого: конец - -->
                     <dependency>
                         <groupId>org.aspectj</groupId>
                         <artifactId>aspectjweaver</artifactId>
