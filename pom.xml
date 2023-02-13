@@ -16,6 +16,7 @@
         <org.seleniumhq.selenium.version>4.7.2</org.seleniumhq.selenium.version>
         <com.codeborne.version>6.10.3</com.codeborne.version>
         <org.aeonbits.owner>1.0.12</org.aeonbits.owner>
+        <allure.version>2.13.0</allure.version>
         <qameta.allure>2.13.6</qameta.allure>
         <aspectj.version>1.8.10</aspectj.version>
         <allure.maven>2.10.0</allure.maven>
@@ -113,7 +114,7 @@
                         <property>
                             <name>
                                 autotests.testNG
-                                                                junit.jupiter.extensions.autodetection.enabled
+                                junit.jupiter.extensions.autodetection.enabled
                             </name>
                             <value>true</value>
                         </property>
