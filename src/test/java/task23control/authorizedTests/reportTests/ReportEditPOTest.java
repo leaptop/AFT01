@@ -1,10 +1,10 @@
-package task23control.authorizedTests.calendar;
+package task23control.authorizedTests.reportTests;
 
-import org.testng.annotations.Parameters;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import task23control.authorizedTests.AuthorizedTestBase;
 import task23control.pages.ReportEditPO;
-import task23control.pages.calendar.CalendarPO;
+import task23control.pages.SuccessfulLoginPage;
 
 import static com.codeborne.selenide.Selenide.open;
 import static properties.Properties.credentialsProperties;
@@ -31,15 +31,27 @@ import static properties.Properties.credentialsProperties;
  * @date 30.01.2023
  */
 public class ReportEditPOTest extends AuthorizedTestBase {
-    @Test
-    @Parameters({"name", "pass", "emoji"})
-    void test(String name, String pass, String emoji) {
-        open(credentialsProperties.urlCalendar(), CalendarPO.class);
-        CalendarPO calendarPO = new CalendarPO();
-        calendarPO.clickSubmenuOfReportMenuNamed("Отчет за сегодня");
-        ReportEditPO re = new ReportEditPO();
-        re.clickEmoji(emoji);
-        re.checkIfModal8hoursWindowAppeared();
-        re.clickCancelModal8hours();
+    @DataProvider(name = "emojis", parallel = true)
+    public Object[][] returnParams() {
+        return new Object[][]{
+                {"Авто Пользователь", "12345678", ReportEditPO.Emo.inspired},
+                {"Авто Пользователь", "12345678", ReportEditPO.Emo.sad},
+                {"Авто Мяу", "12345", ReportEditPO.Emo.happy},
+                {"Авто Пользователь", "12345678", ReportEditPO.Emo.angry},
+                {"Авто Мяу", "12345", ReportEditPO.Emo.neutral},
+                {"Авто Мяу", "12345", ReportEditPO.Emo.upset}
+        };
+    }
+
+    @Test(description = "Проверка отчёта за день", dataProvider = "emojis")
+    void test(String name, String pass, ReportEditPO.Emo emo) {
+        authorizeViaHTTP(name, pass);
+        open(credentialsProperties.urlCalendar(), SuccessfulLoginPage.class);
+        SuccessfulLoginPage successfulLoginPage = new SuccessfulLoginPage();
+        successfulLoginPage.clickReportForTodaySubmenuItem();
+        ReportEditPO reportEditPO = new ReportEditPO();
+        reportEditPO.clickEmoji(emo);
+        reportEditPO.checkIfModal8hoursWindowAppeared();
+        reportEditPO.clickCancelModal8hours();
     }
 }

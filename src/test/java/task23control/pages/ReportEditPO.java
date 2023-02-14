@@ -1,6 +1,7 @@
 package task23control.pages;
 
 import com.codeborne.selenide.Condition;
+import io.qameta.allure.Step;
 import task22.pages.SuccessfulLoginPage;
 
 import java.time.Duration;
@@ -16,26 +17,28 @@ public class ReportEditPO extends SuccessfulLoginPage {
      * Универсальный искпас для эмоджи
      */
     private String blankEmojiXPath = "//div[@class='emoji-%s ']/div";
+
     /**
      * Всплывающее окно с надписью о логировании неправильного числа часов
      */
-    private String modalFadeShow = "//div[@class='modal fade show']//h5[contains(text(),'Вы хотите залогировать " +
-            "больше или меньше 8 часов, которые по графику запланированы у вас на сегодня')]";
+    private String modalFadeShow = "//div[@id='modal-more-less-hours']";
     /**
      * Кнопка "Отмена" модального окна, сообщающего о нестандартном числе залогированных часов
      */
-    private String cancelButtonOfModalWindow = "//div[@class='modal fade show']//button[contains(text(), 'Отмена')]";
+    private String cancelModal = ".//button[contains(text(), 'Отмена')]";
 
     /**
      * Кликает кнопку "Отмена" модального окна, сообщающего о нестандартном числе залогированных часов
      */
+    @Step("Кликает кнопку \"Отмена\" модального окна")
     public void clickCancelModal8hours() {
-        $x(cancelButtonOfModalWindow).click();
+        $x(modalFadeShow).$x(cancelModal).click();
     }
 
     /**
      * Проверка того, что модальное окно о нестандартно залогированном времени появилось
      */
+    @Step("Проверка того, что модальное окно о времени появилось")
     public void checkIfModal8hoursWindowAppeared() {
         $x(modalFadeShow).shouldBe(Condition.visible, Duration.ofSeconds(10));
     }
@@ -45,7 +48,11 @@ public class ReportEditPO extends SuccessfulLoginPage {
      *
      * @param emoji вид эмоджи
      */
-    public void clickEmoji(String emoji) {
+    @Step("Нажимает кнопку эмоджи")
+    public void clickEmoji(Emo emoji) {
         $x(String.format(blankEmojiXPath, emoji)).click();
+    }
+   public enum Emo {
+       happy, inspired, ok, neutral, sad, tired, upset, angry
     }
 }

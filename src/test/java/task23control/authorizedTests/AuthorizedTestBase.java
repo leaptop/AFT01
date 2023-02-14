@@ -22,9 +22,7 @@ public class AuthorizedTestBase extends TestBase {
     /**
      * Авторизация по АПИ.
      */
-    @BeforeMethod
-    @Parameters({"name", "pass", "emoji"})
-    public void authorizeViaHTTP(String name, String pass, String emoji) {
+    public void authorizeViaHTTP(String name, String pass) {
         CookieManager cookieManager = new CookieManager();//1 start
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         JavaNetCookieJar cookieJar = new JavaNetCookieJar(cookieManager);
